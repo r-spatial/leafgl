@@ -1,6 +1,9 @@
 # leaflet.glify
 
-An R package for fast web gl rendering of features on leaflet maps
+An R package for fast web gl rendering of features on leaflet maps.
+It's an R port of https://github.com/robertleeplummerjr/Leaflet.glify where 
+more detailed information/documentation can be found. Also, if you like 
+what you get here, make sure to star the original repo!
 
 -----
 
