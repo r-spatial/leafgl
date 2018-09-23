@@ -49,7 +49,7 @@
 #' @export
 addGlifyPoints = function(map,
                           data,
-                          color = cbind(0, 0, 0),
+                          color = cbind(0, 0.2, 1),
                           opacity = 1,
                           weight = 10,
                           group = "glpoints",

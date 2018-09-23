@@ -4,7 +4,7 @@
 \alias{addGlifyPoints}
 \title{add ponts to a leaflet map using Leaflet.glify}
 \usage{
-addGlifyPoints(map, data, color = cbind(0, 0, 0), opacity = 1,
+addGlifyPoints(map, data, color = cbind(0, 0.2, 1), opacity = 1,
   weight = 10, group = "glpoints", popup = NULL, ...)
 }
 \arguments{

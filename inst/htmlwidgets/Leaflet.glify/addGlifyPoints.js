@@ -6,6 +6,12 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, opacity, si
 
   wget([data_fl, color_fl], function(points, colors) {
     var cols = JSON.parse(colors);
+    var clrs;
+    if (cols.length === 1) {
+      clrs = cols[0];
+    } else {
+      clrs = function(index, point) { return cols[index]; };
+    }
     var dat = JSON.parse(points);
     L.glify.points({
       map: map,
@@ -19,9 +25,7 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, opacity, si
         console.log(point);
       },
       data: dat,
-      color: function(index, point) {
-        return cols[index];
-      },
+      color: clrs,
       opacity: opacity,
       size: size
     });
@@ -44,4 +48,14 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, opacity, si
       request.send();
     });
   }
+
+  function clr(colors) {
+    if (colors.length === 1) {
+      return colors[0];
+    }
+    if (colors.length > 1) {
+      return function(index, point) { return cols[index]; };
+    }
+  }
+
 };
