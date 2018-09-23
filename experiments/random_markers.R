@@ -3,7 +3,6 @@ library(leaflet)
 library(leaflet.glify)
 library(sf)
 library(colourvalues)
-library(jsonlite)
 
 n = 1e6
 
@@ -20,7 +19,7 @@ options(viewer = NULL)
 system.time({
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPoints(data = pts) %>%
+    addGlifyPoints(data = pts, color = cols) %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6)
 })
