@@ -26,3 +26,12 @@ system.time({
 
 m
 
+
+
+system.time({
+  m2 = mapview(st_cast(franconia, "MULTILINESTRING"), color = "black")@map %>%
+    addGlifyPoints(data = pts, color = cols, popup = "id")
+})
+
+m2
+

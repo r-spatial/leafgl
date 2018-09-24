@@ -1,20 +1,21 @@
-#' add ponts to a leaflet map using Leaflet.glify
+#' add points/polygons to a leaflet map using Leaflet.glify
 #'
 #' @description
 #'   Leaflet.glify is a web gl renderer plugin for leaflet. See
 #'   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
 #'   and documentation. Currently not all functionality is implemented here.
 #'
-#' @param map a leaflet map to add points to.
-#' @param data sf/sp point data to add to the map.
+#' @param map a leaflet map to add points/polygons to.
+#' @param data sf/sp point/polygon data to add to the map.
 #' @param color a three-column rgb matrix with values between 0 and 1.
-#' @param opacity point opacity. Numeric between 0 and 1.
+#' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
-#' @param group a group name for the point layer.
+#' @param group a group name for the feature layer.
 #' @param popup the name of the column in data to be used for popups.
 #' @param ... ignored.
 #'
+#' @describeIn addGlifyPoints add points to a leaflet map using Leaflet.glify
 #' @examples
 #' \dontrun{
 #' library(mapview)
@@ -114,76 +115,4 @@ addGlifyPoints = function(map,
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
                         data_var, color_var, popup_var, opacity, weight)
 
-}
-
-
-
-
-# helpers
-glifyDependencies = function() {
-  list(
-    htmltools::htmlDependency(
-      "addGlifyPoints",
-      '0.0.1',
-      system.file("htmlwidgets/Leaflet.glify", package = "leaflet.glify"),
-      script = c(
-        "addGlifyPoints.js",
-        "glify.js",
-        "src/js/canvasoverlay.js",
-        "src/js/gl.js",
-        "src/js/index.js",
-        "src/js/map-matrix.js",
-        "src/js/points.js",
-        "src/js/shapes.js",
-        "src/js/utils.js",
-        "src/shader/fragment/dot.glsl",
-        "src/shader/fragment/point.glsl",
-        "src/shader/fragment/polygon.glsl",
-        "src/shader/fragment/puck.glsl",
-        "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
-        "src/shader/vertex/default.glsl"
-      )
-    )
-  )
-}
-
-glifyDataAttachment = function(fl_data, group) {
-  data_dir <- dirname(fl_data)
-  data_file <- basename(fl_data)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "dt"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
-}
-
-
-glifyColorAttachment = function(fl_color, group) {
-  data_dir <- dirname(fl_color)
-  data_file <- basename(fl_color)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "cl"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
-}
-
-glifyPopupAttachment = function(fl_popup, group) {
-  data_dir <- dirname(fl_popup)
-  data_file <- basename(fl_popup)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "pop"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
 }

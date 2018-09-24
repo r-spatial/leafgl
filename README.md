@@ -85,6 +85,34 @@ m
 ```
 ![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/pts_viridis.png)
 
+#### 100k polygons on a map
+
+In reality, it only 97112 polygons... But who wants to be pedantic here?
+
+This data was downloaded from https://download.geofabrik.de/europe/switzerland.html
+
+```r
+ch_lu = st_read("/media/timpanse/d8346522-ef28-4d63-9bf3-19fec6e13aab/bu_lenovo/software/testing/mapview/switzerland/landuse.shp")
+
+ch_lu = ch_lu[, c(1, 3, 4)] # don't handle NAs so far
+
+options(viewer = NULL)
+
+cols = colour_values_rgb(ch_lu$type, include_alpha = FALSE) / 255
+
+system.time({
+  m = leaflet() %>%
+    addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+    leaflet.glify:::addGlifyPolygons(data = ch_lu, color = cols, popup = "type") %>%
+    addMouseCoordinates() %>%
+    setView(lng = 8.3, lat = 46.85, zoom = 9)
+})
+
+m
+```
+
+![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/polys_ch.png)
+
 ## Contact ##
 
 Please file Pull requests, bug reports and feature requests at https://github.com/tim-salabim/leaflet.glify/issues
