@@ -21,7 +21,7 @@ Note: expect funny results if you set this to < 1.}
 
 \item{group}{a group name for the point layer.}
 
-\item{popup}{currently not implemented.}
+\item{popup}{the name of the column in data to be used for popups.}
 
 \item{...}{ignored.}
 }
@@ -53,7 +53,7 @@ options(viewer = NULL)
 system.time({
   m = leaflet() \%>\%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-    addGlifyPoints(data = pts, color = cols) \%>\%
+    addGlifyPoints(data = pts, color = cols, popup = "id") \%>\%
     addMouseCoordinates() \%>\%
     setView(lng = 10.5, lat = 49.5, zoom = 9)
 })

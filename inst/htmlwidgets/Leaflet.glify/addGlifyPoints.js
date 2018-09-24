@@ -1,10 +1,11 @@
-LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, opacity, size) {
+LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, popup_var, opacity, size) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
   var color_fl = document.getElementById(color_var + '-1-attachment' ).href;
+  if (popup_var) var popup_fl = document.getElementById(popup_var + '-1-attachment' ).href;
 
-  wget([data_fl, color_fl], function(points, colors) {
+  wget([data_fl, color_fl, popup_fl], function(points, colors, popups) {
     var cols = JSON.parse(colors);
     var clrs;
     if (cols.length === 1) {
@@ -13,13 +14,15 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, opacity, si
       clrs = function(index, point) { return cols[index]; };
     }
     var dat = JSON.parse(points);
+    if (popup_var) var pop = JSON.parse(popups);
     L.glify.points({
       map: map,
       click: function (e, point, xy) {
+        var idx = dat.indexOf(point);
         //set up a standalone popup (use a popup as a layer)
         L.popup()
             .setLatLng(point)
-            .setContent("lon:" + point[L.glify.longitudeKey] + ', lat:' + point[L.glify.latitudeKey])
+            .setContent(pop[idx].toString())
             .openOn(map);
 
         console.log(point);

@@ -12,7 +12,7 @@
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
 #' @param group a group name for the point layer.
-#' @param popup currently not implemented.
+#' @param popup the name of the column in data to be used for popups.
 #' @param ... ignored.
 #'
 #' @examples
@@ -38,7 +38,7 @@
 #' system.time({
 #'   m = leaflet() %>%
 #'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'     addGlifyPoints(data = pts, color = cols) %>%
+#'     addGlifyPoints(data = pts, color = cols, popup = "id") %>%
 #'     addMouseCoordinates() %>%
 #'     setView(lng = 10.5, lat = 49.5, zoom = 9)
 #' })
@@ -65,6 +65,8 @@ addGlifyPoints = function(map,
   dir.create(dir_data)
   dir_color = tempfile(pattern = "glify_points_cl")
   dir.create(dir_color)
+  dir_popup = tempfile(pattern = "glify_points_pop")
+  dir.create(dir_popup)
 
   # data
   data = sf::st_transform(data, 4326)
@@ -84,16 +86,33 @@ addGlifyPoints = function(map,
   color_var = paste0(group, "cl")
   cat(jsn, file = fl_color, append = FALSE)
 
+  # popup
+  if (!is.null(popup)) {
+    pop = jsonlite::toJSON(data[[popup]])
+    fl_popup = paste0(dir_popup, "/", group, "_popup.json")
+    popup_var = paste0(group, "pop")
+    cat(pop, file = fl_popup, append = FALSE)
+  } else {
+    popup_var = NULL
+  }
+
   # dependencies
   map$dependencies = c(
     map$dependencies,
     glifyDependencies(),
-    glifyDataDependency(fl_data, group),
-    glifyColorDependency(fl_color, group)
+    glifyDataAttachment(fl_data, group),
+    glifyColorAttachment(fl_color, group)
   )
 
+  if (!is.null(popup)) {
+    map$dependencies = c(
+      map$dependencies,
+      glifyPopupAttachment(fl_popup, group)
+    )
+  }
+
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
-                        data_var, color_var, opacity, weight)
+                        data_var, color_var, popup_var, opacity, weight)
 
 }
 
@@ -129,7 +148,7 @@ glifyDependencies = function() {
   )
 }
 
-glifyDataDependency = function(fl_data, group) {
+glifyDataAttachment = function(fl_data, group) {
   data_dir <- dirname(fl_data)
   data_file <- basename(fl_data)
   list(
@@ -143,12 +162,25 @@ glifyDataDependency = function(fl_data, group) {
 }
 
 
-glifyColorDependency = function(fl_color, group) {
+glifyColorAttachment = function(fl_color, group) {
   data_dir <- dirname(fl_color)
   data_file <- basename(fl_color)
   list(
     htmltools::htmlDependency(
       name = paste0(group, "cl"),
+      version = 1,
+      src = c(file = data_dir),
+      attachment = list(data_file)
+    )
+  )
+}
+
+glifyPopupAttachment = function(fl_popup, group) {
+  data_dir <- dirname(fl_popup)
+  data_file <- basename(fl_popup)
+  list(
+    htmltools::htmlDependency(
+      name = paste0(group, "pop"),
       version = 1,
       src = c(file = data_dir),
       attachment = list(data_file)

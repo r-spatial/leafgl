@@ -19,7 +19,7 @@ options(viewer = NULL)
 system.time({
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPoints(data = pts, color = cols) %>%
+    addGlifyPoints(data = pts, color = cols, popup = "id") %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6)
 })
