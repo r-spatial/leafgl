@@ -52,7 +52,13 @@ addGlifyPolygons = function(map,
   # dir.create(dir_popup)
 
   # data
-  data = sf::st_transform(data, 4326)
+  geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+  if (is.null(popup)) {
+    data = sf::st_sf(id = 1:length(geom),
+                     geometry = geom)
+  } else {
+    data = sf::st_transform(data[, popup], crs = 4326)
+  }
   # crds = sf::st_coordinates(data)[, c(2, 1)]
 
   fl_data = paste0(dir_data, "/", group, "_data.json")

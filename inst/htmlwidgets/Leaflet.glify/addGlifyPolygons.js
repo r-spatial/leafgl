@@ -14,19 +14,26 @@ LeafletWidget.methods.addGlifyPolygons = function(data_var, color_var, popup_var
     } else {
       clrs = function(index, feature) { return cols[index]; };
     }
+
+    if (popup_var) {
+        var pop = function (e, feature) {
+          L.popup()
+            .setLatLng(e.latlng)
+            .setContent(feature.properties[[popup_var]].toString())
+            .openOn(map);
+
+          console.log(feature);
+          console.log(e);
+        };
+    } else {
+        var pop = null;
+    }
+
     var dat = JSON.parse(polygons);
     //if (popup_var) var pop = JSON.parse(popups);
     L.glify.shapes({
       map: map,
-      click: function (e, feature) {
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(feature.properties[[popup_var]])
-          .openOn(map);
-
-        console.log(feature);
-        console.log(e);
-      },
+      click: pop,
       data: dat,
       color: clrs,
       opacity: opacity
