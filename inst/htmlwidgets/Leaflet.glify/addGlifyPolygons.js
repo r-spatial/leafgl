@@ -36,7 +36,8 @@ LeafletWidget.methods.addGlifyPolygons = function(data_var, color_var, popup_var
       click: pop,
       data: dat,
       color: clrs,
-      opacity: opacity
+      opacity: opacity,
+      className: "glify-pls"
     });
   });
 

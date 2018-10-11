@@ -15,7 +15,7 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, popup_var, 
     }
     var dat = JSON.parse(points);
     if (popup_var) var pop = JSON.parse(popups);
-    L.glify.points({
+    var test = L.glify.points({
       map: map,
       click: function (e, point, xy) {
         var idx = dat.indexOf(point);
@@ -30,8 +30,10 @@ LeafletWidget.methods.addGlifyPoints = function(data_var, color_var, popup_var, 
       data: dat,
       color: clrs,
       opacity: opacity,
-      size: size
+      size: size,
+      className: "test"
     });
+    map.layerManager.addLayer(test, null, null, "test");
   });
 
   function wget(urls, fn) {
