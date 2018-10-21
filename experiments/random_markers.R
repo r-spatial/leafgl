@@ -45,10 +45,7 @@ pts_lst = lapply(seq(st), function(i) {
   return(pts)
 })
 
-options(viewer = NULL)
-
-m = leaflet() %>%
-  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+m = mapview()@map %>%
   addMouseCoordinates() %>%
   setView(lng = 0, lat = 0, zoom = 2)
 
@@ -59,7 +56,8 @@ for (i in 1:5) {
                      data = pts_lst[[i]],
                      weight = 5,
                      color = cols[i, , drop = FALSE],
-                     group = as.character(i))
+                     group = as.character(i),
+                     popup = "id")
 }
 
 options(viewer = NULL)
