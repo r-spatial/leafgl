@@ -3,8 +3,9 @@ library(leaflet)
 library(leaflet.glify)
 library(sf)
 library(colourvalues)
+library(data.table)
 
-n = 1e6
+n = 1e5
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
@@ -26,35 +27,42 @@ system.time({
 
 m
 
-### try 10 mio - partition into 5 chunks to avoid size overflow in the browser
+### try 10 mio - partition into 4 chunks to avoid size overflow in the browser
 n = 10e6
 
 df1 = data.frame(id = 1:n,
-                 x = runif(n, -180, 180),
-                 y = runif(n, -85, 85))
+                 x = c(runif(n/4, -160, 0),
+                       runif(n/4, -160, 0),
+                       runif(n/4, 0, 160),
+                       runif(n/4, 0, 160)),
+                 y = c(runif(n/4, -80, 0),
+                       runif(n/4, 0, 80),
+                       runif(n/4, -80, 0),
+                       runif(n/4, 0, 80)))
 
-st = seq(1, n, 2e6)
-nd = st + 2e6 - 1
+pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
-cols = colour_values_rgb(1:5, include_alpha = FALSE) / 255
+cols = colour_values_rgb(1:4, include_alpha = FALSE) / 255
 
-pts_lst = lapply(seq(st), function(i) {
-  print(i)
-  tmp = df1[st[i]:nd[i], ]
-  pts = st_as_sf(tmp, coords = c("x", "y"), crs = 4326)
-  return(pts)
+system.time({
+  pts_lst = lapply(
+    split(as.data.table(pts), (as.numeric(rownames(pts))-1) %/% 2.5e6),
+    st_as_sf
+  )
 })
+#   user  system elapsed
+# 42.298   0.050  42.344
 
 m = mapview()@map %>%
   addMouseCoordinates() %>%
   setView(lng = 0, lat = 0, zoom = 2)
 
 
-for (i in 1:5) {
+for (i in 1:4) {
   print(i)
   m = addGlifyPoints(map = m,
                      data = pts_lst[[i]],
-                     weight = 5,
+                     weight = i * 5,
                      color = cols[i, , drop = FALSE],
                      group = as.character(i),
                      popup = "id")
