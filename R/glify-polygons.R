@@ -43,6 +43,52 @@ addGlifyPolygons = function(map,
   if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
     stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast")
 
+  # data
+  if (is.null(popup)) {
+    geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+    data = sf::st_sf(id = 1:length(geom),
+                     geometry = geom)
+  } else {
+    data = sf::st_transform(data[, popup], crs = 4326)
+  }
+
+  data = geojsonsf::sf_geojson(data)
+
+  # color
+  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+  color = as.data.frame(color, stringsAsFactors = FALSE)
+  colnames(color) = c("r", "g", "b")
+
+  cols = jsonlite::toJSON(color)
+
+  # dependencies
+  map$dependencies = c(
+    map$dependencies,
+    glifyDependencies()
+  )
+
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygons',
+                        data, cols, popup, opacity, weight)
+
+}
+
+
+### via attachments
+addGlifyPolygonsFl = function(map,
+                              data,
+                              color = cbind(0, 0.2, 1),
+                              opacity = 0.6,
+                              weight = 10,
+                              group = "glpolygons",
+                              popup = NULL,
+                              ...) {
+
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
+  if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
+    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast")
+
   # temp directories
   dir_data = tempfile(pattern = "glify_polygons_dt")
   dir.create(dir_data)
@@ -100,7 +146,7 @@ addGlifyPolygons = function(map,
   #   )
   # }
 
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygons',
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygonsFl',
                         data_var, color_var, popup, opacity, weight)
 
 }

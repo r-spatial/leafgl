@@ -61,6 +61,56 @@ addGlifyPoints = function(map,
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
 
+  # data
+  data = sf::st_transform(data, 4326)
+  crds = sf::st_coordinates(data)[, c(2, 1)]
+
+  # color
+  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+  color = as.data.frame(color, stringsAsFactors = FALSE)
+  colnames(color) = c("r", "g", "b")
+
+  color = jsonlite::toJSON(color)
+
+  # popup
+  if (!is.null(popup)) {
+    popup = jsonlite::toJSON(data[[popup]])
+  } else {
+    popup = NULL
+  }
+
+  # convert data to json
+  data = jsonlite::toJSON(crds, digits = 7)
+
+  # dependencies
+  map$dependencies = c(
+    map$dependencies,
+    glifyDependencies()
+  )
+
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
+                        data, color, popup, opacity, weight)
+
+}
+
+
+
+
+
+### via attachments
+addGlifyPointsFl = function(map,
+                          data,
+                          color = cbind(0, 0.2, 1),
+                          opacity = 1,
+                          weight = 10,
+                          group = "glpoints",
+                          popup = NULL,
+                          ...) {
+
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
+
   # temp directories
   dir_data = tempfile(pattern = "glify_points_dt")
   dir.create(dir_data)
@@ -100,7 +150,7 @@ addGlifyPoints = function(map,
   # dependencies
   map$dependencies = c(
     map$dependencies,
-    glifyDependencies(),
+    glifyDependenciesFl(),
     glifyDataAttachment(fl_data, group),
     glifyColorAttachment(fl_color, group)
   )
@@ -112,7 +162,7 @@ addGlifyPoints = function(map,
     )
   }
 
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsFl',
                         data_var, color_var, popup_var, opacity, weight)
 
 }

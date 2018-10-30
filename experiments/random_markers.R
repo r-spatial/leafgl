@@ -5,7 +5,7 @@ library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 1e5
+n = 10e6
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
@@ -20,7 +20,7 @@ system.time({
 
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPoints(data = pts, color = cols, popup = "id") %>%
+    addGlifyPoints(data = pts) %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6)
 })

@@ -1,7 +1,7 @@
 Package: leaflet.glify
 Type: Package
 Title: Bindings for Leaflet.glify
-Version: 0.1.0
+Version: 0.1.1
 Author: Tim Appelhans
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.

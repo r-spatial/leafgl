@@ -28,6 +28,36 @@ glifyDependencies = function() {
   )
 }
 
+# helpers
+glifyDependenciesFl = function() {
+  list(
+    htmltools::htmlDependency(
+      "addGlifyPoints",
+      '0.0.1',
+      system.file("htmlwidgets/Leaflet.glify", package = "leaflet.glify"),
+      script = c(
+        "addGlifyPoints.js",
+        "addGlifyPolygonsFl.js",
+        "glify.js",
+        "src/js/canvasoverlay.js",
+        "src/js/gl.js",
+        "src/js/index.js",
+        "src/js/map-matrix.js",
+        "src/js/points.js",
+        "src/js/shapes.js",
+        "src/js/utils.js",
+        "src/shader/fragment/dot.glsl",
+        "src/shader/fragment/point.glsl",
+        "src/shader/fragment/polygon.glsl",
+        "src/shader/fragment/puck.glsl",
+        "src/shader/fragment/simple-circle.glsl",
+        "src/shader/fragment/aquare.glsl",
+        "src/shader/vertex/default.glsl"
+      )
+    )
+  )
+}
+
 glifyDataAttachment = function(fl_data, group) {
   data_dir <- dirname(fl_data)
   data_file <- basename(fl_data)
