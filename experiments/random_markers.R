@@ -5,7 +5,7 @@ library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 10e6
+n = 1e6
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
@@ -26,6 +26,8 @@ system.time({
 })
 
 m
+
+mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
 
 ### try 10 mio - partition into 4 chunks to avoid size overflow in the browser
 n = 10e6

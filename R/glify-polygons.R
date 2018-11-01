@@ -73,6 +73,88 @@ addGlifyPolygons = function(map,
 }
 
 
+### via src
+addGlifyPolygonsSrc = function(map,
+                               data,
+                               color = cbind(0, 0.2, 1),
+                               opacity = 0.6,
+                               weight = 10,
+                               group = "glpolygons",
+                               popup = NULL,
+                               ...) {
+
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
+  if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
+    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast")
+
+  # temp directories
+  dir_data = tempfile(pattern = "glify_polygons_dat")
+  dir.create(dir_data)
+  dir_color = tempfile(pattern = "glify_polygons_col")
+  dir.create(dir_color)
+  # dir_popup = tempfile(pattern = "glify_polygons_pop")
+  # dir.create(dir_popup)
+
+  # data
+  geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+  if (is.null(popup)) {
+    data = sf::st_sf(id = 1:length(geom),
+                     geometry = geom)
+  } else {
+    data = sf::st_transform(data[, popup], crs = 4326)
+  }
+  # crds = sf::st_coordinates(data)[, c(2, 1)]
+
+  fl_data = paste0(dir_data, "/", group, "_data.json")
+  pre = paste0('var data = data || {}; data["', group, '"] = ')
+  writeLines(pre, fl_data)
+  cat('[', geojsonsf::sf_geojson(data), '];',
+      file = fl_data, sep = "", append = TRUE)
+
+  # color
+  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+  color = as.data.frame(color, stringsAsFactors = FALSE)
+  colnames(color) = c("r", "g", "b")
+
+  fl_color = paste0(dir_color, "/", group, "_color.json")
+  pre = paste0('var col = col || {}; col["', group, '"] = ')
+  writeLines(pre, fl_color)
+  cat('[', jsonlite::toJSON(color), '];',
+      file = fl_color, append = TRUE)
+
+  # popup
+  # if (!is.null(popup)) {
+  #   pop = jsonlite::toJSON(data[[popup]])
+  #   fl_popup = paste0(dir_popup, "/", group, "_popup.json")
+  #   popup_var = paste0(group, "pop")
+  #   cat(pop, file = fl_popup, append = FALSE)
+  # } else {
+  #   popup_var = NULL
+  # }
+
+  # dependencies
+  map$dependencies = c(
+    map$dependencies,
+    glifyDependenciesSrc(),
+    glifyDataAttachmentSrc(fl_data, group),
+    glifyColorAttachmentSrc(fl_color, group)
+  )
+
+  # if (!is.null(popup)) {
+  #   map$dependencies = c(
+  #     map$dependencies,
+  #     glifyPopupAttachment(fl_popup, group)
+  #   )
+  # }
+
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygonsSrc',
+                        group, popup, opacity)
+
+}
+
+
 ### via attachments
 addGlifyPolygonsFl = function(map,
                               data,
