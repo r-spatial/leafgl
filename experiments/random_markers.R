@@ -73,4 +73,5 @@ for (i in 1:4) {
 
 options(viewer = NULL)
 
-m
+m %>%
+  addLayersControl(overlayGroups = as.character(1:4))
