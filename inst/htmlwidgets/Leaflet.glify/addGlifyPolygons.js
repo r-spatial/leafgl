@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, size) {
+LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, size, group) {
 
   var map = this;
 
@@ -9,27 +9,32 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, si
       clrs = function(index, feature) { return cols[index]; };
     }
 
+    var pop;
     if (popup) {
-        var pop = function (e, feature) {
-          L.popup()
-            .setLatLng(e.latlng)
-            .setContent(feature.properties[[popup]].toString())
-            .openOn(map);
+        pop = function (e, feature) {
+          if (map.hasLayer(shapeslayer.glLayer)) {
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(feature.properties[[popup]].toString())
+              .openOn(map);
+          }
 
           console.log(feature);
           console.log(e);
         };
     } else {
-        var pop = null;
+        pop = null;
     }
 
-    L.glify.shapes({
+    var shapeslayer = L.glify.shapes({
       map: map,
       click: pop,
       data: data,
       color: clrs,
       opacity: opacity,
-      // className: "glify-pls"
+      className: group
     });
+
+  map.layerManager.addLayer(shapeslayer.glLayer, null, null, group);
 
 };

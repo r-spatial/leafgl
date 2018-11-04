@@ -68,7 +68,7 @@ addGlifyPolygons = function(map,
   )
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygons',
-                        data, cols, popup, opacity, weight)
+                        data, cols, popup, opacity, weight, group)
 
 }
 

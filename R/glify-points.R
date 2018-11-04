@@ -89,7 +89,7 @@ addGlifyPoints = function(map,
   )
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
-                        data, color, popup, opacity, weight)
+                        data, color, popup, opacity, weight, group)
 
 }
 

@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size, group) {
 
   var map = this;
   //var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
@@ -13,17 +13,20 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
     } else {
       clrs = function(index, point) { return cols[index]; };
     }
+
     //var dat = JSON.parse(points);
     //if (popup_var) var pop = JSON.parse(popups);
-    L.glify.points({
+    var pointslayer = L.glify.points({
       map: map,
       click: function (e, point, xy) {
         var idx = data.indexOf(point);
         //set up a standalone popup (use a popup as a layer)
-        L.popup()
+        if (map.hasLayer(pointslayer.glLayer)) {
+          L.popup()
             .setLatLng(point)
             .setContent(popup[idx].toString())
             .openOn(map);
+        }
 
         console.log(point);
       },
@@ -31,9 +34,11 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
       color: clrs,
       opacity: opacity,
       size: size,
-      // className: "test"
+      className: group
     });
-    //map.layerManager.addLayer(test, null, null, "test");
+
+  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
+
   //});
 
 };
