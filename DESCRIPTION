@@ -12,6 +12,5 @@ RoxygenNote: 6.1.0
 Imports:
   geojsonsf,
   htmltools,
-  jsonlite,
   leaflet,
   sf

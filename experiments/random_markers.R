@@ -8,6 +8,7 @@ library(data.table)
 n = 1e6
 
 df1 = data.frame(id = 1:n,
+                 id2 = n:1,
                  x = rnorm(n, 10, 1),
                  y = rnorm(n, 49, 0.8))
 

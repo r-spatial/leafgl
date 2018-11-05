@@ -70,17 +70,19 @@ addGlifyPoints = function(map,
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
 
-  color = jsonlite::toJSON(color)
-
+  # color = jsonlite::toJSON(color)
+  color = jsonify::to_json(color)
   # popup
   if (!is.null(popup)) {
-    popup = jsonlite::toJSON(data[[popup]])
+    # popup = jsonlite::toJSON(data[[popup]])
+    popup = jsonify::to_json(data[[popup]])
   } else {
     popup = NULL
   }
 
   # convert data to json
-  data = jsonlite::toJSON(crds, digits = 7)
+  # data = jsonlite::toJSON(crds, digits = 7)
+  data = jsonify::to_json(crds)
 
   # dependencies
   map$dependencies = c(

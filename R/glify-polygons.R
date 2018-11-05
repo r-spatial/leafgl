@@ -46,8 +46,7 @@ addGlifyPolygons = function(map,
   # data
   if (is.null(popup)) {
     geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
-    data = sf::st_sf(id = 1:length(geom),
-                     geometry = geom)
+    data = sf::st_sf(id = 1:length(geom), geometry = geom)
   } else {
     data = sf::st_transform(data[, popup], crs = 4326)
   }
@@ -59,7 +58,8 @@ addGlifyPolygons = function(map,
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
 
-  cols = jsonlite::toJSON(color)
+  # cols = jsonlite::toJSON(color)
+  cols = jsonify::to_json(color)
 
   # dependencies
   map$dependencies = c(
