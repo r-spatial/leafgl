@@ -68,6 +68,7 @@ glifyDependenciesSrc = function() {
       script = c(
         "addGlifyPoints.js",
         "addGlifyPolygonsSrc.js",
+        "addGlifyPointsSrc.js",
         "glify.js",
         "src/js/canvasoverlay.js",
         "src/js/gl.js",

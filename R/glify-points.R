@@ -95,7 +95,79 @@ addGlifyPoints = function(map,
 
 }
 
+### via src
+addGlifyPointsSrc = function(map,
+                            data,
+                            color = cbind(0, 0.2, 1),
+                            opacity = 1,
+                            weight = 10,
+                            group = "glpoints",
+                            popup = NULL,
+                            ...) {
 
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
+
+  # temp directories
+  dir_data = tempfile(pattern = "glify_points_dat")
+  dir.create(dir_data)
+  dir_color = tempfile(pattern = "glify_points_col")
+  dir.create(dir_color)
+  dir_popup = tempfile(pattern = "glify_points_pop")
+  dir.create(dir_popup)
+
+  # data
+  data = sf::st_transform(data, 4326)
+  crds = sf::st_coordinates(data)[, c(2, 1)]
+
+  fl_data = paste0(dir_data, "/", group, "_data.json")
+  pre = paste0('var data = data || {}; data["', group, '"] = ')
+  writeLines(pre, fl_data)
+  cat('[', jsonify::to_json(crds), '];',
+      file = fl_data, sep = "", append = TRUE)
+
+  # color
+  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+  color = as.data.frame(color, stringsAsFactors = FALSE)
+  colnames(color) = c("r", "g", "b")
+
+  fl_color = paste0(dir_color, "/", group, "_color.json")
+  pre = paste0('var col = col || {}; col["', group, '"] = ')
+  writeLines(pre, fl_color)
+  cat('[', jsonlite::toJSON(color), '];',
+      file = fl_color, append = TRUE)
+
+  # popup
+  if (!is.null(popup)) {
+    fl_popup = paste0(dir_popup, "/", group, "_popup.json")
+    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
+    writeLines(pre, fl_popup)
+    cat('[', jsonlite::toJSON(data[[popup]]), '];',
+        file = fl_popup, append = TRUE)
+  } else {
+    popup = NULL
+  }
+
+  # dependencies
+  map$dependencies = c(
+    map$dependencies,
+    glifyDependenciesSrc(),
+    glifyDataAttachmentSrc(fl_data, group),
+    glifyColorAttachmentSrc(fl_color, group)
+  )
+
+  if (!is.null(popup)) {
+    map$dependencies = c(
+      map$dependencies,
+      glifyPopupAttachmentSrc(fl_popup, group)
+    )
+  }
+
+  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc',
+                        group, opacity, weight)
+
+}
 
 
 

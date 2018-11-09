@@ -19,12 +19,11 @@ system.time({
 
   options(viewer = NULL)
 
-  m = leaflet() %>%
-    addProviderTiles(provider = providers$CartoDB.Positron) %>%
+  m = mapview()@map %>%
     addGlifyPoints(data = pts, color = cols, group = "pts", popup = "id") %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
-    addLayersControl(overlayGroups = "pts")
+    mapview:::updateOverlayGroups(group = "pts")
 })
 
 m
@@ -32,7 +31,7 @@ m
 mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
 
 ### try 10 mio - partition into 4 chunks to avoid size overflow in the browser
-n = 10e6
+n = 1e7
 
 df1 = data.frame(id = 1:n,
                  x = c(runif(n/4, -160, 0),
@@ -64,15 +63,15 @@ m = mapview()@map %>%
 
 for (i in 1:4) {
   print(i)
-  m = addGlifyPoints(map = m,
-                     data = pts_lst[[i]],
-                     weight = i * 5,
-                     color = cols[i, , drop = FALSE],
-                     group = as.character(i),
-                     popup = "id")
+  m = leaflet.glify:::addGlifyPointsSrc(map = m,
+                                        data = pts_lst[[i]],
+                                        weight = i * 5,
+                                        color = cols[i, , drop = FALSE],
+                                        group = as.character(i),
+                                        popup = "id")
 }
 
 options(viewer = NULL)
 
 m %>%
-  addLayersControl(overlayGroups = as.character(1:4))
+  mapview:::updateOverlayGroups(group = as.character(1:4))
