@@ -9,11 +9,11 @@ LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size) {
     } else {
       clrs = function(index, feature) { return cols[index]; };
     }
-
     var pointslayer = L.glify.points({
       map: map,
       click: function (e, point, xy) {
-        var idx = data[group][0].indexOf(point);
+        //var idx = data[group][0].indexOf(point);
+        var idx = data[group][0].findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
         if (map.hasLayer(pointslayer.glLayer)) {
           L.popup()
@@ -23,6 +23,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size) {
         }
 
         console.log(point);
+
       },
       data: data[group][0],
       color: clrs,
@@ -32,7 +33,5 @@ LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size) {
     });
 
   map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
-
-  //});
 
 };

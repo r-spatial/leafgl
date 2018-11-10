@@ -19,7 +19,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
     var pointslayer = L.glify.points({
       map: map,
       click: function (e, point, xy) {
-        var idx = data.indexOf(point);
+        var idx = data.findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
         if (map.hasLayer(pointslayer.glLayer)) {
           L.popup()
