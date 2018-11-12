@@ -20,7 +20,7 @@ system.time({
   options(viewer = NULL)
 
   m = mapview()@map %>%
-    addGlifyPoints(data = pts, color = cols, group = "pts", popup = "id") %>%
+    leaflet.glify:::addGlifyPointsSrc2(data = pts, group = "pts", popup = "id") %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
     mapview:::updateOverlayGroups(group = "pts")
