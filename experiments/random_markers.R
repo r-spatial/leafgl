@@ -5,7 +5,7 @@ library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 1e6
+n = 5e6
 
 df1 = data.frame(id = 1:n,
                  id2 = n:1,
