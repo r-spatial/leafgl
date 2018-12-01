@@ -63,7 +63,7 @@ m = mapview()@map %>%
 
 for (i in 1:4) {
   print(i)
-  m = leaflet.glify:::addGlifyPointsSrc(map = m,
+  m = leaflet.glify:::addGlifyPointsSrc2(map = m,
                                         data = pts_lst[[i]],
                                         weight = i * 5,
                                         color = cols[i, , drop = FALSE],
@@ -75,3 +75,5 @@ options(viewer = NULL)
 
 m %>%
   mapview:::updateOverlayGroups(group = as.character(1:4))
+
+mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)

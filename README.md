@@ -106,6 +106,7 @@ m
 ![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/pts_blue.png)
 
 <br>
+
 -----
 
 #### Colouring points by value mapping
@@ -146,6 +147,7 @@ m
 ![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/pts_viridis.png)
 
 <br>
+
 -----
 
 #### 100k polygons on a map
@@ -187,7 +189,30 @@ m
 ![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/polys_ch.png)
 
 <br>
+
 -----
+
+## Shiny ##
+
+In order to use leaflet.glify in a shiny context, we need to include the
+necessary javascript dependencies in the ui component. Here's an example:
+
+```r
+ui <- fluidPage(
+  leafletOutput("mymap"),
+  tags$script(leaflet.glify:::glifyDependencies())
+)
+
+server <- function(input, output, session) {
+  output$mymap <- renderLeaflet(m)
+}
+
+shinyApp(ui, server)
+```
+<br>
+
+-----
+
 
 ## Contact ##
 
