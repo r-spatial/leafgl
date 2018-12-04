@@ -2,3 +2,9 @@
 
 export(addGlifyPoints)
 export(addGlifyPolygons)
+export(glifyOutput)
+export(renderGlify)
+importFrom(htmltools,tagList)
+importFrom(htmltools,tags)
+importFrom(leaflet,leafletOutput)
+importFrom(leaflet,renderLeaflet)
