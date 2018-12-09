@@ -237,7 +237,7 @@ addGlifyPointsSrc2 = function(map,
     map$dependencies,
     glifyDependenciesSrc(),
     glifyDataAttachmentSrc(fl_data1, grp1),
-    glifyDataAttachmentSrc(fl_data2, grp2),
+    glifyDataAttachmentSrc(fl_data2, grp1, TRUE),
     glifyColorAttachmentSrc(fl_color, group)
   )
 
