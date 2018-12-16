@@ -82,7 +82,7 @@ addGlifyPoints = function(map,
 
   # convert data to json
   # data = jsonlite::toJSON(crds, digits = 7)
-  data = jsonify::to_json(crds)
+  data = jsonify::to_json(crds, ...)
 
   # dependencies
   map$dependencies = c(
@@ -203,11 +203,11 @@ addGlifyPointsSrc2 = function(map,
   fl_data2 = paste0(dir_data, "/", grp2, "_data.json")
   pre1 = paste0('var data = data || {}; data["', grp1, '"] = ')
   writeLines(pre1, fl_data1)
-  cat('[', jsonify::to_json(crds[1:100, ]), '];',
+  cat('[', jsonify::to_json(crds[1:100, ], ...), '];',
       file = fl_data1, sep = "", append = TRUE)
   pre2 = paste0('var data = data || {}; data["', grp2, '"] = ')
   writeLines(pre2, fl_data2)
-  cat('[', jsonify::to_json(crds[101:nrow(crds), ]), '];',
+  cat('[', jsonify::to_json(crds[101:nrow(crds), ], ...), '];',
       file = fl_data2, sep = "", append = TRUE)
 
   # color
