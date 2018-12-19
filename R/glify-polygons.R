@@ -51,7 +51,7 @@ addGlifyPolygons = function(map,
     data = sf::st_transform(data[, popup], crs = 4326)
   }
 
-  data = geojsonsf::sf_geojson(data)
+  data = geojsonsf::sf_geojson(data, ...)
 
   # color
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
@@ -59,7 +59,7 @@ addGlifyPolygons = function(map,
   colnames(color) = c("r", "g", "b")
 
   # cols = jsonlite::toJSON(color)
-  cols = jsonify::to_json(color)
+  cols = jsonify::to_json(color, digits = 3)
 
   # dependencies
   map$dependencies = c(
@@ -110,7 +110,7 @@ addGlifyPolygonsSrc = function(map,
   fl_data = paste0(dir_data, "/", group, "_data.json")
   pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
-  cat('[', geojsonsf::sf_geojson(data), '];',
+  cat('[', geojsonsf::sf_geojson(data, ...), '];',
       file = fl_data, sep = "", append = TRUE)
 
   # color
@@ -121,7 +121,7 @@ addGlifyPolygonsSrc = function(map,
   fl_color = paste0(dir_color, "/", group, "_color.json")
   pre = paste0('var col = col || {}; col["', group, '"] = ')
   writeLines(pre, fl_color)
-  cat('[', jsonlite::toJSON(color), '];',
+  cat('[', jsonlite::toJSON(color, digits = 3), '];',
       file = fl_color, append = TRUE)
 
   # popup
