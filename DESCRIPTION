@@ -5,12 +5,14 @@ Version: 0.1.1
 Author: Tim Appelhans
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.
-License: GPL v3
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
 Imports:
   geojsonsf,
+  jsonify, 
+  jsonlite,
   htmltools,
   leaflet,
   sf
