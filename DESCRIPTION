@@ -16,4 +16,5 @@ Imports:
   sf
 Suggests: 
     testthat, 
-    mapview
+    mapview, 
+    shiny

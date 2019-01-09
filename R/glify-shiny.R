@@ -62,6 +62,7 @@ glifyOutput <- function(outputId, width = "100%", height = 400){
 #' library(leaflet)
 #' library(leaflet.glify)
 #' library(sf)
+#' library(shiny)
 #'
 #' n = 1e4
 #' df1 = data.frame(id = 1:n,
