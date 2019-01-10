@@ -103,7 +103,7 @@ system.time({
 
 m
 ```
-![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/pts_blue.png)
+![](readme_figs/pts_blue.png)
 
 <br>
 
@@ -144,7 +144,7 @@ system.time({
 
 m
 ```
-![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/pts_viridis.png)
+![](readme_figs/pts_viridis.png)
 
 <br>
 
@@ -186,7 +186,7 @@ system.time({
 m
 ```
 
-![](https://raw.githubusercontent.com/tim-salabim/leaflet.glify/master/inst/polys_ch.png)
+![](readme_figs/polys_ch.png)
 
 <br>
 

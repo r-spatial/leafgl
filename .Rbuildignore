@@ -1,3 +1,4 @@
+^readme_figs$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^experiments
