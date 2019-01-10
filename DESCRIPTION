@@ -14,3 +14,7 @@ Imports:
   htmltools,
   leaflet,
   sf
+Suggests: 
+    testthat, 
+    mapview, 
+    shiny
