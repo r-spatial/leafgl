@@ -1,4 +1,4 @@
-Package: leaflet.glify
+Package: leafgl
 Type: Package
 Title: Bindings for Leaflet.glify
 Version: 0.1.1

@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, size, group) {
+LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group) {
 
   var map = this;
 

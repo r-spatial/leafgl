@@ -1,6 +1,6 @@
 library(sf)
 library(mapview)
-library(leaflet.glify)
+library(leafgl)
 library(leaflet)
 library(data.table)
 
@@ -21,11 +21,11 @@ m = mapview()@map %>%
 ## add each tile embedded via <src=...>
 for (i in 1:length(al_lst)) {
   print(i)
-  m = leaflet.glify:::addGlifyPolygonsSrc(map = m,
-                                          data = al_lst[[i]],
-                                          color = cbind(0, 0, 0),
-                                          opacity = 0.9,
-                                          group = as.character(i))
+  m = leafgl:::addGlPolygonsSrc(map = m,
+                                data = al_lst[[i]],
+                                color = cbind(0, 0, 0),
+                                opacity = 0.9,
+                                group = as.character(i))
 }
 
 ## render in browser rather than viewer

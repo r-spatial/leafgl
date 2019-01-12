@@ -8,7 +8,7 @@
 #' \dontrun{
 #' library(mapview)
 #' library(leaflet)
-#' library(leaflet.glify)
+#' library(leafgl)
 #' library(sf)
 #' library(colourvalues)
 #'
@@ -20,22 +20,21 @@
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'   addGlifyPolygons(data = fran, color = cols) %>%
+#'   addGlPolygons(data = fran, color = cols) %>%
 #'   addMouseCoordinates() %>%
 #'   setView(lng = 10.5, lat = 49.5, zoom = 8)
 #' }
 #'
-#' @describeIn addGlifyPoints add polygons to a leaflet map using Leaflet.glify
-#' @aliases addGlifyPolygons
-#' @export addGlifyPolygons
-addGlifyPolygons = function(map,
-                            data,
-                            color = cbind(0, 0.2, 1),
-                            opacity = 0.6,
-                            weight = 10,
-                            group = "glpolygons",
-                            popup = NULL,
-                            ...) {
+#' @describeIn addGlPoints add polygons to a leaflet map using Leaflet.glify
+#' @aliases addGlPolygons
+#' @export addGlPolygons
+addGlPolygons = function(map,
+                         data,
+                         color = cbind(0, 0.2, 1),
+                         opacity = 0.6,
+                         group = "glpolygons",
+                         popup = NULL,
+                         ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -68,20 +67,20 @@ addGlifyPolygons = function(map,
   )
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygons',
-                        data, cols, popup, opacity, weight, group)
+                        data, cols, popup, opacity, group)
 
 }
 
 
 ### via src
-addGlifyPolygonsSrc = function(map,
-                               data,
-                               color = cbind(0, 0.2, 1),
-                               opacity = 0.6,
-                               weight = 10,
-                               group = "glpolygons",
-                               popup = NULL,
-                               ...) {
+addGlPolygonsSrc = function(map,
+                            data,
+                            color = cbind(0, 0.2, 1),
+                            opacity = 0.6,
+                            weight = 10,
+                            group = "glpolygons",
+                            popup = NULL,
+                            ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -156,14 +155,14 @@ addGlifyPolygonsSrc = function(map,
 
 
 ### via attachments
-addGlifyPolygonsFl = function(map,
-                              data,
-                              color = cbind(0, 0.2, 1),
-                              opacity = 0.6,
-                              weight = 10,
-                              group = "glpolygons",
-                              popup = NULL,
-                              ...) {
+addGlPolygonsFl = function(map,
+                           data,
+                           color = cbind(0, 0.2, 1),
+                           opacity = 0.6,
+                           weight = 10,
+                           group = "glpolygons",
+                           popup = NULL,
+                           ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -229,6 +228,6 @@ addGlifyPolygonsFl = function(map,
   # }
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygonsFl',
-                        data_var, color_var, popup, opacity, weight)
+                        data_var, color_var, popup, opacity)
 
 }

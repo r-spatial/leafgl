@@ -1,16 +1,16 @@
-#' Use Glify in shiny
+#' Use leafgl in shiny
 #'
 #' @inheritParams leaflet::leafletOutput
 #' @importFrom leaflet leafletOutput
 #' @importFrom htmltools tagList tags
-#' @return A UI for rendering Glify
+#' @return A UI for rendering leafgl
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' library(mapview)
 #' library(leaflet)
-#' library(leaflet.glify)
+#' library(leafgl)
 #' library(sf)
 #'
 #' n = 1e4
@@ -27,7 +27,7 @@
 #'  addLayersControl(overlayGroups = "pts")
 #'
 #' ui <- fluidPage(
-#'     glifyOutput("mymap")
+#'     leafglOutput("mymap")
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -38,7 +38,7 @@
 #' }
 #'
 
-glifyOutput <- function(outputId, width = "100%", height = 400){
+leafglOutput <- function(outputId, width = "100%", height = 400){
   tagList(
     leafletOutput(outputId = outputId, width = width, height = height),
     tags$script(glifyDependencies())
@@ -47,20 +47,20 @@ glifyOutput <- function(outputId, width = "100%", height = 400){
 
 # Just for consistency
 #
-#' Use Glify in shiny
+#' Use leafgl in shiny
 #'
 #' @importFrom leaflet renderLeaflet
 #'
 #' @inheritParams leaflet::renderLeaflet
 #'
-#' @return A server function for rendering Glify
+#' @return A server function for rendering leafgl
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' library(mapview)
 #' library(leaflet)
-#' library(leaflet.glify)
+#' library(leafgl)
 #' library(sf)
 #' library(shiny)
 #'
@@ -72,13 +72,13 @@ glifyOutput <- function(outputId, width = "100%", height = 400){
 #'
 #' m = leaflet() %>%
 #'  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'  addGlifyPoints(data = pts, group = "pts") %>%
+#'  addGlPoints(data = pts, group = "pts") %>%
 #'  addMouseCoordinates() %>%
 #'  setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
 #'  addLayersControl(overlayGroups = "pts")
 #'
 #' ui <- fluidPage(
-#'     glifyOutput("mymap")
+#'     leafglOutput("mymap")
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -88,7 +88,7 @@ glifyOutput <- function(outputId, width = "100%", height = 400){
 #' shinyApp(ui, server)
 #' }
 #'
-renderGlify <- function(expr, env = parent.frame(), quoted = FALSE){
+renderLeafgl <- function(expr, env = parent.frame(), quoted = FALSE){
   renderLeaflet(expr = expr, env = env, quoted = quoted)
 }
 

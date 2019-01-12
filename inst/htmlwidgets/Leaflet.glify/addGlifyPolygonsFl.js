@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygonsFl = function(data_var, color_var, popup_var, opacity, size) {
+LeafletWidget.methods.addGlifyPolygonsFl = function(data_var, color_var, popup_var, opacity) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;

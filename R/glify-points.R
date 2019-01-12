@@ -15,12 +15,12 @@
 #' @param popup the name of the column in data to be used for popups.
 #' @param ... ignored.
 #'
-#' @describeIn addGlifyPoints add points to a leaflet map using Leaflet.glify
+#' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
 #' \dontrun{
 #' library(mapview)
 #' library(leaflet)
-#' library(leaflet.glify)
+#' library(leafgl)
 #' library(sf)
 #' library(colourvalues)
 #' library(jsonlite)
@@ -39,7 +39,7 @@
 #' system.time({
 #'   m = leaflet() %>%
 #'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'     addGlifyPoints(data = pts, color = cols, popup = "id") %>%
+#'     addGlPoints(data = pts, color = cols, popup = "id") %>%
 #'     addMouseCoordinates() %>%
 #'     setView(lng = 10.5, lat = 49.5, zoom = 9)
 #' })
@@ -47,15 +47,15 @@
 #' m
 #' }
 #'
-#' @export
-addGlifyPoints = function(map,
-                          data,
-                          color = cbind(0, 0.2, 1),
-                          opacity = 1,
-                          weight = 10,
-                          group = "glpoints",
-                          popup = NULL,
-                          ...) {
+#' @export addGlPoints
+addGlPoints = function(map,
+                       data,
+                       color = cbind(0, 0.2, 1),
+                       opacity = 1,
+                       weight = 10,
+                       group = "glpoints",
+                       popup = NULL,
+                       ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -96,14 +96,14 @@ addGlifyPoints = function(map,
 }
 
 ### via src
-addGlifyPointsSrc = function(map,
-                            data,
-                            color = cbind(0, 0.2, 1),
-                            opacity = 1,
-                            weight = 10,
-                            group = "glpoints",
-                            popup = NULL,
-                            ...) {
+addGlPointsSrc = function(map,
+                          data,
+                          color = cbind(0, 0.2, 1),
+                          opacity = 1,
+                          weight = 10,
+                          group = "glpoints",
+                          popup = NULL,
+                          ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -171,14 +171,14 @@ addGlifyPointsSrc = function(map,
 
 
 ### via src
-addGlifyPointsSrc2 = function(map,
-                              data,
-                              color = cbind(0, 0.2, 1),
-                              opacity = 1,
-                              weight = 10,
-                              group = "glpoints",
-                              popup = NULL,
-                              ...) {
+addGlPointsSrc2 = function(map,
+                           data,
+                           color = cbind(0, 0.2, 1),
+                           opacity = 1,
+                           weight = 10,
+                           group = "glpoints",
+                           popup = NULL,
+                           ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -256,14 +256,14 @@ addGlifyPointsSrc2 = function(map,
 
 
 ### via attachments
-addGlifyPointsFl = function(map,
-                          data,
-                          color = cbind(0, 0.2, 1),
-                          opacity = 1,
-                          weight = 10,
-                          group = "glpoints",
-                          popup = NULL,
-                          ...) {
+addGlPointsFl = function(map,
+                         data,
+                         color = cbind(0, 0.2, 1),
+                         opacity = 1,
+                         weight = 10,
+                         group = "glpoints",
+                         popup = NULL,
+                         ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)

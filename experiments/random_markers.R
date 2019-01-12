@@ -1,11 +1,11 @@
 library(mapview)
 library(leaflet)
-library(leaflet.glify)
+library(leafgl)
 library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 20e6
+n = 2e6
 
 df1 = data.frame(id = 1:n,
                  id2 = n:1,
@@ -20,7 +20,7 @@ system.time({
   options(viewer = NULL)
 
   m = mapview()@map %>%
-    leaflet.glify:::addGlifyPointsSrc2(data = pts, group = "pts", digits = 5) %>%
+    leafgl:::addGlPointsSrc2(data = pts, group = "pts", digits = 5) %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
     mapview:::updateOverlayGroups(group = "pts")
@@ -63,7 +63,7 @@ m = mapview()@map %>%
 
 for (i in 1:4) {
   print(i)
-  m = leaflet.glify:::addGlifyPointsSrc2(map = m,
+  m = leafgl:::addGlPointsSrc2(map = m,
                                         data = pts_lst[[i]],
                                         weight = i * 5,
                                         color = cols[i, , drop = FALSE],

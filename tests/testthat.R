@@ -1,4 +1,4 @@
 library(testthat)
-library(leaflet.glify)
+library(leafgl)
 
-test_check("leaflet.glify")
+test_check("leafgl")
