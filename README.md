@@ -194,10 +194,8 @@ m
 
 ## Shiny ##
 
-Thanks to @ColinFay `leafgl` has dedicated shiny functions. Given that what 
-`leafgl` produces is a `leaflet` map, we only need to use `leafglOutput` in
-our `ui` call. In the `server` call we can simply use `renderLeaflet`. 
-Here an example:
+Thanks to [@ColinFay](https://github.com/ColinFay) `leafgl` has dedicated shiny functions. Given that what `leafgl` produces is a `leaflet` map, we only need to
+use `leafglOutput` in our `ui` call. In the `server` call we can simply use `renderLeaflet`. Here an example:
 
 ```r
 library(mapview)
