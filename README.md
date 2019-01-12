@@ -12,7 +12,7 @@ what you get here, make sure to star the original repo!
 Currently not on CRAN, github only:
 
 ```r
-devtools::install_github("tim-salabim/leafgl")
+devtools::install_github("r-spatial/leafgl")
 ```
 
 ### What does it do?
@@ -194,13 +194,37 @@ m
 
 ## Shiny ##
 
-In order to use leafgl in a shiny context, we need to include the
-necessary javascript dependencies in the ui component. Here's an example:
+Thanks to @ColinFay `leafgl` has dedicated shiny functions. Given that what 
+`leafgl` produces is a `leaflet` map, we only need to use `leafglOutput` in
+our `ui` call. In the `server` call we can simply use `renderLeaflet`. 
+Here an example:
 
 ```r
+library(mapview)
+library(leaflet)
+library(leafgl)
+library(sf)
+library(shiny)
+
+n = 1e6
+
+df1 = data.frame(id = 1:n,
+                 x = rnorm(n, 10, 3),
+                 y = rnorm(n, 49, 1.8))
+
+pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
+
+options(viewer = NULL) # view in browser
+
+m = leaflet() %>%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+  addGlPoints(data = pts, group = "pts") %>%
+  addMouseCoordinates() %>%
+  setView(lng = 10.5, lat = 49.5, zoom = 4) %>% 
+  addLayersControl(overlayGroups = "pts")
+
 ui <- fluidPage(
-  leafletOutput("mymap"),
-  tags$script(leafgl:::glifyDependencies())
+  leafglOutput("mymap")
 )
 
 server <- function(input, output, session) {

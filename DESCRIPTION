@@ -2,7 +2,16 @@ Package: leafgl
 Type: Package
 Title: Bindings for Leaflet.glify
 Version: 0.1.1
-Author: Tim Appelhans
+Authors@R: 
+    c(person(given = "Tim",
+             family = "Appelhans",
+             role = c("cre", "aut"),
+             email = "tim.appelhans@gmail.com"),
+      person(given = "Colin",
+             family = "Fay",
+             role = "aut",
+             email = "colin@thinkr.fr",
+             comment = structure("0000-0001-7343-1846", .Names = "ORCID"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.
 License: GPL-3 + file LICENSE
