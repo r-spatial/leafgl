@@ -1,4 +1,4 @@
-#' add points/polygons to a leaflet map using Leaflet.glify
+#' add points to a leaflet map using Leaflet.glify
 #'
 #' @description
 #'   Leaflet.glify is a web gl renderer plugin for leaflet. See

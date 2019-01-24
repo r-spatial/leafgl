@@ -1,8 +1,8 @@
-#' add polygons/polygons to a leaflet map using Leaflet.glify
+#' add polygons to a leaflet map using Leaflet.glify
 #'
 #' @details
-#'   Multipolygons are currently not supported! Make sure you cast your data
-#'   to polygons first (e.g. using \code{sf::st_cast(data, "POLYGON")}.
+#'   MULTIPOLYGONs are currently not supported! Make sure you cast your data
+#'   to POLYGON first (e.g. using \code{sf::st_cast(data, "POLYGON")}.
 #'
 #' @examples
 #' \dontrun{
@@ -20,7 +20,7 @@
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'   addGlPolygons(data = fran, color = cols) %>%
+#'   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") %>%
 #'   addMouseCoordinates() %>%
 #'   setView(lng = 10.5, lat = 49.5, zoom = 8)
 #' }
@@ -40,7 +40,8 @@ addGlPolygons = function(map,
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
   if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
-    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast")
+    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast",
+         call. = FALSE)
 
   # data
   if (is.null(popup)) {

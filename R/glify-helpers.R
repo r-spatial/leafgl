@@ -2,12 +2,13 @@
 glifyDependencies = function() {
   list(
     htmltools::htmlDependency(
-      "addGlifyPoints",
-      '0.0.1',
+      "Leaflet.glify",
+      '2.1.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPoints.js",
         "addGlifyPolygons.js",
+        "addGlifyPolylines.js",
         "glify.js",
         "src/js/canvasoverlay.js",
         "src/js/gl.js",
@@ -15,6 +16,7 @@ glifyDependencies = function() {
         "src/js/map-matrix.js",
         "src/js/points.js",
         "src/js/shapes.js",
+        "src/js/lines.js",
         "src/js/utils.js",
         "src/shader/fragment/dot.glsl",
         "src/shader/fragment/point.glsl",
@@ -32,8 +34,8 @@ glifyDependencies = function() {
 glifyDependenciesFl = function() {
   list(
     htmltools::htmlDependency(
-      "addGlifyPoints",
-      '0.0.1',
+      "Leaflet.glify",
+      '2.1.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPoints.js",
@@ -62,8 +64,8 @@ glifyDependenciesFl = function() {
 glifyDependenciesSrc = function() {
   list(
     htmltools::htmlDependency(
-      "addGlifyPoints",
-      '0.0.1',
+      "Leaflet.glify",
+      '2.1.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPoints.js",

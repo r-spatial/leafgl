@@ -2,6 +2,7 @@
 
 export(addGlPoints)
 export(addGlPolygons)
+export(addGlPolylines)
 export(leafglOutput)
 export(renderLeafgl)
 importFrom(htmltools,tagList)
