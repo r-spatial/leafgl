@@ -58,7 +58,7 @@ implementation.
 Depending on your operating system and browser, you may
 see some weird colors that do not correspond to the ones that you
 specified. The only known work-around at this stage is to set `opacity = 1`. 
-For more details the inclined reader is referred to [this issue](https://github.com/tim-salabim/leafgl/issues/4)
+For more details the inclined reader is referred to [this issue](https://github.com/r-spatial/leafgl/issues/4)
 
 ### What can I do to help?
 
@@ -238,4 +238,4 @@ shinyApp(ui, server)
 
 ## Contact ##
 
-Please file Pull requests, bug reports and feature requests at https://github.com/tim-salabim/leafgl/issues
+Please file Pull requests, bug reports and feature requests at https://github.com/r-spatial/leafgl/issues
