@@ -95,7 +95,7 @@ options(viewer = NULL) # view in browser
 system.time({
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPoints(data = pts, group = "pts") %>%
+    addGlPoints(data = pts, group = "pts") %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>% 
     addLayersControl(overlayGroups = "pts")
@@ -136,7 +136,7 @@ options(viewer = NULL)
 system.time({
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPoints(data = pts, color = cols, group = "pts") %>%
+    addGlPoints(data = pts, color = cols, group = "pts") %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>% 
     addLayersControl(overlayGroups = "pts")
@@ -174,7 +174,7 @@ cols = colour_values_rgb(ch_lu$type, include_alpha = FALSE) / 255
 system.time({
   m = leaflet() %>%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlifyPolygons(data = ch_lu, 
+    addGlPolygons(data = ch_lu, 
                      color = cols, 
                      popup = "type",
                      group = "pols") %>%
