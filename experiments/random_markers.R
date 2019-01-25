@@ -20,7 +20,7 @@ system.time({
   options(viewer = NULL)
 
   m = mapview()@map %>%
-    leafgl:::addGlPointsSrc2(data = pts, group = "pts", digits = 5) %>%
+    addGlPoints(data = pts, popup = "id", group = "pts", digits = 5) %>%
     addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
     mapview:::updateOverlayGroups(group = "pts")
