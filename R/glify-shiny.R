@@ -21,7 +21,7 @@
 #'
 #' m = leaflet() %>%
 #'  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'  addGlifyPoints(data = pts, group = "pts") %>%
+#'  addGlPoints(data = pts, group = "pts") %>%
 #'  addMouseCoordinates() %>%
 #'  setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
 #'  addLayersControl(overlayGroups = "pts")

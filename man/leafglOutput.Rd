@@ -36,7 +36,7 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
 m = leaflet() \%>\%
  addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
- addGlifyPoints(data = pts, group = "pts") \%>\%
+ addGlPoints(data = pts, group = "pts") \%>\%
  addMouseCoordinates() \%>\%
  setView(lng = 10.5, lat = 49.5, zoom = 6) \%>\%
  addLayersControl(overlayGroups = "pts")
