@@ -20,12 +20,13 @@ LazyData: true
 RoxygenNote: 6.1.0
 Imports:
   geojsonsf,
+  htmltools,
   jsonify, 
   jsonlite,
-  htmltools,
   leaflet,
   sf
-Suggests: 
-    testthat, 
+Suggests:
+    colourvalues, 
     mapview, 
-    shiny
+    shiny, 
+    testthat

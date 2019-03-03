@@ -56,7 +56,7 @@ MULTIPOLYGONs are currently not supported! Make sure you cast your data
 }}
 
 \examples{
-\dontrun{
+if (interactive()) {
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -76,7 +76,7 @@ leaflet() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
 }
 
-\dontrun{
+if (interactive()) {
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -106,7 +106,7 @@ system.time({
 m
 }
 
-\dontrun{
+if (interactive()) {
 library(mapview)
 library(leaflet)
 library(leafgl)

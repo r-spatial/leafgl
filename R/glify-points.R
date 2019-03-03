@@ -17,7 +17,7 @@
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
@@ -135,7 +135,7 @@ addGlPointsSrc = function(map,
   fl_color = paste0(dir_color, "/", group, "_color.json")
   pre = paste0('var col = col || {}; col["', group, '"] = ')
   writeLines(pre, fl_color)
-  cat('[', jsonlite::toJSON(color), '];',
+  cat('[', jsonify::to_json(color), '];',
       file = fl_color, append = TRUE)
 
   # popup
@@ -143,7 +143,7 @@ addGlPointsSrc = function(map,
     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
     pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', jsonlite::toJSON(data[[popup]]), '];',
+    cat('[', jsonify::to_json(data[[popup]]), '];',
         file = fl_popup, append = TRUE)
   } else {
     popup = NULL
@@ -218,7 +218,7 @@ addGlPointsSrc2 = function(map,
   fl_color = paste0(dir_color, "/", group, "_color.json")
   pre = paste0('var col = col || {}; col["', group, '"] = ')
   writeLines(pre, fl_color)
-  cat('[', jsonlite::toJSON(color), '];',
+  cat('[', jsonify::to_json(color), '];',
       file = fl_color, append = TRUE)
 
   # popup
@@ -226,7 +226,7 @@ addGlPointsSrc2 = function(map,
     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
     pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', jsonlite::toJSON(data[[popup]]), '];',
+    cat('[', jsonify::to_json(data[[popup]]), '];',
         file = fl_popup, append = TRUE)
   } else {
     popup = NULL
@@ -282,7 +282,7 @@ addGlPointsFl = function(map,
   crds = sf::st_coordinates(data)[, c(2, 1)]
 
   fl_data = paste0(dir_data, "/", group, "_data.json")
-  cat(jsonlite::toJSON(crds, digits = 7), file = fl_data, append = FALSE)
+  cat(jsonify::to_json(crds, digits = 7), file = fl_data, append = FALSE)
   data_var = paste0(group, "dt")
 
   # color
@@ -290,14 +290,14 @@ addGlPointsFl = function(map,
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
 
-  jsn = jsonlite::toJSON(color)
+  jsn = jsonify::to_json(color)
   fl_color = paste0(dir_color, "/", group, "_color.json")
   color_var = paste0(group, "cl")
   cat(jsn, file = fl_color, append = FALSE)
 
   # popup
   if (!is.null(popup)) {
-    pop = jsonlite::toJSON(data[[popup]])
+    pop = jsonify::to_json(data[[popup]])
     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
     popup_var = paste0(group, "pop")
     cat(pop, file = fl_popup, append = FALSE)

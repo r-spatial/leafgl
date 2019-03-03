@@ -5,7 +5,7 @@
 #'   to POLYGON first (e.g. using \code{sf::st_cast(data, "POLYGON")}.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
@@ -121,7 +121,7 @@ addGlPolygonsSrc = function(map,
   fl_color = paste0(dir_color, "/", group, "_color.json")
   pre = paste0('var col = col || {}; col["', group, '"] = ')
   writeLines(pre, fl_color)
-  cat('[', jsonlite::toJSON(color, digits = 3), '];',
+  cat('[', jsonify::to_json(color, digits = 3), '];',
       file = fl_color, append = TRUE)
 
   # popup
@@ -198,7 +198,7 @@ addGlPolygonsFl = function(map,
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
 
-  jsn = jsonlite::toJSON(color)
+  jsn = jsonify::to_json(color)
   fl_color = paste0(dir_color, "/", group, "_color.json")
   color_var = paste0(group, "cl")
   cat(jsn, file = fl_color, append = FALSE)

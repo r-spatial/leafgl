@@ -21,7 +21,7 @@ A server function for rendering leafgl
 Use leafgl in shiny
 }
 \examples{
-\dontrun{
+if (interactive()) {
 library(mapview)
 library(leaflet)
 library(leafgl)

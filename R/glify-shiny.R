@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
@@ -57,7 +57,7 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(mapview)
 #' library(leaflet)
 #' library(leafgl)

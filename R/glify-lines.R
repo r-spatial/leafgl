@@ -5,7 +5,7 @@
 #'   to LINETSRING first (e.g. using \code{sf::st_cast(data, "LINESTRING")}.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
