@@ -52,14 +52,13 @@ wait for a map that the browser isn’t able to render anyway…
 ### What doesn’t it do?
 
 For starters, it doesn’t guarantee to be working tomorrow. At this stage
-lealet.glify is pre-alpha and under heavy development so things are
-likely to change frequently. For example, we are thinking about shorter
-funtion names (e.g. `addGlPolygons` instead of the current
-`addGlifyPolygons`). Additionally, we are still figuring out which
-pathway is best to use in order to pass data from R to the browser. As a
-result, rendering environments other than the browser (or RStudio
-viewer) may not work properly or at all until we approach a more stable
-implementation.
+`leafgl` is pre-alpha and under heavy development so things are likely
+to change frequently. For example, we are thinking about shorter funtion
+names (e.g. `addGlPolygons` instead of the current `addGlifyPolygons`).
+Additionally, we are still figuring out which pathway is best to use in
+order to pass data from R to the browser. As a result, rendering
+environments other than the browser (or RStudio viewer) may not work
+properly or at all until we approach a more stable implementation.
 
 #### NOTE
 

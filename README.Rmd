@@ -64,7 +64,7 @@ wants to wait for a map that the browser isn't able to render anyway...
 ### What doesn't it do?
 
 For starters, it doesn't guarantee to be working tomorrow. At this stage
-lealet.glify is pre-alpha and under heavy development so things are 
+`leafgl` is pre-alpha and under heavy development so things are 
 likely to change frequently. For example, we are thinking about shorter 
 funtion names (e.g. `addGlPolygons` instead of the current 
 `addGlifyPolygons`). Additionally, we are still figuring out which 
