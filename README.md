@@ -1,9 +1,17 @@
-# leafgl
 
-An R package for fast web gl rendering of features on leaflet maps.
-It's an R port of https://github.com/robertleeplummerjr/Leaflet.glify where 
-more detailed information/documentation can be found. Also, if you like 
-what you get here, make sure to star the original repo!
+# leafgl - performant WebGL rendering for leaflet
+
+[![Travis build
+status](https://travis-ci.org/r-spatial/leafgl.svg?branch=master)](https://travis-ci.org/r-spatial/leafgl)
+[![monthly](http://cranlogs.r-pkg.org/badges/leafgl)](https://www.rpackages.io/package/leafgl)
+[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafgl)](https://www.rpackages.io/package/leafgl)
+[![CRAN](http://www.r-pkg.org/badges/version/leafgl?color=009999)](https://cran.r-project.org/package=leafgl)
+[![status](https://tinyverse.netlify.com/badge/leafgl)](https://CRAN.R-project.org/package=leafgl)
+
+An R package for fast web gl rendering of features on leaflet maps. It’s
+an R port of <https://github.com/robertleeplummerjr/Leaflet.glify> where
+more detailed information/documentation can be found. Also, if you like
+what you get here, make sure to star the original repo\!
 
 -----
 
@@ -11,72 +19,73 @@ what you get here, make sure to star the original repo!
 
 Currently not on CRAN, github only:
 
-```r
+``` r
 devtools::install_github("r-spatial/leafgl")
 ```
 
 ### What does it do?
 
-It allows rendering of a large amount of features on a leaflet map. 
-What exactly a "large amount" is, depends 
+It allows rendering of a large amount of features on a leaflet map. What
+exactly a “large amount” is, depends
 
-1. on the types of features and
-2. on the hardware/software of the rendering machine. 
+1.  on the types of features and
+2.  on the hardware/software of the rendering machine.
 
-Regarding 1. millions of points should be no problem, but millions 
-of polygons might, depending on their complexity - i.e. the number of 
+Regarding 1. millions of points should be no problem, but millions of
+polygons might, depending on their complexity - i.e. the number of
 vertices.
 
 With regard to 2., obviously the amount of RAM will matter most but
-there are other, more suptle, problems that can occur. 
+there are other, more suptle, problems that can occur.
 
-Given it's name, leafgl is intended to fully integrate with the 
-leaflet package, though it is very likely that it won't be a 1:1
-replacement for the respective `leaflet::add*` functions. For example, 
-given the intention to render/visualise as many features as possible we
-need to make a compromise on what additional information we allow to be 
-part of the rendering. So far, we allow coloring of features and popups
-based on one column of the feature attributes, hence you cannot provide 
-your own popup content. This may seem drastic, but all this information 
-is costly both in terms of performance/speed and memory. In the end, who
-wants to wait for a map that the browser isn't able to render anyway...
+Given it’s name, leafgl is intended to fully integrate with the leaflet
+package, though it is very likely that it won’t be a 1:1 replacement for
+the respective `leaflet::add*` functions. For example, given the
+intention to render/visualise as many features as possible we need to
+make a compromise on what additional information we allow to be part of
+the rendering. So far, we allow coloring of features and popups based on
+one column of the feature attributes, hence you cannot provide your own
+popup content. This may seem drastic, but all this information is costly
+both in terms of performance/speed and memory. In the end, who wants to
+wait for a map that the browser isn’t able to render anyway…
 
-### What doesn't it do?
+### What doesn’t it do?
 
-For starters, it doesn't guarantee to be working tomorrow. At this stage
-lealet.glify is pre-alpha and under heavy development so things are 
-likely to change frequently. For example, we are thinking about shorter 
-funtion names (e.g. `addGlPolygons` instead of the current 
-`addGlifyPolygons`). Additionally, we are still figuring out which 
-pathway is best to use in order to pass data from R to the browser. As
-a result, rendering environments other than the browser (or RStudio 
-viewer) may not work properly or at all until we approach a more stable 
+For starters, it doesn’t guarantee to be working tomorrow. At this stage
+lealet.glify is pre-alpha and under heavy development so things are
+likely to change frequently. For example, we are thinking about shorter
+funtion names (e.g. `addGlPolygons` instead of the current
+`addGlifyPolygons`). Additionally, we are still figuring out which
+pathway is best to use in order to pass data from R to the browser. As a
+result, rendering environments other than the browser (or RStudio
+viewer) may not work properly or at all until we approach a more stable
 implementation.
 
 #### NOTE
 
-Depending on your operating system and browser, you may
-see some weird colors that do not correspond to the ones that you
-specified. The only known work-around at this stage is to set `opacity = 1`. 
-For more details the inclined reader is referred to [this issue](https://github.com/r-spatial/leafgl/issues/4)
+Depending on your operating system and browser, you may see some weird
+colors that do not correspond to the ones that you specified. The only
+known work-around at this stage is to set `opacity = 1`. For more
+details the inclined reader is referred to [this
+issue](https://github.com/r-spatial/leafgl/issues/4)
 
 ### What can I do to help?
 
-A lot! First and foremost you can use it as often as possible and report
-issues/bugreports and/or feature request (see end of page for details). 
-If you have ideas on how to enhance functionality without impacting
-performance too much and feel confident enough to provide pull
-request, please don't hesitate. Finally, if you have proficient 
-knowledge of JavaScript and want/know how to improve the package in any 
-way, we would very much love to hear from you!
+A lot\! First and foremost you can use it as often as possible and
+report issues/bugreports and/or feature request (see end of page for
+details). If you have ideas on how to enhance functionality without
+impacting performance too much and feel confident enough to provide pull
+request, please don’t hesitate. Finally, if you have proficient
+knowledge of JavaScript and want/know how to improve the package in any
+way, we would very much love to hear from you\!
 
 ### Example usage
 
 #### 1 Mio. points on a map
 
-This will render 1 Mio. points on a standard leaflet map. 
+This will render 1 Mio. points on a standard leaflet map.
 
-```r
+``` r
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -103,7 +112,8 @@ system.time({
 
 m
 ```
-![](readme_figs/pts_blue.png)
+
+![](man/figures/pts_blue.png)
 
 <br>
 
@@ -111,10 +121,10 @@ m
 
 #### Colouring points by value mapping
 
-For this we use `library(colourvalues)` because it can create color 
-voctors in the blink of an eye!
+For this we use `library(colourvalues)` because it can create color
+voctors in the blink of an eye\!
 
-```r
+``` r
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -144,7 +154,8 @@ system.time({
 
 m
 ```
-![](readme_figs/pts_viridis.png)
+
+![](man/figures/pts_viridis.png)
 
 <br>
 
@@ -152,11 +163,12 @@ m
 
 #### 100k polygons on a map
 
-In reality, it only 97112 polygons... But who wants to be pedantic here?
+In reality, it only 97112 polygons… But who wants to be pedantic here?
 
-This data was downloaded from https://download.geofabrik.de/europe/switzerland.html
+This data was downloaded from
+<https://download.geofabrik.de/europe/switzerland.html>
 
-```r
+``` r
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -186,18 +198,20 @@ system.time({
 m
 ```
 
-![](readme_figs/polys_ch.png)
+![](man/figures/polys_ch.png)
 
 <br>
 
 -----
 
-## Shiny ##
+## Shiny
 
-Thanks to [@ColinFay](https://github.com/ColinFay) `leafgl` has dedicated shiny functions. Given that what `leafgl` produces is a `leaflet` map, we only need to
-use `leafglOutput` in our `ui` call. In the `server` call we can simply use `renderLeaflet`. Here an example:
+Thanks to \[@ColinFay\](<https://github.com/ColinFay>) `leafgl` has
+dedicated shiny functions. Given that what `leafgl` produces is a
+`leaflet` map, we only need to use `leafglOutput` in our `ui` call. In
+the `server` call we can simply use `renderLeaflet`. Here an example:
 
-```r
+``` r
 library(mapview)
 library(leaflet)
 library(leafgl)
@@ -231,11 +245,12 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
 <br>
 
 -----
 
+## Contact
 
-## Contact ##
-
-Please file Pull requests, bug reports and feature requests at https://github.com/r-spatial/leafgl/issues
+Please file Pull requests, bug reports and feature requests at
+<https://github.com/r-spatial/leafgl/issues>

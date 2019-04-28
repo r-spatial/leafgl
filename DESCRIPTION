@@ -11,10 +11,14 @@ Authors@R:
              family = "Fay",
              role = "aut",
              email = "colin@thinkr.fr",
-             comment = structure("0000-0001-7343-1846", .Names = "ORCID")))
+             comment = structure("0000-0001-7343-1846", .Names = "ORCID")),
+      person(given = "Robert",
+             family = "Plummer",
+             role = "ctb",
+             comment = "Leaflet.glify plugin"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.
-License: GPL-3 + file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
