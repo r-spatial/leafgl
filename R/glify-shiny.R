@@ -92,3 +92,16 @@ renderLeafgl <- function(expr, env = parent.frame(), quoted = FALSE){
   renderLeaflet(expr = expr, env = env, quoted = quoted)
 }
 
+leafOutput <- function (outputId, width = "100%", height = 400) 
+{
+  htmlwidgets::shinyWidgetOutput(outputId, "leaflet", width, 
+                                 height, "leaflet")
+}
+
+
+leafletOutput <- function(outputId, width = "100%", height = 400){
+  tagList(
+    leafOutput(outputId = outputId, width = width, height = height),
+    tags$script(leafgl:::glifyDependencies())
+  )
+}
