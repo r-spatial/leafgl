@@ -9,22 +9,7 @@ glifyDependencies = function() {
         "addGlifyPoints.js",
         "addGlifyPolygons.js",
         "addGlifyPolylines.js",
-        "glify.js",
-        "src/js/canvasoverlay.js",
-        "src/js/gl.js",
-        "src/js/index.js",
-        "src/js/map-matrix.js",
-        "src/js/points.js",
-        "src/js/shapes.js",
-        "src/js/lines.js",
-        "src/js/utils.js",
-        "src/shader/fragment/dot.glsl",
-        "src/shader/fragment/point.glsl",
-        "src/shader/fragment/polygon.glsl",
-        "src/shader/fragment/puck.glsl",
-        "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
-        "src/shader/vertex/default.glsl"
+        "glify.js"
       )
     )
   )
