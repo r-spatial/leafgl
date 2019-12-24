@@ -7,7 +7,8 @@
 renderLeafgl(expr, env = parent.frame(), quoted = FALSE)
 }
 \arguments{
-\item{expr}{An expression that generates an HTML widget}
+\item{expr}{An expression that generates an HTML widget (or a
+\href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}
 
 \item{env}{The environment in which to evaluate \code{expr}.}
 

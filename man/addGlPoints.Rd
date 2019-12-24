@@ -7,14 +7,37 @@
 \alias{addGlPolygons}
 \title{add polylines to a leaflet map using Leaflet.glify}
 \usage{
-addGlPolylines(map, data, color = cbind(0, 0.2, 1), opacity = 0.6,
-  group = "glpolylines", popup = NULL, ...)
+addGlPolylines(
+  map,
+  data,
+  color = cbind(0, 0.2, 1),
+  opacity = 0.6,
+  group = "glpolylines",
+  popup = NULL,
+  weight = 2,
+  ...
+)
 
-addGlPoints(map, data, color = cbind(0, 0.2, 1), opacity = 1,
-  weight = 10, group = "glpoints", popup = NULL, ...)
+addGlPoints(
+  map,
+  data,
+  color = cbind(0, 0.2, 1),
+  opacity = 1,
+  weight = 10,
+  group = "glpoints",
+  popup = NULL,
+  ...
+)
 
-addGlPolygons(map, data, color = cbind(0, 0.2, 1), opacity = 0.6,
-  group = "glpolygons", popup = NULL, ...)
+addGlPolygons(
+  map,
+  data,
+  color = cbind(0, 0.2, 1),
+  opacity = 0.6,
+  group = "glpolygons",
+  popup = NULL,
+  ...
+)
 }
 \arguments{
 \item{map}{a leaflet map to add points/polygons to.}
@@ -30,9 +53,9 @@ Note: expect funny results if you set this to < 1.}
 
 \item{popup}{the name of the column in data to be used for popups.}
 
-\item{...}{ignored.}
+\item{weight}{line width/thicknes in pixels when in addGlPolylines.}
 
-\item{weight}{point size in pixels.}
+\item{...}{ignored.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See

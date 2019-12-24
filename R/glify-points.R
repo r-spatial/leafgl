@@ -13,6 +13,7 @@
 #' @param weight point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup the name of the column in data to be used for popups.
+#' @param weight line width/thicknes in pixels when in addGlPolylines.
 #' @param ... ignored.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
