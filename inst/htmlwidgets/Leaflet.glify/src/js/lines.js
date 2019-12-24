@@ -56,6 +56,7 @@ Lines.defaults = {
   color: 'random',
   className: '',
   opacity: 0.5,
+  thickness: 2,
   shaderVars: {
     color: {
       type: 'FLOAT',
@@ -208,7 +209,7 @@ Lines.prototype = {
       }
 
       for (i = 0; i < feature.geometry.coordinates.length; i++) {
-        pixel = utils.latLonToPixel(feature.geometry.coordinates[i][latitudeKey], feature.geometry.coordinates[i][longitudeKey]);
+        pixel = settings.map.project(L.latLng(feature.geometry.coordinates[i][latitudeKey], feature.geometry.coordinates[i][longitudeKey]), 0);
         featureVerts.push(pixel.x, pixel.y, color.r, color.g, color.b);
       }
 
@@ -285,32 +286,37 @@ Lines.prototype = {
       settings = this.settings,
       canvas = this.canvas,
       map = settings.map,
+      thickness = settings.thickness,
       pointSize = Math.max(map.getZoom() - 4.0, 4.0),
       bounds = map.getBounds(),
       topLeft = new L.LatLng(bounds.getNorth(), bounds.getWest()),
-    // -- Scale to current zoom
+      // -- Scale to current zoom
       scale = Math.pow(2, map.getZoom()),
-      offset = utils.latLonToPixel(topLeft.lat, topLeft.lng),
+      offset = map.project(topLeft, 0),
       mapMatrix = this.mapMatrix,
-      pixelsToWebGLMatrix = this.pixelsToWebGLMatrix;
-
-    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]);
-
-    // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
-    mapMatrix
-      .set(pixelsToWebGLMatrix)
-      .scaleMatrix(scale)
-      .translateMatrix(-offset.x, -offset.y);
+      pixelsToWebGLMatrix = this.pixelsToWebGLMatrix,
+      lineScale = map.getZoom() / scale / 10,
+      lineThickness = lineScale * thickness;
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
+    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]);
 
-    gl.vertexAttrib1f(gl.aPointSize, pointSize);
-    // -- attach matrix value to 'mapMatrix' uniform in shader
-    gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+    for (let yOffset = -lineThickness; yOffset < lineThickness; yOffset += lineScale) {
+      for (let xOffset = -lineThickness; xOffset < lineThickness; xOffset += lineScale) {
+        // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
+        mapMatrix
+          .set(pixelsToWebGLMatrix)
+          .scaleMatrix(scale)
+          .translateMatrix(-offset.x + xOffset, -offset.y + yOffset);
 
-    gl.drawArrays(gl.LINES, 0, this.verts.length / 5);
+        gl.vertexAttrib1f(gl.aPointSize, pointSize);
+        // -- attach matrix value to 'mapMatrix' uniform in shader
+        gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
 
+        gl.drawArrays(gl.LINES, 0, this.verts.length / 5);
+      }
+    }
     return this;
   },
 

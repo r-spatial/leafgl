@@ -34,6 +34,7 @@ addGlPolylines = function(map,
                           opacity = 0.6,
                           group = "glpolylines",
                           popup = NULL,
+                          weight = 2,
                           ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -67,7 +68,8 @@ addGlPolylines = function(map,
     glifyDependencies()
   )
 
+  # weight is about double the weight of svg, so / 2
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolylines',
-                        data, cols, popup, opacity, group)
+                        data, cols, popup, opacity, group, weight / 2)
 
 }
