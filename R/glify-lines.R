@@ -13,13 +13,14 @@
 #' library(colourvalues)
 #'
 #' trls = st_cast(trails, "LINESTRING")
+#' trls = st_transform(trls, 4326)
 #'
 #' cols = colour_values_rgb(trls$district, include_alpha = FALSE) / 255
 #'
 #' options(viewer = NULL)
 #'
 #' leaflet() %>%
-#'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+#'   addProviderTiles(provider = providers$CartoDB.Positron) %>%
 #'   addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) %>%
 #'   addMouseCoordinates() %>%
 #'   setView(lng = 10.5, lat = 49.5, zoom = 8)
@@ -46,10 +47,11 @@ addGlPolylines = function(map,
 
   # data
   if (is.null(popup)) {
-    geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+    # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+    geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   } else {
-    data = sf::st_transform(data[, popup], crs = 4326)
+    data = data[, popup]
   }
 
   data = geojsonsf::sf_geojson(data, ...)

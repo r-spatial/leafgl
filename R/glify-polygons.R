@@ -45,10 +45,11 @@ addGlPolygons = function(map,
 
   # data
   if (is.null(popup)) {
-    geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+    # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
+    geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   } else {
-    data = sf::st_transform(data[, popup], crs = 4326)
+    data = data[, popup]
   }
 
   data = geojsonsf::sf_geojson(data, ...)
