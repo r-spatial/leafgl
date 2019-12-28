@@ -23,7 +23,7 @@ glifyDependencies = function() {
         "src/shader/fragment/polygon.glsl",
         "src/shader/fragment/puck.glsl",
         "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
+        "src/shader/fragment/square.glsl",
         "src/shader/vertex/default.glsl"
       )
     )
@@ -53,7 +53,7 @@ glifyDependenciesFl = function() {
         "src/shader/fragment/polygon.glsl",
         "src/shader/fragment/puck.glsl",
         "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
+        "src/shader/fragment/square.glsl",
         "src/shader/vertex/default.glsl"
       )
     )
@@ -84,7 +84,7 @@ glifyDependenciesSrc = function() {
         "src/shader/fragment/polygon.glsl",
         "src/shader/fragment/puck.glsl",
         "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
+        "src/shader/fragment/square.glsl",
         "src/shader/vertex/default.glsl"
       )
     )
