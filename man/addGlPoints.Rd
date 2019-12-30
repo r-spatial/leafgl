@@ -87,13 +87,14 @@ library(sf)
 library(colourvalues)
 
 trls = st_cast(trails, "LINESTRING")
+trls = st_transform(trls, 4326)
 
 cols = colour_values_rgb(trls$district, include_alpha = FALSE) / 255
 
 options(viewer = NULL)
 
 leaflet() \%>\%
-  addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
+  addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
   addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) \%>\%
   addMouseCoordinates() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
