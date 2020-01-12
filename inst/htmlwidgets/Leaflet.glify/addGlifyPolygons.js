@@ -11,17 +11,26 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
 
     var pop;
     if (popup) {
-        pop = function (e, feature) {
-          if (map.hasLayer(shapeslayer.glLayer)) {
-            L.popup()
-              .setLatLng(e.latlng)
-              .setContent(feature.properties[[popup]].toString())
-              .openOn(map);
-          }
-
-          console.log(feature);
-          console.log(e);
-        };
+        if (popup === true) {
+          pop = function (e, feature) {
+            var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+            if (map.hasLayer(shapeslayer.glLayer)) {
+              L.popup({ maxWidth: 2000 })
+                .setLatLng(e.latlng)
+                .setContent(popUp)
+                .openOn(map);
+            }
+          };
+        } else {
+          pop = function (e, feature) {
+            if (map.hasLayer(shapeslayer.glLayer)) {
+              L.popup({ maxWidth: 2000 })
+                .setLatLng(e.latlng)
+                .setContent(feature.properties[[popup]].toString())
+                .openOn(map);
+            }
+          };
+        }
     } else {
         pop = null;
     }

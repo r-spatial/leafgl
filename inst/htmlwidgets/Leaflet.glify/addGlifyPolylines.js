@@ -11,20 +11,30 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
 
     var pop;
     if (popup) {
-        pop = function (e, feature) {
-          if (map.hasLayer(lineslayer.glLayer)) {
-            L.popup()
-              .setLatLng(e.latlng)
-              .setContent(feature.properties[[popup]].toString())
-              .openOn(map);
-          }
-
-          console.log(feature);
-          console.log(e);
-        };
+        if (popup === true) {
+          pop = function (e, feature) {
+            var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+            if (map.hasLayer(lineslayer.glLayer)) {
+              L.popup({ maxWidth: 2000 })
+                .setLatLng(e.latlng)
+                .setContent(popUp)
+                .openOn(map);
+            }
+          };
+        } else {
+          pop = function (e, feature) {
+            if (map.hasLayer(lineslayer.glLayer)) {
+              L.popup({ maxWidth: 2000 })
+                .setLatLng(e.latlng)
+                .setContent(feature.properties[[popup]].toString())
+                .openOn(map);
+            }
+          };
+        }
     } else {
         pop = null;
     }
+
 
     var lineslayer = L.glify.lines({
       map: map,
