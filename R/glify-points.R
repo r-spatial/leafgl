@@ -3,7 +3,7 @@
 #' @description
 #'   Leaflet.glify is a web gl renderer plugin for leaflet. See
 #'   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
-#'   and documentation. Currently not all functionality is implemented here.
+#'   and documentation.
 #'
 #' @param map a leaflet map to add points/polygons to.
 #' @param data sf/sp point/polygon data to add to the map.
@@ -12,8 +12,8 @@
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
 #' @param group a group name for the feature layer.
-#' @param popup the name of the column in data to be used for popups.
-#' @param weight line width/thicknes in pixels when in addGlPolylines.
+#' @param popup logical or the name of the column in data to be used for popups.
+#' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param ... ignored.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify

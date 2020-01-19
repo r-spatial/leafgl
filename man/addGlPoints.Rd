@@ -51,16 +51,16 @@ Note: expect funny results if you set this to < 1.}
 
 \item{group}{a group name for the feature layer.}
 
-\item{popup}{the name of the column in data to be used for popups.}
+\item{popup}{logical or the name of the column in data to be used for popups.}
 
-\item{weight}{line width/thicknes in pixels when in addGlPolylines.}
+\item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 
 \item{...}{ignored.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See
   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
-  and documentation. Currently not all functionality is implemented here.
+  and documentation.
 }
 \details{
 MULTILINESTRINGs are currently not supported! Make sure you cast your data
