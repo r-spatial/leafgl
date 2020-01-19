@@ -45,7 +45,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
       color: clrs,
       opacity: opacity,
       className: group,
-      thickness: weight
+      weight: weight
     });
 
   map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
