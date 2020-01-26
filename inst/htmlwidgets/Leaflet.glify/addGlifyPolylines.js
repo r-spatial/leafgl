@@ -9,6 +9,13 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
       clrs = function(index, feature) { return cols[index]; };
     }
 
+    var wght;
+    if (weight.length === undefined) {
+      wght = weight;
+    } else {
+      wght = function(index, feature) { return weight[index]; };
+    }
+
     var pop;
     if (popup) {
         if (popup === true) {
@@ -45,7 +52,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
       color: clrs,
       opacity: opacity,
       className: group,
-      weight: weight
+      weight: wght
     });
 
   map.layerManager.addLayer(lineslayer.glLayer, null, null, group);

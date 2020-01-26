@@ -66,8 +66,7 @@ function toByteArray (b64) {
     ? validLen - 4
     : validLen
 
-  var i
-  for (i = 0; i < len; i += 4) {
+  for (var i = 0; i < len; i += 4) {
     tmp =
       (revLookup[b64.charCodeAt(i)] << 18) |
       (revLookup[b64.charCodeAt(i + 1)] << 12) |
@@ -166,10 +165,6 @@ function fromByteArray (uint8) {
 
 var base64 = require('base64-js')
 var ieee754 = require('ieee754')
-var customInspectSymbol =
-  (typeof Symbol === 'function' && typeof Symbol.for === 'function')
-    ? Symbol.for('nodejs.util.inspect.custom')
-    : null
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -206,9 +201,7 @@ function typedArraySupport () {
   // Can typed array instances can be augmented?
   try {
     var arr = new Uint8Array(1)
-    var proto = { foo: function () { return 42 } }
-    Object.setPrototypeOf(proto, Uint8Array.prototype)
-    Object.setPrototypeOf(arr, proto)
+    arr.__proto__ = { __proto__: Uint8Array.prototype, foo: function () { return 42 } }
     return arr.foo() === 42
   } catch (e) {
     return false
@@ -237,7 +230,7 @@ function createBuffer (length) {
   }
   // Return an augmented `Uint8Array` instance
   var buf = new Uint8Array(length)
-  Object.setPrototypeOf(buf, Buffer.prototype)
+  buf.__proto__ = Buffer.prototype
   return buf
 }
 
@@ -287,7 +280,7 @@ function from (value, encodingOrOffset, length) {
   }
 
   if (value == null) {
-    throw new TypeError(
+    throw TypeError(
       'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
       'or Array-like Object. Received type ' + (typeof value)
     )
@@ -339,8 +332,8 @@ Buffer.from = function (value, encodingOrOffset, length) {
 
 // Note: Change prototype *after* Buffer.from is defined to workaround Chrome bug:
 // https://github.com/feross/buffer/pull/148
-Object.setPrototypeOf(Buffer.prototype, Uint8Array.prototype)
-Object.setPrototypeOf(Buffer, Uint8Array)
+Buffer.prototype.__proto__ = Uint8Array.prototype
+Buffer.__proto__ = Uint8Array
 
 function assertSize (size) {
   if (typeof size !== 'number') {
@@ -444,8 +437,7 @@ function fromArrayBuffer (array, byteOffset, length) {
   }
 
   // Return an augmented `Uint8Array` instance
-  Object.setPrototypeOf(buf, Buffer.prototype)
-
+  buf.__proto__ = Buffer.prototype
   return buf
 }
 
@@ -767,9 +759,6 @@ Buffer.prototype.inspect = function inspect () {
   if (this.length > max) str += ' ... '
   return '<Buffer ' + str + '>'
 }
-if (customInspectSymbol) {
-  Buffer.prototype[customInspectSymbol] = Buffer.prototype.inspect
-}
 
 Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
   if (isInstance(target, Uint8Array)) {
@@ -895,7 +884,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
         return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
       }
     }
-    return arrayIndexOf(buffer, [val], byteOffset, encoding, dir)
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
   }
 
   throw new TypeError('val must be string, number or Buffer')
@@ -1224,7 +1213,7 @@ function hexSlice (buf, start, end) {
 
   var out = ''
   for (var i = start; i < end; ++i) {
-    out += hexSliceLookupTable[buf[i]]
+    out += toHex(buf[i])
   }
   return out
 }
@@ -1261,8 +1250,7 @@ Buffer.prototype.slice = function slice (start, end) {
 
   var newBuf = this.subarray(start, end)
   // Return an augmented `Uint8Array` instance
-  Object.setPrototypeOf(newBuf, Buffer.prototype)
-
+  newBuf.__proto__ = Buffer.prototype
   return newBuf
 }
 
@@ -1751,8 +1739,6 @@ Buffer.prototype.fill = function fill (val, start, end, encoding) {
     }
   } else if (typeof val === 'number') {
     val = val & 255
-  } else if (typeof val === 'boolean') {
-    val = Number(val)
   }
 
   // Invalid ranges are not set to a default, so can range check early.
@@ -1808,6 +1794,11 @@ function base64clean (str) {
     str = str + '='
   }
   return str
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
 }
 
 function utf8ToBytes (string, units) {
@@ -1940,20 +1931,6 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-// Create lookup table for `toString('hex')`
-// See: https://github.com/feross/buffer/issues/219
-var hexSliceLookupTable = (function () {
-  var alphabet = '0123456789abcdef'
-  var table = new Array(256)
-  for (var i = 0; i < 16; ++i) {
-    var i16 = i * 16
-    for (var j = 0; j < 16; ++j) {
-      table[i16 + j] = alphabet[i] + alphabet[j]
-    }
-  }
-  return table
-})()
-
 }).call(this,require("buffer").Buffer)
 },{"base64-js":1,"buffer":2,"ieee754":4}],3:[function(require,module,exports){
 'use strict';
@@ -2082,7 +2059,7 @@ function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
 
             // if this didn't work, try curing all small self-intersections locally
             } else if (pass === 1) {
-                ear = cureLocalIntersections(filterPoints(ear), triangles, dim);
+                ear = cureLocalIntersections(ear, triangles, dim);
                 earcutLinked(ear, triangles, dim, minX, minY, invSize, 2);
 
             // as a last resort, try splitting the remaining polygon into two
@@ -2189,7 +2166,7 @@ function cureLocalIntersections(start, triangles, dim) {
         p = p.next;
     } while (p !== start);
 
-    return filterPoints(p);
+    return p;
 }
 
 // try splitting polygon into two and triangulate them independently
@@ -2282,7 +2259,7 @@ function findHoleBridge(hole, outerNode) {
 
     if (!m) return null;
 
-    if (hx === qx) return m; // hole touches outer segment; pick leftmost endpoint
+    if (hx === qx) return m.prev; // hole touches outer segment; pick lower endpoint
 
     // look for points inside the triangle of hole point, segment intersection and endpoint;
     // if there are no points found, we have a valid connection;
@@ -2294,30 +2271,24 @@ function findHoleBridge(hole, outerNode) {
         tanMin = Infinity,
         tan;
 
-    p = m;
+    p = m.next;
 
-    do {
+    while (p !== stop) {
         if (hx >= p.x && p.x >= mx && hx !== p.x &&
                 pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {
 
             tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
 
-            if (locallyInside(p, hole) &&
-                (tan < tanMin || (tan === tanMin && (p.x > m.x || (p.x === m.x && sectorContainsSector(m, p)))))) {
+            if ((tan < tanMin || (tan === tanMin && p.x > m.x)) && locallyInside(p, hole)) {
                 m = p;
                 tanMin = tan;
             }
         }
 
         p = p.next;
-    } while (p !== stop);
+    }
 
     return m;
-}
-
-// whether sector in vertex m contains sector in vertex p in the same coordinates
-function sectorContainsSector(m, p) {
-    return area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
 }
 
 // interlink polygon nodes in z-order
@@ -2429,10 +2400,8 @@ function pointInTriangle(ax, ay, bx, by, cx, cy, px, py) {
 
 // check if a diagonal between two polygon nodes is valid (lies in polygon interior)
 function isValidDiagonal(a, b) {
-    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && // dones't intersect other edges
-           (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && // locally visible
-            (area(a.prev, a, b.prev) || area(a, b.prev, b)) || // does not create opposite-facing sectors
-            equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case
+    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) &&
+           locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b);
 }
 
 // signed area of a triangle
@@ -2447,28 +2416,10 @@ function equals(p1, p2) {
 
 // check if two segments intersect
 function intersects(p1, q1, p2, q2) {
-    var o1 = sign(area(p1, q1, p2));
-    var o2 = sign(area(p1, q1, q2));
-    var o3 = sign(area(p2, q2, p1));
-    var o4 = sign(area(p2, q2, q1));
-
-    if (o1 !== o2 && o3 !== o4) return true; // general case
-
-    if (o1 === 0 && onSegment(p1, p2, q1)) return true; // p1, q1 and p2 are collinear and p2 lies on p1q1
-    if (o2 === 0 && onSegment(p1, q2, q1)) return true; // p1, q1 and q2 are collinear and q2 lies on p1q1
-    if (o3 === 0 && onSegment(p2, p1, q2)) return true; // p2, q2 and p1 are collinear and p1 lies on p2q2
-    if (o4 === 0 && onSegment(p2, q1, q2)) return true; // p2, q2 and q1 are collinear and q1 lies on p2q2
-
-    return false;
-}
-
-// for collinear points p, q, r, check if point q lies on segment pr
-function onSegment(p, q, r) {
-    return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
-}
-
-function sign(num) {
-    return num > 0 ? 1 : num < 0 ? -1 : 0;
+    if ((equals(p1, q1) && equals(p2, q2)) ||
+        (equals(p1, q2) && equals(p2, q1))) return true;
+    return area(p1, q1, p2) > 0 !== area(p1, q1, q2) > 0 &&
+           area(p2, q2, p1) > 0 !== area(p2, q2, q1) > 0;
 }
 
 // check if a polygon diagonal intersects any polygon segments
@@ -19839,19 +19790,19 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 module.exports = function (point, vs) {
     // ray-casting algorithm based on
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-    
+
     var x = point[0], y = point[1];
-    
+
     var inside = false;
     for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
         var xi = vs[i][0], yi = vs[i][1];
         var xj = vs[j][0], yj = vs[j][1];
-        
+
         var intersect = ((yi > y) != (yj > y))
             && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
     }
-    
+
     return inside;
 };
 
@@ -21261,7 +21212,7 @@ Lines.prototype = {
       }
     }
 
-    this.verts = allVertices;
+    this.allVertices = allVertices;
     var vertArray = new Float32Array(allVertices);
     size = vertArray.BYTES_PER_ELEMENT;
     gl.bufferData(gl.ARRAY_BUFFER, vertArray, gl.STATIC_DRAW);
@@ -21290,6 +21241,7 @@ Lines.prototype = {
    * @returns {Lines}
    */
   resetVertices: function resetVertices() {
+    this.allVertices = [];
     this.verts = [];
     var pixel,
         verts = this.verts,
@@ -21391,27 +21343,60 @@ Lines.prototype = {
         canvas = this.canvas,
         map = settings.map,
         weight = settings.weight,
-        pointSize = Math.max(map.getZoom() - 4.0, 4.0),
+        zoom = map.getZoom(),
+        pointSize = Math.max(zoom - 4.0, 4.0),
         bounds = map.getBounds(),
         topLeft = new L.LatLng(bounds.getNorth(), bounds.getWest()),
         // -- Scale to current zoom
-    scale = Math.pow(2, map.getZoom()),
+    scale = Math.pow(2, zoom),
         offset = map.project(topLeft, 0),
         mapMatrix = this.mapMatrix,
         pixelsToWebGLMatrix = this.pixelsToWebGLMatrix;
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
-    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]); // Now draw the lines several times, but like a brush, taking advantage of the single pixel line generally used by cards
+    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]);
 
-    for (var yOffset = -weight; yOffset < weight; yOffset += 0.5) {
-      for (var xOffset = -weight; xOffset < weight; xOffset += 0.5) {
-        // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
-        mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + xOffset / scale, -offset.y + yOffset / scale);
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.vertexAttrib1f(gl.aPointSize, pointSize); // -- attach matrix value to 'mapMatrix' uniform in shader
+    if (zoom > 18) {
+      mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x, -offset.y);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.vertexAttrib1f(gl.aPointSize, pointSize); // -- attach matrix value to 'mapMatrix' uniform in shader
 
-        gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
-        gl.drawArrays(gl.LINES, 0, this.verts.length / 5);
+      gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+      gl.drawArrays(gl.LINES, 0, this.allVertices.length / 5);
+    } else if (typeof weight === 'number') {
+      // Now draw the lines several times, but like a brush, taking advantage of the half pixel line generally used by cards
+      for (var yOffset = -weight; yOffset < weight; yOffset += 0.5) {
+        for (var xOffset = -weight; xOffset < weight; xOffset += 0.5) {
+          // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
+          mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + xOffset / scale, -offset.y + yOffset / scale);
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          gl.vertexAttrib1f(gl.aPointSize, pointSize); // -- attach matrix value to 'mapMatrix' uniform in shader
+
+          gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+          gl.drawArrays(gl.LINES, 0, this.allVertices.length / 5);
+        }
+      }
+    } else if (typeof weight === 'function') {
+      var vertexCount = 0;
+      var features = this.settings.data.features;
+
+      for (var i = 0; i < this.verts.length; i++) {
+        var vert = this.verts[i];
+        var weightValue = weight(i, features[i]); // Now draw the lines several times, but like a brush, taking advantage of the half pixel line generally used by cards
+
+        for (var _yOffset = -weightValue; _yOffset < weightValue; _yOffset += 0.5) {
+          for (var _xOffset = -weightValue; _xOffset < weightValue; _xOffset += 0.5) {
+            // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
+            mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + _xOffset / scale, -offset.y + _yOffset / scale);
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.vertexAttrib1f(gl.aPointSize, pointSize); // -- attach matrix value to 'mapMatrix' uniform in shader
+
+            gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+            gl.drawArrays(gl.LINES, vertexCount / 5, (vertexCount + vert.length) / 5);
+          }
+        }
+
+        vertexCount += vert.length * 2 - 10; // number of vertexes is features.length * 2, but not first or last (5 each) in array of each set of features
       }
     }
 
