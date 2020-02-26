@@ -45,11 +45,15 @@ addGlPolylines = function(map,
     stop("Can only handle LINESTRINGs, please cast your MULTILINESTRING to LINESTRING using sf::st_cast",
          call. = FALSE)
 
+  bounds = as.numeric(sf::st_bbox(data))
+
   # data
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
+  } else if (isTRUE(popup)) {
+    data = data
   } else {
     data = data[, popup]
   }
@@ -71,7 +75,22 @@ addGlPolylines = function(map,
   )
 
   # weight is about double the weight of svg, so / 2
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolylines',
-                        data, cols, popup, opacity, group, weight)
+  map = leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , 'addGlifyPolylines'
+    , data
+    , cols
+    , popup
+    , opacity
+    , group
+    , weight / 2
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
 
 }

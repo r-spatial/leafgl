@@ -21212,7 +21212,7 @@ Lines.prototype = {
       }
     }
 
-    this.verts = allVertices;
+    this.allVertices = allVertices;
     var vertArray = new Float32Array(allVertices);
     size = vertArray.BYTES_PER_ELEMENT;
     gl.bufferData(gl.ARRAY_BUFFER, vertArray, gl.STATIC_DRAW);
@@ -21241,6 +21241,7 @@ Lines.prototype = {
    * @returns {Lines}
    */
   resetVertices: function resetVertices() {
+    this.allVertices = [];
     this.verts = [];
     var pixel,
         verts = this.verts,
@@ -21264,20 +21265,41 @@ Lines.prototype = {
     } // -- data
 
 
-    for (; featureIndex < featureMax; featureIndex++) {
+    var _loop = function _loop() {
       feature = features[featureIndex];
-      var featureVerts = []; //use colorFn function here if it exists
+      featureVerts = [];
+      featureVerts.vertexCount = 0; //use colorFn function here if it exists
 
       if (colorFn) {
         color = colorFn(featureIndex, feature);
       }
 
-      for (i = 0; i < feature.geometry.coordinates.length; i++) {
-        pixel = settings.map.project(L.latLng(feature.geometry.coordinates[i][latitudeKey], feature.geometry.coordinates[i][longitudeKey]), 0);
-        featureVerts.push(pixel.x, pixel.y, color.r, color.g, color.b);
+      function getFeatureVerts(featureVerts, coordinates) {
+        for (var i = 0; i < coordinates.length; i++) {
+          if (Array.isArray(coordinates[i][0])) {
+            getFeatureVerts(featureVerts, coordinates[i]);
+            continue;
+          }
+
+          pixel = settings.map.project(L.latLng(coordinates[i][latitudeKey], coordinates[i][longitudeKey]), 0);
+          featureVerts.push(pixel.x, pixel.y, color.r, color.g, color.b);
+
+          if (i !== 0 && i !== coordinates.length - 1) {
+            featureVerts.vertexCount += 1;
+          }
+
+          featureVerts.vertexCount += 1;
+        }
       }
 
+      getFeatureVerts(featureVerts, feature.geometry.coordinates);
       verts.push(featureVerts);
+    };
+
+    for (; featureIndex < featureMax; featureIndex++) {
+      var featureVerts;
+
+      _loop();
     }
 
     return this;
@@ -21342,27 +21364,57 @@ Lines.prototype = {
         canvas = this.canvas,
         map = settings.map,
         weight = settings.weight,
-        pointSize = Math.max(map.getZoom() - 4.0, 4.0),
+        zoom = map.getZoom(),
+        pointSize = Math.max(zoom - 4.0, 4.0),
         bounds = map.getBounds(),
         topLeft = new L.LatLng(bounds.getNorth(), bounds.getWest()),
         // -- Scale to current zoom
-    scale = Math.pow(2, map.getZoom()),
+    scale = Math.pow(2, zoom),
         offset = map.project(topLeft, 0),
         mapMatrix = this.mapMatrix,
         pixelsToWebGLMatrix = this.pixelsToWebGLMatrix;
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
-    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]); // Now draw the lines several times, but like a brush, taking advantage of the single pixel line generally used by cards
+    pixelsToWebGLMatrix.set([2 / canvas.width, 0, 0, 0, 0, -2 / canvas.height, 0, 0, 0, 0, 0, 0, -1, 1, 0, 1]);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.vertexAttrib1f(gl.aPointSize, pointSize);
 
-    for (var yOffset = -weight; yOffset < weight; yOffset += 0.5) {
-      for (var xOffset = -weight; xOffset < weight; xOffset += 0.5) {
-        // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
-        mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + xOffset / scale, -offset.y + yOffset / scale);
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.vertexAttrib1f(gl.aPointSize, pointSize); // -- attach matrix value to 'mapMatrix' uniform in shader
+    if (zoom > 18) {
+      mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x, -offset.y); // -- attach matrix value to 'mapMatrix' uniform in shader
 
-        gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
-        gl.drawArrays(gl.LINES, 0, this.verts.length / 5);
+      gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+      gl.drawArrays(gl.LINES, 0, this.allVertices.length / 5);
+    } else if (typeof weight === 'number') {
+      // Now draw the lines several times, but like a brush, taking advantage of the half pixel line generally used by cards
+      for (var yOffset = -weight; yOffset < weight; yOffset += 0.5) {
+        for (var xOffset = -weight; xOffset < weight; xOffset += 0.5) {
+          // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
+          mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + xOffset / scale, -offset.y + yOffset / scale); // -- attach matrix value to 'mapMatrix' uniform in shader
+
+          gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+          gl.drawArrays(gl.LINES, 0, this.allVertices.length / 5);
+        }
+      }
+    } else if (typeof weight === 'function') {
+      var allVertexCount = 0;
+      var features = this.settings.data.features;
+
+      for (var i = 0; i < this.verts.length; i++) {
+        var vert = this.verts[i];
+        var vertexCount = vert.vertexCount;
+        var weightValue = weight(i, features[i]); // Now draw the lines several times, but like a brush, taking advantage of the half pixel line generally used by cards
+
+        for (var _yOffset = -weightValue; _yOffset < weightValue; _yOffset += 0.5) {
+          for (var _xOffset = -weightValue; _xOffset < weightValue; _xOffset += 0.5) {
+            // -- set base matrix to translate canvas pixel coordinates -> webgl coordinates
+            mapMatrix.set(pixelsToWebGLMatrix).scaleMatrix(scale).translateMatrix(-offset.x + _xOffset / scale, -offset.y + _yOffset / scale); // -- attach matrix value to 'mapMatrix' uniform in shader
+
+            gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
+            gl.drawArrays(gl.LINES, allVertexCount, vertexCount);
+          }
+        }
+
+        allVertexCount += vertexCount; // number of vertexes is features.length * 2, but not first or last (5 each) in array of each set of features
       }
     }
 
