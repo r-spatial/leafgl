@@ -64,6 +64,8 @@ addGlPoints = function(map,
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
 
+  bounds = as.numeric(sf::st_bbox(data))
+
   # data
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
@@ -93,8 +95,26 @@ addGlPoints = function(map,
     glifyDependencies()
   )
 
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPoints',
-                        data, color, popup, opacity, weight, group, layerId)
+
+  map = leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , 'addGlifyPoints'
+    , data
+    , color
+    , popup
+    , opacity
+    , weight
+    , group
+    , layerId
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
+
 
 }
 

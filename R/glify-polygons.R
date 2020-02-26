@@ -44,6 +44,8 @@ addGlPolygons = function(map,
     stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast",
          call. = FALSE)
 
+  bounds = as.numeric(sf::st_bbox(data))
+
   # data
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
@@ -69,8 +71,24 @@ addGlPolygons = function(map,
     glifyDependencies()
   )
 
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPolygons',
-                        data, cols, popup, opacity, group, layerId)
+
+  map = leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , 'addGlifyPolygons'
+    , data
+    , cols
+    , popup
+    , opacity
+    , group
+    , layerId
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
 
 }
 
