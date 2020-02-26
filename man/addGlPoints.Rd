@@ -15,6 +15,7 @@ addGlPolylines(
   group = "glpolylines",
   popup = NULL,
   weight = 2,
+  layerId = NULL,
   ...
 )
 
@@ -26,6 +27,7 @@ addGlPoints(
   weight = 10,
   group = "glpoints",
   popup = NULL,
+  layerId = NULL,
   ...
 )
 
@@ -36,6 +38,7 @@ addGlPolygons(
   opacity = 0.6,
   group = "glpolygons",
   popup = NULL,
+  layerId = NULL,
   ...
 )
 }
@@ -54,6 +57,8 @@ Note: expect funny results if you set this to < 1.}
 \item{popup}{logical or the name of the column in data to be used for popups.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
+
+\item{layerId}{the layer id}
 
 \item{...}{ignored.}
 }
