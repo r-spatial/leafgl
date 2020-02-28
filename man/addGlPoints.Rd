@@ -44,7 +44,9 @@ addGlPolygons(
 
 \item{data}{sf/sp point/polygon data to add to the map.}
 
-\item{color}{a three-column rgb matrix with values between 0 and 1.}
+\item{color}{Object representing the color. Can be of class integer, character with
+color names or HEX codes, factor, matrix, data.frame, list, json or formula.
+See the examples or \link{make_color_matrix} for more information.}
 
 \item{opacity}{feature opacity. Numeric between 0 and 1.
 Note: expect funny results if you set this to < 1.}
@@ -55,7 +57,7 @@ Note: expect funny results if you set this to < 1.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 
-\item{...}{ignored.}
+\item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See

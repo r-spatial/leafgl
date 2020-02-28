@@ -47,6 +47,15 @@ addGlPolylines = function(map,
 
   bounds = as.numeric(sf::st_bbox(data))
 
+  # color
+  color <- make_color_matrix(color, data)
+  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+  color = as.data.frame(color, stringsAsFactors = FALSE)
+  colnames(color) = c("r", "g", "b")
+
+  # cols = jsonlite::toJSON(color)
+  cols = jsonify::to_json(color, digits = 3)
+
   # data
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
@@ -57,16 +66,7 @@ addGlPolylines = function(map,
   } else {
     data = data[, popup]
   }
-
   data = geojsonsf::sf_geojson(data, ...)
-
-  # color
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
-
-  # cols = jsonlite::toJSON(color)
-  cols = jsonify::to_json(color, digits = 3)
 
   # dependencies
   map$dependencies = c(

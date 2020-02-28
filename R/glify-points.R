@@ -7,14 +7,16 @@
 #'
 #' @param map a leaflet map to add points/polygons to.
 #' @param data sf/sp point/polygon data to add to the map.
-#' @param color a three-column rgb matrix with values between 0 and 1.
+#' @param color Object representing the color. Can be of class integer, character with
+#'   color names or HEX codes, factor, matrix, data.frame, list, json or formula.
+#'   See the examples or \link{make_color_matrix} for more information.
 #' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup logical or the name of the column in data to be used for popups.
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
-#' @param ... ignored.
+#' @param ... Passed to \code{\link{to_json}{jsonify}} for the data coordinates
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
@@ -64,11 +66,8 @@ addGlPoints = function(map,
 
   bounds = as.numeric(sf::st_bbox(data))
 
-  # data
-  # data = sf::st_transform(data, 4326)
-  crds = sf::st_coordinates(data)[, c(2, 1)]
-
   # color
+  color <- make_color_matrix(color, data)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
@@ -83,6 +82,9 @@ addGlPoints = function(map,
     popup = NULL
   }
 
+  # data
+  # data = sf::st_transform(data, 4326)
+  crds = sf::st_coordinates(data)[, c(2, 1)]
   # convert data to json
   # data = jsonlite::toJSON(crds, digits = 7)
   data = jsonify::to_json(crds, ...)
