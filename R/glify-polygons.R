@@ -34,6 +34,7 @@ addGlPolygons = function(map,
                          opacity = 0.6,
                          group = "glpolygons",
                          popup = NULL,
+                         layerId = NULL,
                          ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -78,6 +79,7 @@ addGlPolygons = function(map,
     glifyDependencies()
   )
 
+
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -87,6 +89,7 @@ addGlPolygons = function(map,
     , popup
     , opacity
     , group
+    , layerId
   )
 
   leaflet::expandLimits(
@@ -96,6 +99,7 @@ addGlPolygons = function(map,
   )
 
 }
+
 
 
 ### via src

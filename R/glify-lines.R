@@ -36,6 +36,7 @@ addGlPolylines = function(map,
                           group = "glpolylines",
                           popup = NULL,
                           weight = 2,
+                          layerId = NULL,
                           ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -83,6 +84,7 @@ addGlPolylines = function(map,
   )
 
   # weight is about double the weight of svg, so / 2
+
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -93,6 +95,7 @@ addGlPolylines = function(map,
     , opacity
     , group
     , weight / 2
+    , layerId
   )
 
   leaflet::expandLimits(
@@ -101,4 +104,9 @@ addGlPolylines = function(map,
     c(bounds[1], bounds[3])
   )
 
+
 }
+
+
+
+
