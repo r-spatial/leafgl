@@ -97,9 +97,16 @@ make_color_matrix.character <- function(x, data, alpha = FALSE, palette = "virid
     x <- data[[x]]
     return(make_color_matrix(x, data, alpha, palette, ...))
   }
-  ## Otherwise we assume its a color-name / HEX-code
+  ## Otherwise we assume its a color-name / HEX-code.
+  ## If that errors, convert to integer/factor, and feed back
   x <- checkDim(x, data)
-  t(grDevices::col2rgb(x, alpha = alpha)) / 255
+  col <- tryCatch(t(grDevices::col2rgb(x, alpha = alpha)) / 255,
+           error = function(e) {
+             x <- as.integer(as.factor(x))
+             make_color_matrix(x, data, alpha, palette)
+           }
+  )
+  col
 }
 
 #' @export

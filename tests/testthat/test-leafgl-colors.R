@@ -100,6 +100,15 @@ test_that("Character as color", {
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
+  ## Character - Character Column Name #############
+  m <- leaflet() %>%
+    addGlPolylines(data = lines,
+                   color = "FGN",
+                   group = "lns");
+  expect_is(m, "leaflet")
+  expect_is(m$x$calls[[1]]$args[[2]], "json")
+  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  rm(m)
 })
 
 test_that("Formula as color", {

@@ -45,7 +45,7 @@ addGlPolygons(
 \item{data}{sf/sp point/polygon data to add to the map.}
 
 \item{color}{Object representing the color. Can be of class integer, character with
-color names or HEX codes, factor, matrix, data.frame, list, json or formula.
+color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
 See the examples or \link{make_color_matrix} for more information.}
 
 \item{opacity}{feature opacity. Numeric between 0 and 1.
