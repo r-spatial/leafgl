@@ -5,7 +5,6 @@
 #'   POSIX*, character with color names or HEX codes, factor, matrix, data.frame,
 #'   list, json or formula.
 #' @param data The dataset
-#' @param alpha Should alpha be included. Default is FALSE
 #' @param palette Name of a color palette. If \code{colourvalues} is installed, it is
 #'   passed to \code{\link[colourvalues]{colour_values_rgb}}. To see all available
 #'   palettes, please use \code{\link[colourvalues]{colour_palettes}}.
@@ -49,25 +48,25 @@
 #' ## For Lists
 #' make_color_matrix(list(1,2), data.frame(x=c(1,2)))
 #' }
-make_color_matrix <-  function(x, data, alpha, palette, ...) {
+make_color_matrix <-  function(x, data, palette, ...) {
   UseMethod("make_color_matrix", x)
 }
 
 #' @export
-make_color_matrix.integer <- function(x, data = NULL, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.integer <- function(x, data = NULL, palette = "viridis", ...) {
   if (requireNamespace("colourvalues", quietly = TRUE)) {
     x <- checkDim(x, data)
     colourvalues::colour_values_rgb(x,
                                     palette = palette,
-                                    include_alpha = alpha, ...) / 255
+                                    include_alpha = FALSE, ...) / 255
   } else {
     if (length(x) == 1) {
       x <- grDevices::colors()[x]
-      t(grDevices::col2rgb(x, alpha = alpha)) / 255
+      t(grDevices::col2rgb(x, alpha = FALSE)) / 255
     } else {
       x <- checkDim(x, data)
-      pal <- leaflet::colorNumeric(palette, x, alpha = alpha, ...)
-      t(grDevices::col2rgb(pal(x), alpha = alpha)) / 255
+      pal <- leaflet::colorNumeric(palette, x, alpha = FALSE, ...)
+      t(grDevices::col2rgb(pal(x), alpha = FALSE)) / 255
     }
   }
 }
@@ -75,42 +74,42 @@ make_color_matrix.integer <- function(x, data = NULL, alpha = FALSE, palette = "
 make_color_matrix.numeric <- make_color_matrix.integer
 
 #' @export
-make_color_matrix.factor <- function(x, data = NULL, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.factor <- function(x, data = NULL, palette = "viridis", ...) {
   x <- tryCatch(as.integer(as.character(as.factor(x))),
                 error = function(e) as.numeric(as.factor(x)),
                 warning = function(e) as.numeric(as.factor(x)),
                 finally = function(e) stop("Cannot process factor."))
 
-  make_color_matrix(x, data, alpha, palette, ...)
+  make_color_matrix(x, data, palette, ...)
 }
 
 #' @export
-make_color_matrix.formula <- function(x, data, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.formula <- function(x, data, palette = "viridis", ...) {
   x <- leaflet::evalFormula(x, data)
-  make_color_matrix(x, data, alpha, ...)
+  make_color_matrix(x, data, palette, ...)
 }
 
 #' @export
-make_color_matrix.character <- function(x, data, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.character <- function(x, data, palette = "viridis", ...) {
   ## If x is a column name, take the column values and feed method again
   if (length(x) == 1 && x %in% colnames(data)) {
     x <- data[[x]]
-    return(make_color_matrix(x, data, alpha, palette, ...))
+    return(make_color_matrix(x, data, palette, ...))
   }
   ## Otherwise we assume its a color-name / HEX-code.
   ## If that errors, convert to integer/factor, and feed back
   x <- checkDim(x, data)
-  col <- tryCatch(t(grDevices::col2rgb(x, alpha = alpha)) / 255,
+  col <- tryCatch(t(grDevices::col2rgb(x)) / 255,
            error = function(e) {
              x <- as.integer(as.factor(x))
-             make_color_matrix(x, data, alpha, palette)
+             make_color_matrix(x, data, palette, ...)
            }
   )
   col
 }
 
 #' @export
-make_color_matrix.matrix <- function(x, data, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.matrix <- function(x, data, palette = "viridis", ...) {
   if (all(apply(x, 2, class) == "character")) {
     x <- matrix(apply(x, 2, as.numeric), ncol = 3)
   }
@@ -125,7 +124,7 @@ make_color_matrix.matrix <- function(x, data, alpha = FALSE, palette = "viridis"
 make_color_matrix.data.frame <- make_color_matrix.matrix
 
 #' @export
-make_color_matrix.list <- function(x, data = NULL, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.list <- function(x, data = NULL, palette = "viridis", ...) {
   classes <- lapply(x, class)
   if (all(classes == "numeric")) {
     x <- unlist(x)
@@ -134,19 +133,19 @@ make_color_matrix.list <- function(x, data = NULL, alpha = FALSE, palette = "vir
   } else {
     x <- as.numeric(unlist(x))
   }
-  make_color_matrix(x, data, alpha, palette, ...)
+  make_color_matrix(x, data, palette, ...)
 }
 
 #' @export
-make_color_matrix.json <- function(x, data = NULL, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.json <- function(x, data = NULL, palette = "viridis", ...) {
   x <- jsonify::from_json(x)
-  make_color_matrix(x, data, alpha, palette, ...)
+  make_color_matrix(x, data, palette, ...)
 }
 
 #' @export
-make_color_matrix.Date <- function(x, data = NULL, alpha = FALSE, palette = "viridis", ...) {
+make_color_matrix.Date <- function(x, data = NULL, palette = "viridis", ...) {
   x <- as.numeric(x)
-  make_color_matrix(x, data, alpha, palette, ...)
+  make_color_matrix(x, data, palette, ...)
 }
 #' @export
 make_color_matrix.POSIXct <- make_color_matrix.Date
@@ -166,7 +165,7 @@ checkDim <- function(x, data) {
     if (nrow(x) != 1 && nro_d != nrow(x)) {
       warning("Number of rows of color matrix does not match number of data rows.\n",
               "  Just the first row is taken.")
-      x <- x[1,]
+      x <- x[1,,drop = FALSE]
     }
   } else {
     len_x <- length(x)

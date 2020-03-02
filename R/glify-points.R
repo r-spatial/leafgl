@@ -67,7 +67,13 @@ addGlPoints = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color
-  color <- make_color_matrix(color, data)
+  args <- list(...)
+  palette = "viridis"
+  if ("palette" %in% names(args)) {
+    palette <- args$palette
+    args$palette = NULL
+  }
+  color <- make_color_matrix(color, data, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
@@ -87,7 +93,8 @@ addGlPoints = function(map,
   crds = sf::st_coordinates(data)[, c(2, 1)]
   # convert data to json
   # data = jsonlite::toJSON(crds, digits = 7)
-  data = jsonify::to_json(crds, ...)
+  if (length(args) == 0) args <- NULL
+  data = do.call(jsonify::to_json, c(list(crds), args))
 
   # dependencies
   map$dependencies = c(

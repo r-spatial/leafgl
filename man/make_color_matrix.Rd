@@ -4,7 +4,7 @@
 \alias{make_color_matrix}
 \title{make_color_matrix}
 \usage{
-make_color_matrix(x, data, alpha, palette, ...)
+make_color_matrix(x, data, palette, ...)
 }
 \arguments{
 \item{x}{Object representing the color. Can be of class integer, numeric, Date,
@@ -12,8 +12,6 @@ POSIX*, character with color names or HEX codes, factor, matrix, data.frame,
 list, json or formula.}
 
 \item{data}{The dataset}
-
-\item{alpha}{Should alpha be included. Default is FALSE}
 
 \item{palette}{Name of a color palette. If \code{colourvalues} is installed, it is
 passed to \code{\link[colourvalues]{colour_values_rgb}}. To see all available

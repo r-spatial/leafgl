@@ -48,7 +48,13 @@ addGlPolylines = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color
-  color <- make_color_matrix(color, data)
+  args <- list(...)
+  palette = "viridis"
+  if ("palette" %in% names(args)) {
+    palette <- args$palette
+    args$palette = NULL
+  }
+  color <- make_color_matrix(color, data, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
@@ -66,7 +72,9 @@ addGlPolylines = function(map,
   } else {
     data = data[, popup]
   }
-  data = geojsonsf::sf_geojson(data, ...)
+  if (length(args) == 0) args <- NULL
+  data = do.call(geojsonsf::sf_geojson, c(list(data), args))
+  # data = geojsonsf::sf_geojson(data, ...)
 
   # dependencies
   map$dependencies = c(
