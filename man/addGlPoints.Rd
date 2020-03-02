@@ -51,7 +51,9 @@ Note: expect funny results if you set this to < 1.}
 
 \item{group}{a group name for the feature layer.}
 
-\item{popup}{logical or the name of the column in data to be used for popups.}
+\item{popup}{Object representing the popup. Can be of type character with column names,
+formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 

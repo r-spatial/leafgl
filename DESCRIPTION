@@ -34,7 +34,7 @@ Imports:
   leaflet,
   sf
 Suggests:
-    colourvalues, 
-    mapview, 
-    shiny, 
-    testthat
+    colourvalues,
+    mapview,
+    shiny,
+    testthat (>= 2.1.0)

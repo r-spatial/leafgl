@@ -16,6 +16,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
       wght = function(index, feature) { return weight[index]; };
     }
 
+/*
     var pop;
     if (popup) {
         if (popup === true) {
@@ -41,13 +42,22 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
     } else {
         pop = null;
     }
-
+*/
 
     var lineslayer = L.glify.lines({
       map: map,
+      click: function (e, feature, xy) {
+        var idx = data.features.findIndex(k => k==feature);
+        //set up a standalone popup (use a popup as a layer)
+        if (map.hasLayer(lineslayer.glLayer)) {
+          L.popup()
+            .setLatLng(e.latlng)
+            .setContent(popup[idx].toString())
+            .openOn(map);
+        }
+      },
       latitudeKey: 1,
       longitudeKey: 0,
-      click: pop,
       data: data,
       color: clrs,
       opacity: opacity,

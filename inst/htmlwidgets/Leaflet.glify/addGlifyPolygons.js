@@ -9,6 +9,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       clrs = function(index, feature) { return cols[index]; };
     }
 
+/*
     var pop;
     if (popup) {
         if (popup === true) {
@@ -34,10 +35,21 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     } else {
         pop = null;
     }
+*/
 
     var shapeslayer = L.glify.shapes({
       map: map,
-      click: pop,
+      click: function (e, feature) {
+        var idx = data.features.findIndex(k => k==feature);
+        //set up a standalone popup (use a popup as a layer)
+        if (map.hasLayer(shapeslayer.glLayer)) {
+          L.popup()
+            .setLatLng(e.latlng)
+            .setContent(popup[idx].toString())
+            .openOn(map);
+        }
+
+      },
       data: data,
       color: clrs,
       opacity: opacity,

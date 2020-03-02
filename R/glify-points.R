@@ -12,7 +12,9 @@
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
 #' @param group a group name for the feature layer.
-#' @param popup logical or the name of the column in data to be used for popups.
+#' @param popup Object representing the popup. Can be of type character with column names,
+#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+#'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param ... ignored.
 #'
@@ -75,10 +77,19 @@ addGlPoints = function(map,
 
   # color = jsonlite::toJSON(color)
   color = jsonify::to_json(color)
+
   # popup
   if (!is.null(popup)) {
+    htmldeps <- htmltools::htmlDependencies(popup)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    popup = make_popup(popup, data)
     # popup = jsonlite::toJSON(data[[popup]])
-    popup = jsonify::to_json(data[[popup]])
+    popup = jsonify::to_json(popup)
   } else {
     popup = NULL
   }
