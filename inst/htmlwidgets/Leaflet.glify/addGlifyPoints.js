@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size, group) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size, group, layerId) {
 
   var map = this;
 
@@ -71,8 +71,17 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
       className: group
     });
 
-  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 
   //});
 
+};
+
+
+LeafletWidget.methods.removeGlPoints = function(layerId) {
+  this.layerManager.removeLayer("glify", layerId);
+};
+
+LeafletWidget.methods.clearGlLayers = function() {
+  this.layerManager.clearLayers("glify");
 };

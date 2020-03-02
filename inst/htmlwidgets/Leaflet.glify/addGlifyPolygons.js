@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group) {
+LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group, layerId) {
 
   var map = this;
 
@@ -56,6 +56,11 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       className: group
     });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(shapeslayer.glLayer, "glify", layerId, group);
 
+};
+
+
+LeafletWidget.methods.removeGlPolygons = function(layerId) {
+  this.layerManager.removeLayer("glify", layerId);
 };

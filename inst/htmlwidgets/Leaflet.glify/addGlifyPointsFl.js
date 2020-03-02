@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size) {
+LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size, layerId) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
