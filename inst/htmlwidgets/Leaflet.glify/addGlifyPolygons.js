@@ -9,7 +9,6 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       clrs = function(index, feature) { return cols[index]; };
     }
 
-/*
     var pop;
     if (popup) {
         if (popup === true) {
@@ -24,10 +23,12 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
           };
         } else {
           pop = function (e, feature) {
+            var idx = data.features.findIndex(k => k==feature);
+            //set up a standalone popup (use a popup as a layer)
             if (map.hasLayer(shapeslayer.glLayer)) {
               L.popup({ maxWidth: 2000 })
                 .setLatLng(e.latlng)
-                .setContent(feature.properties[[popup]].toString())
+                .setContent(popup[idx].toString())
                 .openOn(map);
             }
           };
@@ -35,21 +36,11 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     } else {
         pop = null;
     }
-*/
+
 
     var shapeslayer = L.glify.shapes({
       map: map,
-      click: function (e, feature) {
-        var idx = data.features.findIndex(k => k==feature);
-        //set up a standalone popup (use a popup as a layer)
-        if (map.hasLayer(shapeslayer.glLayer)) {
-          L.popup()
-            .setLatLng(e.latlng)
-            .setContent(popup[idx].toString())
-            .openOn(map);
-        }
-
-      },
+      click: pop,
       data: data,
       color: clrs,
       opacity: opacity,

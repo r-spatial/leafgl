@@ -52,6 +52,8 @@ addGlPolylines = function(map,
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
+  } else if (isTRUE(popup)) {
+    data = data[, popup]
   } else {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {

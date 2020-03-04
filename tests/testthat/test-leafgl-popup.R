@@ -409,7 +409,7 @@ test_that("popup-lines-logical", {
                    popup = TRUE,
                    opacity = 1)
   expect_is(m, "leaflet")
-  expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+  expect_true(m$x$calls[[2]]$args[[3]])
 
   ## FALSE #################
   m <- leaflet() %>% addTiles() %>%
@@ -562,7 +562,7 @@ test_that("popup-polygon-logical", {
                    popup = TRUE,
                    opacity = 1)
   expect_is(m, "leaflet")
-  expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+  expect_true(m$x$calls[[2]]$args[[3]])
 
   ## FALSE #################
   m <- leaflet() %>% addTiles() %>%
@@ -582,3 +582,5 @@ test_that("popup-polygon-logical", {
   expect_is(m, "leaflet")
   expect_true(is.null(m$x$calls[[2]]$args[[3]]))
 })
+
+
