@@ -15,6 +15,7 @@ addGlPolylines(
   group = "glpolylines",
   popup = NULL,
   weight = 2,
+  layerId = NULL,
   ...
 )
 
@@ -26,6 +27,7 @@ addGlPoints(
   weight = 10,
   group = "glpoints",
   popup = NULL,
+  layerId = NULL,
   ...
 )
 
@@ -36,6 +38,7 @@ addGlPolygons(
   opacity = 0.6,
   group = "glpolygons",
   popup = NULL,
+  layerId = NULL,
   ...
 )
 }
@@ -56,6 +59,8 @@ formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght doe
 match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
+
+\item{layerId}{the layer id}
 
 \item{...}{ignored.}
 }
