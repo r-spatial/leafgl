@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size) {
+LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size, layerId) {
 
   var map = this;
 
@@ -32,12 +32,12 @@ LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size) {
       className: group
     });
 
-  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 
 };
 
 
-LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size) {
+LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerId) {
 
   var map = this;
   var grp1 = group + "_1";
@@ -73,7 +73,7 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size) {
       className: group
     });
 
-  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 
   function add() {
         if (typeof data[grp2] === 'undefined') {

@@ -12,6 +12,7 @@
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
 #' @param group a group name for the feature layer.
+#' @param layerId the layer id
 #' @param popup logical or the name of the column in data to be used for popups.
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param ... ignored.
@@ -56,6 +57,7 @@ addGlPoints = function(map,
                        weight = 10,
                        group = "glpoints",
                        popup = NULL,
+                       layerId = NULL,
                        ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -93,6 +95,7 @@ addGlPoints = function(map,
     glifyDependencies()
   )
 
+
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -103,6 +106,7 @@ addGlPoints = function(map,
     , opacity
     , weight
     , group
+    , layerId
   )
 
   leaflet::expandLimits(
@@ -111,7 +115,9 @@ addGlPoints = function(map,
     c(bounds[1], bounds[3])
   )
 
+
 }
+
 
 ### via src
 addGlPointsSrc = function(map,
@@ -121,6 +127,7 @@ addGlPointsSrc = function(map,
                           weight = 10,
                           group = "glpoints",
                           popup = NULL,
+                          layerId = NULL,
                           ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -183,7 +190,7 @@ addGlPointsSrc = function(map,
   }
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc',
-                        group, opacity, weight)
+                        group, opacity, weight, layerId)
 
 }
 
@@ -196,6 +203,7 @@ addGlPointsSrc2 = function(map,
                            weight = 10,
                            group = "glpoints",
                            popup = NULL,
+                           layerId = NULL,
                            ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -267,7 +275,7 @@ addGlPointsSrc2 = function(map,
   }
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc2',
-                        group, opacity, weight)
+                        group, opacity, weight, layerId)
 
 }
 
@@ -281,6 +289,7 @@ addGlPointsFl = function(map,
                          weight = 10,
                          group = "glpoints",
                          popup = NULL,
+                         layerId = NULL,
                          ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -339,6 +348,6 @@ addGlPointsFl = function(map,
   }
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsFl',
-                        data_var, color_var, popup_var, opacity, weight)
+                        data_var, color_var, popup_var, opacity, weight, layerId)
 
 }
