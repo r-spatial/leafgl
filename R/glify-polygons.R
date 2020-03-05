@@ -53,7 +53,7 @@ addGlPolygons = function(map,
     palette <- args$palette
     args$palette = NULL
   }
-  color <- make_color_matrix(color, data, palette = palette)
+  color <- makeColorMatrix(color, data, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")

@@ -9,7 +9,7 @@
 #' @param data sf/sp point/polygon data to add to the map.
 #' @param color Object representing the color. Can be of class integer, character with
 #'   color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
-#'   See the examples or \link{make_color_matrix} for more information.
+#'   See the examples or \link{makeColorMatrix} for more information.
 #' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
 #' @param weight point size in pixels.
@@ -75,7 +75,7 @@ addGlPoints = function(map,
     palette <- args$palette
     args$palette = NULL
   }
-  color <- make_color_matrix(color, data, palette = palette)
+  color <- makeColorMatrix(color, data, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")

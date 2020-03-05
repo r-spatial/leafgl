@@ -49,7 +49,7 @@ addGlPolygons(
 
 \item{color}{Object representing the color. Can be of class integer, character with
 color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
-See the examples or \link{make_color_matrix} for more information.}
+See the examples or \link{makeColorMatrix} for more information.}
 
 \item{opacity}{feature opacity. Numeric between 0 and 1.
 Note: expect funny results if you set this to < 1.}
@@ -63,7 +63,6 @@ Note: expect funny results if you set this to < 1.}
 \item{layerId}{the layer id}
 
 \item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
-
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See
