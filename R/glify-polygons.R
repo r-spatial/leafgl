@@ -76,7 +76,7 @@ addGlPolygons = function(map,
         htmldeps
       )
     }
-    popup = make_popup(popup, data)
+    popup = makePopup(popup, data)
     popup = jsonify::to_json(popup)
   }
   if (length(args) == 0) args <- NULL

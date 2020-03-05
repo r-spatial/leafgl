@@ -94,7 +94,7 @@ addGlPoints = function(map,
         htmldeps
       )
     }
-    popup = make_popup(popup, data)
+    popup = makePopup(popup, data)
     # popup = jsonlite::toJSON(data[[popup]])
     popup = jsonify::to_json(popup)
   } else {

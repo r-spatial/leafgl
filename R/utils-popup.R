@@ -1,21 +1,21 @@
 
 #' Transform object to popup
-#' @title make_popup
+#' @title makePopup
 #' @param x Object representing the popup
 #' @param data The dataset
-#' @rdname make_popup
+#' @rdname makePopup
 #' @export
-make_popup <-  function(x, data) {
-  UseMethod("make_popup", x)
+makePopup <-  function(x, data) {
+  UseMethod("makePopup", x)
 }
 
 #' @export
-make_popup.formula <- function(x, data) {
+makePopup.formula <- function(x, data) {
   leaflet::evalFormula(x, data)
 }
 
 #' @export
-make_popup.character <- function(x, data) {
+makePopup.character <- function(x, data) {
   if (all(x %in% names(data))) {
     if (length(x) == 1) {
       data[[x]]
@@ -23,7 +23,7 @@ make_popup.character <- function(x, data) {
       names <- x
       x <- do.call(cbind, lapply(x, function(x) .subset2(data, x)))
       colnames(x) <- names
-      make_popup(x, data)
+      makePopup(x, data)
     }
   } else {
     checkDimPop(x, data)
@@ -31,7 +31,7 @@ make_popup.character <- function(x, data) {
 }
 
 #' @export
-make_popup.shiny.tag <- function(x, data) {
+makePopup.shiny.tag <- function(x, data) {
   x <- as.character(x)
   x <- checkDimPop(x, data)
   # if (length(x) == 1) {
@@ -42,7 +42,7 @@ make_popup.shiny.tag <- function(x, data) {
 }
 
 #' @export
-make_popup.matrix <- function(x, data) {
+makePopup.matrix <- function(x, data) {
   names_x <- colnames(x)
   x <- apply(x, 1, function(x)
     paste0("<b>", names_x, "</b>: ", x,
@@ -50,10 +50,10 @@ make_popup.matrix <- function(x, data) {
   checkDimPop(x, data)
 }
 #' @export
-make_popup.data.frame <- make_popup.matrix
+makePopup.data.frame <- makePopup.matrix
 
 #' @export
-make_popup.sf <- function(x, data) {
+makePopup.sf <- function(x, data) {
   x <- data.frame(x)
   ## Remove Geometry Columns ???
   x[,"geometry"] <- NULL
@@ -61,36 +61,36 @@ make_popup.sf <- function(x, data) {
   x[,"longitude"] <- NULL
   x[,"optional"] <- NULL
   ## Feed back to method
-  make_popup(x, data)
+  makePopup(x, data)
 }
 #' @export
-make_popup.Spatial <- make_popup.sf
+makePopup.Spatial <- makePopup.sf
 
 #' @export
-make_popup.logical <- function(x, data) {
+makePopup.logical <- function(x, data) {
   if (x == TRUE) {
-    make_popup(data, data)
+    makePopup(data, data)
   } else {
     return(NULL)
   }
 }
 
 #' @export
-make_popup.list <- function(x, data) {
+makePopup.list <- function(x, data) {
   x <- do.call(cbind, x)
-  make_popup(x, data)
+  makePopup(x, data)
 }
 
 #' @export
-make_popup.json <- function(x, data) {
+makePopup.json <- function(x, data) {
   x <- jsonify::from_json(x)
-  make_popup(x, data)
+  makePopup(x, data)
 }
 
 #' @export
-make_popup.default <- function(x, data) {
+makePopup.default <- function(x, data) {
   x <- as.character(x)
-  make_popup(x, data)
+  makePopup(x, data)
 }
 
 
