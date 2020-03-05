@@ -2,7 +2,7 @@
 #'
 #' @inheritParams leaflet::leafletOutput
 #' @importFrom leaflet leafletOutput
-#' @importFrom htmltools tagList tags
+#' @importFrom htmltools tagList tags htmlDependencies
 #' @return A UI for rendering leafgl
 #' @export
 #'
