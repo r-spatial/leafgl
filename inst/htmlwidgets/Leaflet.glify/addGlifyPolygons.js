@@ -36,7 +36,6 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       };
     } else {
       pop = function (e, feature) {
-        debugger;
         var idx = data.features.findIndex(k => k==feature);
         var popUp = popup[idx].toString();
         click_event(e, feature, true, popUp);
