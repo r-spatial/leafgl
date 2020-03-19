@@ -4,7 +4,7 @@
 \alias{renderLeafgl}
 \title{Use leafgl in shiny}
 \usage{
-renderLeafgl(expr, env = parent.frame(), quoted = FALSE)
+renderLeafgl(expr, env = parent.frame(), quoted = TRUE)
 }
 \arguments{
 \item{expr}{An expression that generates an HTML widget (or a

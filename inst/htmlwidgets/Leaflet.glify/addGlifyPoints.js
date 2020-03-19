@@ -49,32 +49,37 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
   map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
 */
 
-    //var dat = JSON.parse(points);
-    //if (popup_var) var pop = JSON.parse(popups);
-    var pointslayer = L.glify.points({
-      map: map,
-      click: function (e, point, xy) {
-        var idx = data.findIndex(k => k==point);
-        //set up a standalone popup (use a popup as a layer)
-        if (map.hasLayer(pointslayer.glLayer)) {
+  var pointslayer = L.glify.points({
+    map: map,
+    click: function (e, point, xy) {
+      var idx = data.findIndex(k => k==point);
+      //set up a standalone popup (use a popup as a layer)
+      if (map.hasLayer(pointslayer.glLayer)) {
+        var content = popup ? popup[idx].toString() : null;
+        if (HTMLWidgets.shinyMode) {
+              Shiny.setInputValue(map.id + "_shape_click", {
+                group: pointslayer.settings.className,
+                lat: point[0],
+                lng: point[1],
+                data: content
+              });
+        }
+        if (popup !== null) {
           L.popup()
             .setLatLng(point)
-            .setContent(popup[idx].toString())
+            .setContent(content)
             .openOn(map);
         }
-
-      },
-      data: data,
-      color: clrs,
-      opacity: opacity,
-      size: size,
-      className: group
-    });
+      }
+    },
+    data: data,
+    color: clrs,
+    opacity: opacity,
+    size: size,
+    className: group
+  });
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
-
-  //});
-
 };
 
 
