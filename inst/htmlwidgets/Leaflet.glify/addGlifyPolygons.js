@@ -9,10 +9,12 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     clrs = function(index, feature) { return cols[index]; };
   }
 
-  var click_event = function(e, feature, addpopup, content) {
+  var click_event = function(e, feature, addpopup, popup) {
     if (map.hasLayer(shapeslayer.glLayer)) {
+      var idx = data.features.findIndex(k => k==feature);
       if (HTMLWidgets.shinyMode) {
-        Shiny.setInputValue(map.id + "_shape_click", {
+        Shiny.setInputValue(map.id + "_glify_click", {
+          id: layerId ? layerId[idx] : idx+1,
           group: Object.values(shapeslayer.glLayer._eventParents)[0].groupname,
           lat: e.latlng.lat,
           lng: e.latlng.lng,
@@ -20,6 +22,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
         });
       }
       if (addpopup) {
+        var content = popup === true ? '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>' : popup[idx].toString();
         L.popup({ maxWidth: 2000 })
         .setLatLng(e.latlng)
         .setContent(content)
@@ -28,24 +31,9 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     }
   };
 
-  if (popup) {
-    if (popup === true) {
-      pop = function (e, feature) {
-        var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
-        click_event(e, feature, true, popUp);
-      };
-    } else {
-      pop = function (e, feature) {
-        var idx = data.features.findIndex(k => k==feature);
-        var popUp = popup[idx].toString();
-        click_event(e, feature, true, popUp);
-      };
-    }
-  } else {
-    pop = function (e, feature) {
-      click_event(e, feature, false, null);
-    };
-  }
+  var pop = function (e, feature) {
+    click_event(e, feature, popup !== null, popup);
+  };
 
   var shapeslayer = L.glify.shapes({
     map: map,
