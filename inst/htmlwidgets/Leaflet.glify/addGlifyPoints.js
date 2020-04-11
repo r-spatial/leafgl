@@ -80,13 +80,14 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
             .setContent(content)
             .openOn(map);
         }
-      },
-      data: data,
-      color: clrs,
-      opacity: opacity,
-      size: rad,
-      className: group
-    });
+      }
+    },
+    data: data,
+    color: clrs,
+    opacity: opacity,
+    size: rad,
+    className: group
+  });
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 };
