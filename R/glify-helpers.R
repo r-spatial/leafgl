@@ -9,7 +9,7 @@ glifyDependencies = function() {
         "addGlifyPoints.js"
         , "addGlifyPolygons.js"
         , "addGlifyPolylines.js"
-        , "glify.js"
+        , "glify-browser.js"
       )
     )
   )

@@ -80,6 +80,8 @@ addGlPolylines = function(map,
     }
     popup = makePopup(popup, data)
     popup = jsonify::to_json(popup)
+    geom = sf::st_geometry(data)
+    data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
   if (length(args) == 0) args <- NULL
   data = do.call(geojsonsf::sf_geojson, c(list(data), args))

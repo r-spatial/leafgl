@@ -24,7 +24,7 @@ addGlPoints(
   data,
   color = cbind(0, 0.2, 1),
   opacity = 1,
-  weight = 10,
+  radius = 10,
   group = "glpoints",
   popup = NULL,
   layerId = NULL,
@@ -65,6 +65,8 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 \item{layerId}{the layer id}
 
 \item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
+
+\item{radius}{point size in pixels.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See

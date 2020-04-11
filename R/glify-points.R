@@ -12,7 +12,7 @@
 #'   See the examples or \link{makeColorMatrix} for more information.
 #' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
-#' @param weight point size in pixels.
+#' @param radius point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
 #'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
@@ -58,7 +58,7 @@ addGlPoints = function(map,
                        data,
                        color = cbind(0, 0.2, 1),
                        opacity = 1,
-                       weight = 10,
+                       radius = 10,
                        group = "glpoints",
                        popup = NULL,
                        layerId = NULL,
@@ -124,7 +124,7 @@ addGlPoints = function(map,
     , color
     , popup
     , opacity
-    , weight
+    , radius
     , group
     , layerId
   )

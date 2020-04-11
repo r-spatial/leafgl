@@ -1,12 +1,21 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size, group, layerId) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId) {
 
   var map = this;
 
+  // colors
   var clrs;
   if (cols.length === 1) {
     clrs = cols[0];
   } else {
     clrs = function(index, point) { return cols[index]; };
+  }
+
+  // radius
+  var rad;
+  if (radius.length === 1) {
+    rad = radius[0];
+  } else {
+    rad = function(index, point) { return radius[index]; };
   }
 
 /*
@@ -67,7 +76,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, size
       data: data,
       color: clrs,
       opacity: opacity,
-      size: size,
+      size: rad,
       className: group
     });
 
