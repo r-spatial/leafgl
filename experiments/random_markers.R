@@ -5,10 +5,11 @@ library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 1e3
+n = 1e5
+rad = sample(3:25, n, replace = TRUE)
 
 df1 = data.frame(id = 1:n,
-                 id2 = n:1,
+                 radius = rad,
                  x = rnorm(n, 10, 1),
                  y = rnorm(n, 49, 0.8))
 
@@ -17,19 +18,21 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
 system.time({
   # cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
-  # cols = colour_values(pts$id, include_alpha = FALSE)
+  cols = colour_values(pts$id, include_alpha = FALSE)
+  cols = sample(cols)
 
-  options(viewer = NULL)
+  # options(viewer = NULL)
 
   m = mapview()@map %>%
     addGlPoints(
       data = pts
-      # , color = cols
-      , popup = NULL
+      , color = cols
+      , radius = pts$radius
+      , popup = TRUE
       , group = "pts"
       , digits = 5
     ) %>%
-    addMouseCoordinates() %>%
+    leafem::addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
     mapview:::updateOverlayGroups(group = "pts")
 })
