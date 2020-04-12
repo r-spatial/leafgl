@@ -46,7 +46,6 @@
 #'   m = leaflet() %>%
 #'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'     addGlPoints(data = pts, color = cols, popup = "id") %>%
-#'     addMouseCoordinates() %>%
 #'     setView(lng = 10.5, lat = 49.5, zoom = 9)
 #' })
 #'
@@ -106,8 +105,16 @@ addGlPoints = function(map,
   crds = sf::st_coordinates(data)[, c(2, 1)]
   # convert data to json
   # data = jsonlite::toJSON(crds, digits = 7)
-  if (length(args) == 0) args <- NULL
-  data = do.call(jsonify::to_json, c(list(crds), args))
+  if (length(args) == 0) {
+    jsonify_args = NULL
+  } else {
+    jsonify_args = match.arg(
+      names(args)
+      , names(as.list(args(jsonify::to_json)))
+      , several.ok = TRUE
+    )
+  }
+  data = do.call(jsonify::to_json, c(list(crds), args[jsonify_args]))
 
   # dependencies
   map$dependencies = c(

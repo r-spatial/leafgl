@@ -21,7 +21,6 @@
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") %>%
-#'   addMouseCoordinates() %>%
 #'   setView(lng = 10.5, lat = 49.5, zoom = 8)
 #' }
 #'
@@ -83,8 +82,16 @@ addGlPolygons = function(map,
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
-  if (length(args) == 0) args <- NULL
-  data = do.call(geojsonsf::sf_geojson, c(list(data), args))
+  if (length(args) == 0) {
+    geojsonsf_args = NULL
+  } else {
+    geojsonsf_args = match.arg(
+      names(args)
+      , names(as.list(args(geojsonsf::sf_geojson)))
+      , several.ok = TRUE
+    )
+  }
+  data = do.call(geojsonsf::sf_geojson, c(list(data), args[geojsonsf_args]))
   # data = geojsonsf::sf_geojson(data, ...)
 
   # dependencies

@@ -109,7 +109,6 @@ options(viewer = NULL)
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
   addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) \%>\%
-  addMouseCoordinates() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
 }
 
@@ -136,7 +135,6 @@ system.time({
   m = leaflet() \%>\%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
     addGlPoints(data = pts, color = cols, popup = "id") \%>\%
-    addMouseCoordinates() \%>\%
     setView(lng = 10.5, lat = 49.5, zoom = 9)
 })
 
@@ -159,7 +157,6 @@ options(viewer = NULL)
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") \%>\%
-  addMouseCoordinates() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
 }
 
