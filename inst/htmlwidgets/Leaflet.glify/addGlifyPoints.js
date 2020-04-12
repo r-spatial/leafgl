@@ -12,8 +12,8 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
 
   // radius
   var rad;
-  if (radius.length === 1) {
-    rad = radius[0];
+  if (typeof(radius) === "number") {
+    rad = radius;
   } else {
     rad = function(index, point) { return radius[index]; };
   }

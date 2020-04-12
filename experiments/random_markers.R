@@ -6,7 +6,7 @@ library(colourvalues)
 library(data.table)
 
 n = 1e5
-rad = sample(3:25, n, replace = TRUE)
+rad = rep(10, n) #sample(3:25, n, replace = TRUE)
 
 df1 = data.frame(id = 1:n,
                  radius = rad,
@@ -26,8 +26,8 @@ system.time({
   m = mapview()@map %>%
     addGlPoints(
       data = pts
-      , color = cols
-      , radius = pts$radius
+      , color = cbind(0, 0.2, 1) #cols
+      , radius = 10 #pts$radius
       , popup = TRUE
       , group = "pts"
       , digits = 5
