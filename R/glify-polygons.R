@@ -31,7 +31,9 @@
 addGlPolygons = function(map,
                          data,
                          color = cbind(0, 0.2, 1),
-                         opacity = 0.6,
+                         fillColor = color,
+                         opacity = 0.8,
+                         fillOpacity = 0.6,
                          group = "glpolygons",
                          popup = NULL,
                          layerId = NULL,
@@ -46,20 +48,20 @@ addGlPolygons = function(map,
 
   bounds = as.numeric(sf::st_bbox(data))
 
-  # color
+  # fillColor
   args <- list(...)
   palette = "viridis"
   if ("palette" %in% names(args)) {
     palette <- args$palette
     args$palette = NULL
   }
-  color <- makeColorMatrix(color, data, palette = palette)
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
+  fillColor <- makeColorMatrix(fillColor, data, palette = palette)
+  if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
+  fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
+  colnames(fillColor) = c("r", "g", "b")
 
-  # cols = jsonlite::toJSON(color)
-  cols = jsonify::to_json(color, digits = 3)
+  # cols = jsonlite::toJSON(fillColor)
+  cols = jsonify::to_json(fillColor, digits = 3)
 
   # data
   if (is.null(popup)) {
@@ -99,7 +101,7 @@ addGlPolygons = function(map,
     , data
     , cols
     , popup
-    , opacity
+    , fillOpacity
     , group
     , layerId
   )
