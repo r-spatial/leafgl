@@ -6,7 +6,7 @@ library(colourvalues)
 library(data.table)
 
 n = 1e5
-rad = rep(10, n) #sample(3:25, n, replace = TRUE)
+rad = sample(3:25, n, replace = TRUE)
 
 df1 = data.frame(id = 1:n,
                  radius = rad,
@@ -26,8 +26,8 @@ system.time({
   m = mapview()@map %>%
     addGlPoints(
       data = pts
-      , color = cbind(0, 0.2, 1) #cols
-      , radius = 10 #pts$radius
+      , color = cols
+      , radius = pts$radius
       , popup = TRUE
       , group = "pts"
       , digits = 5
@@ -39,7 +39,7 @@ system.time({
 
 m
 
-mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
+# mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
 
 ### try 10 mio - partition into 4 chunks to avoid size overflow in the browser
 # n = 1e7

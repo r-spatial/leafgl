@@ -23,7 +23,9 @@ addGlPoints(
   map,
   data,
   color = cbind(0, 0.2, 1),
+  fillColor = color,
   opacity = 1,
+  fillOpacity = 1,
   radius = 10,
   group = "glpoints",
   popup = NULL,
@@ -120,7 +122,7 @@ library(sf)
 library(colourvalues)
 library(jsonlite)
 
-n = 1e6
+n = 1e5
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),

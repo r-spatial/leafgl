@@ -31,7 +31,7 @@
 #' library(colourvalues)
 #' library(jsonlite)
 #'
-#' n = 1e6
+#' n = 1e5
 #'
 #' df1 = data.frame(id = 1:n,
 #'                  x = rnorm(n, 10, 1),
@@ -56,7 +56,9 @@
 addGlPoints = function(map,
                        data,
                        color = cbind(0, 0.2, 1),
+                       fillColor = color,
                        opacity = 1,
+                       fillOpacity = 1,
                        radius = 10,
                        group = "glpoints",
                        popup = NULL,
@@ -69,20 +71,20 @@ addGlPoints = function(map,
 
   bounds = as.numeric(sf::st_bbox(data))
 
-  # color
+  # fillColor
   args <- list(...)
   palette = "viridis"
   if ("palette" %in% names(args)) {
     palette <- args$palette
     args$palette = NULL
   }
-  color <- makeColorMatrix(color, data, palette = palette)
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
+  fillColor <- makeColorMatrix(fillColor, data, palette = palette)
+  if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
+  fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
+  colnames(fillColor) = c("r", "g", "b")
 
-  # color = jsonlite::toJSON(color)
-  color = jsonify::to_json(color)
+  # fillColor = jsonlite::toJSON(fillColor)
+  fillColor = jsonify::to_json(fillColor)
 
   # popup
   if (!is.null(popup)) {
@@ -128,9 +130,9 @@ addGlPoints = function(map,
     , leaflet::getMapData(map)
     , 'addGlifyPoints'
     , data
-    , color
+    , fillColor
     , popup
-    , opacity
+    , fillOpacity
     , radius
     , group
     , layerId
