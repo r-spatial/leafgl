@@ -40,7 +40,6 @@ addGlPolylines = function(map,
 
   ## currently leaflet.glify only supports single (fill)opacity!
   opacity = opacity[1]
-  fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
