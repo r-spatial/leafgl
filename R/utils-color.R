@@ -160,7 +160,7 @@ makeColorMatrix.POSIXlt <- makeColorMatrix.Date
 #' @param x The color vector
 #' @param data The dataset
 checkDim <- function(x, data) {
-  nro_d <- nrow(data)
+  if (inherits(data, "sfc")) nro_d = length(data) else nro_d = nrow(data)
   if (inherits(x, "matrix") || inherits(x, "data.frame")) {
     if (nrow(x) != 1 && nro_d != nrow(x)) {
       warning("Number of rows of color matrix does not match number of data rows.\n",
