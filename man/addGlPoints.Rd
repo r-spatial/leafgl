@@ -22,8 +22,7 @@ addGlPolylines(
 addGlPoints(
   map,
   data,
-  color = cbind(0, 0.2, 1),
-  fillColor = color,
+  fillColor = "#0033ff",
   opacity = 1,
   fillOpacity = 1,
   radius = 10,

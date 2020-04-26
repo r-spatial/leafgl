@@ -1,6 +1,6 @@
 LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId) {
 
-  var map = this;
+  const map = this;
 
   // colors
   var clrs;
@@ -60,7 +60,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
 
   var pointslayer = L.glify.points({
     map: map,
-    click: function (e, point, xy) {
+    click: (e, point, xy) => {
       var idx = data.findIndex(k => k==point);
       //set up a standalone popup (use a popup as a layer)
       if (map.hasLayer(pointslayer.glLayer)) {

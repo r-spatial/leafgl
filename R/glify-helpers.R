@@ -3,13 +3,14 @@ glifyDependencies = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '2.2.0',
+      '3.0.1',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPoints.js"
         , "addGlifyPolygons.js"
         , "addGlifyPolylines.js"
         , "glify-browser.js"
+        # , "glify-browser.js.map"
       )
     )
   )
@@ -40,10 +41,10 @@ glifyDependenciesSrc = function() {
       '2.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js"
-        , "addGlifyPolygonsFl.js"
-        , "addGlifyPolylines.js"
-        , "glify.js"
+        "addGlifyPointsSrc.js"
+        , "addGlifyPolygonsSrc.js"
+        , "addGlifyPolylinesSrc.js"
+        , "glify-browser.js"
       )
     )
   )
@@ -92,6 +93,19 @@ glifyPopupAttachmentSrc = function(fl_popup, group) {
   list(
     htmltools::htmlDependency(
       name = paste0(group, "pop"),
+      version = 1,
+      src = c(file = data_dir),
+      script = list(data_file)
+    )
+  )
+}
+
+glifyRadiusAttachmentSrc = function(fl_radius, group) {
+  data_dir <- dirname(fl_radius)
+  data_file <- basename(fl_radius)
+  list(
+    htmltools::htmlDependency(
+      name = paste0(group, "rad"),
       version = 1,
       src = c(file = data_dir),
       script = list(data_file)

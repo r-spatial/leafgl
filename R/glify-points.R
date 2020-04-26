@@ -55,8 +55,7 @@
 #' @export addGlPoints
 addGlPoints = function(map,
                        data,
-                       color = cbind(0, 0.2, 1),
-                       fillColor = color,
+                       fillColor = "#0033ff",
                        opacity = 1,
                        fillOpacity = 1,
                        radius = 10,
@@ -64,6 +63,22 @@ addGlPoints = function(map,
                        popup = NULL,
                        layerId = NULL,
                        ...) {
+
+  if ("src" %in% names(list(...)) && isTRUE(list(...)$src)) {
+    m = addGlPointsSrc(
+      map = map
+      , data = data
+      , fillColor = fillColor
+      , opacity = opacity
+      , fillOpacity = fillOpacity
+      , radius = radius
+      , group = group
+      , popup = popup
+      , layerId = layerId
+      , ...
+    )
+    return(m)
+  }
 
   ## currently leaflet.glify only supports single (fill)opacity!
   opacity = opacity[1]
@@ -124,8 +139,8 @@ addGlPoints = function(map,
 
   # dependencies
   map$dependencies = c(
-    map$dependencies,
     glifyDependencies()
+    , map$dependencies
   )
 
 
@@ -155,17 +170,24 @@ addGlPoints = function(map,
 ### via src
 addGlPointsSrc = function(map,
                           data,
-                          color = cbind(0, 0.2, 1),
+                          fillColor = "#0033ff",
                           opacity = 1,
-                          weight = 10,
+                          fillOpacity = 1,
+                          radius = 10,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
                           ...) {
 
+  ## currently leaflet.glify only supports single (fill)opacity!
+  opacity = opacity[1]
+  fillOpacity = fillOpacity[1]
+
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
+
+  bounds = as.numeric(sf::st_bbox(data))
 
   # temp directories
   dir_data = tempfile(pattern = "glify_points_dat")
@@ -174,56 +196,121 @@ addGlPointsSrc = function(map,
   dir.create(dir_color)
   dir_popup = tempfile(pattern = "glify_points_pop")
   dir.create(dir_popup)
+  dir_radius = tempfile(pattern = "glify_points_rad")
+  dir.create(dir_radius)
 
   # data
-  data = sf::st_transform(data, 4326)
+  # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
 
-  fl_data = paste0(dir_data, "/", group, "_data.json")
+  fl_data = paste0(dir_data, "/", group, "_data.js")
   pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
-  cat('[', jsonify::to_json(crds), '];',
+  jsonify_args = try(
+    match.arg(
+      names(list(...))
+      , names(as.list(args(jsonify::to_json)))
+      , several.ok = TRUE
+    )
+    , silent = TRUE
+  )
+  if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
+  cat('[', do.call(jsonify::to_json, c(list(crds), list(...)[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
-  # color
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
-
-  fl_color = paste0(dir_color, "/", group, "_color.json")
-  pre = paste0('var col = col || {}; col["', group, '"] = ')
-  writeLines(pre, fl_color)
-  cat('[', jsonify::to_json(color), '];',
-      file = fl_color, append = TRUE)
-
-  # popup
-  if (!is.null(popup)) {
-    fl_popup = paste0(dir_popup, "/", group, "_popup.json")
-    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
-    writeLines(pre, fl_popup)
-    cat('[', jsonify::to_json(data[[popup]]), '];',
-        file = fl_popup, append = TRUE)
-  } else {
-    popup = NULL
-  }
-
-  # dependencies
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, group),
-    glifyColorAttachmentSrc(fl_color, group)
+    glifyDataAttachmentSrc(fl_data, group)
   )
 
+  # color
+  fillColor <- makeColorMatrix(fillColor, data, palette = palette)
+  if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
+  fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
+  colnames(fillColor) = c("r", "g", "b")
+
+  if (nrow(fillColor) > 1) {
+    fl_color = paste0(dir_color, "/", group, "_color.js")
+    pre = paste0('var col = col || {}; col["', group, '"] = ')
+    writeLines(pre, fl_color)
+    cat('[', jsonify::to_json(fillColor), '];',
+        file = fl_color, append = TRUE)
+
+    map$dependencies = c(
+      map$dependencies,
+      glifyColorAttachmentSrc(fl_color, group)
+    )
+
+    fillColor = NULL
+  }
+
+  # popup
   if (!is.null(popup)) {
+    htmldeps <- htmltools::htmlDependencies(popup)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    popup = makePopup(popup, data)
+    # popup = jsonlite::toJSON(data[[popup]])
+    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
+    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
+    writeLines(pre, fl_popup)
+    cat('[', jsonify::to_json(popup), '];',
+        file = fl_popup, append = TRUE)
+
     map$dependencies = c(
       map$dependencies,
       glifyPopupAttachmentSrc(fl_popup, group)
     )
+
   }
 
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc',
-                        group, opacity, weight, layerId)
+  # radius
+  if (length(unique(radius)) > 1) {
+    fl_radius = paste0(dir_radius, "/", group, "_radius.js")
+    pre = paste0('var rad = rad || {}; rad["', group, '"] = ')
+    writeLines(pre, fl_radius)
+    cat('[', jsonify::to_json(radius), '];',
+        file = fl_radius, append = TRUE)
+
+    map$dependencies = c(
+      map$dependencies,
+      glifyRadiusAttachmentSrc(fl_radius, group)
+    )
+
+    radius = NULL
+  }
+
+  # leaflet::invokeMethod(
+  #   map
+  #   , leaflet::getMapData(map)
+  #   , 'addGlifyPointsSrc'
+  #   , fillOpacity
+  #   , radius
+  #   , group
+  #   , layerId
+  # )
+
+  map = leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , 'addGlifyPointsSrc'
+    , fillColor
+    , radius
+    , fillOpacity
+    , group
+    , layerId
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
 
 }
 
