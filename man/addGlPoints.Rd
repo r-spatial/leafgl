@@ -16,6 +16,7 @@ addGlPolylines(
   popup = NULL,
   weight = 1,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 
@@ -29,6 +30,7 @@ addGlPoints(
   group = "glpoints",
   popup = NULL,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 
@@ -42,6 +44,7 @@ addGlPolygons(
   group = "glpolygons",
   popup = NULL,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 }
@@ -66,6 +69,8 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 
 \item{layerId}{the layer id}
+
+\item{src}{whether to pass data to the widget via file attachments.}
 
 \item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
 

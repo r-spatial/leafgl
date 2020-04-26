@@ -50,7 +50,7 @@ system.time({
       , popup = pts$pop
       , group = "pts"
       , digits = 5
-      , src = TRUE
+      # , src = TRUE
     ) %>%
     leafem::addMouseCoordinates() %>%
     # setView(lng = 10.5, lat = 49.5, zoom = 6) %>%

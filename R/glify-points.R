@@ -19,6 +19,7 @@
 #'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
+#' @param src whether to pass data to the widget via file attachments.
 #' @param ... Passed to \code{\link{to_json}{jsonify}} for the data coordinates
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
@@ -62,9 +63,10 @@ addGlPoints = function(map,
                        group = "glpoints",
                        popup = NULL,
                        layerId = NULL,
+                       src = FALSE,
                        ...) {
 
-  if ("src" %in% names(list(...)) && isTRUE(list(...)$src)) {
+  if (isTRUE(src)) {
     m = addGlPointsSrc(
       map = map
       , data = data

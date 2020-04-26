@@ -36,9 +36,10 @@ addGlPolygons = function(map,
                          group = "glpolygons",
                          popup = NULL,
                          layerId = NULL,
+                         src = FALSE,
                          ...) {
 
-  if ("src" %in% names(list(...)) && isTRUE(list(...)$src)) {
+  if (isTRUE(src)) {
     m = addGlPolygonsSrc(
       map = map
       , data = data

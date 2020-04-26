@@ -36,9 +36,10 @@ addGlPolylines = function(map,
                           popup = NULL,
                           weight = 1,
                           layerId = NULL,
+                          src = FALSE,
                           ...) {
 
-  if ("src" %in% names(list(...)) && isTRUE(list(...)$src)) {
+  if (isTRUE(src)) {
     m = addGlPolylinesSrc(
       map = map
       , data = data
