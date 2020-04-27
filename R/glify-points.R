@@ -131,12 +131,16 @@ addGlPoints = function(map,
   if (length(args) == 0) {
     jsonify_args = NULL
   } else {
-    jsonify_args = match.arg(
-      names(args)
-      , names(as.list(args(jsonify::to_json)))
-      , several.ok = TRUE
+    jsonify_args = try(
+      match.arg(
+        names(args)
+        , names(as.list(args(jsonify::to_json)))
+        , several.ok = TRUE
+      )
+      , silent = TRUE
     )
   }
+  if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   data = do.call(jsonify::to_json, c(list(crds), args[jsonify_args]))
 
   # dependencies
@@ -217,6 +221,7 @@ addGlPointsSrc = function(map,
     , silent = TRUE
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
+  if (identical(jsonify_args, "x")) jsonify_args = NULL
   cat('[', do.call(jsonify::to_json, c(list(crds), list(...)[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
@@ -317,159 +322,159 @@ addGlPointsSrc = function(map,
 }
 
 
-### via src
-addGlPointsSrc2 = function(map,
-                           data,
-                           color = cbind(0, 0.2, 1),
-                           opacity = 1,
-                           weight = 10,
-                           group = "glpoints",
-                           popup = NULL,
-                           layerId = NULL,
-                           ...) {
-
-  if (is.null(group)) group = deparse(substitute(data))
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
-
-  # temp directories
-  dir_data = tempfile(pattern = "glify_points_dat")
-  dir.create(dir_data)
-  dir_color = tempfile(pattern = "glify_points_col")
-  dir.create(dir_color)
-  dir_popup = tempfile(pattern = "glify_points_pop")
-  dir.create(dir_popup)
-
-  # data
-  data = sf::st_transform(data, 4326)
-  crds = sf::st_coordinates(data)[, c(2, 1)]
-
-  grp1 = paste0(group, "_1")
-  grp2 = paste0(group, "_2")
-
-  fl_data1 = paste0(dir_data, "/", grp1, "_data.json")
-  fl_data2 = paste0(dir_data, "/", grp2, "_data.json")
-  pre1 = paste0('var data = data || {}; data["', grp1, '"] = ')
-  writeLines(pre1, fl_data1)
-  cat('[', jsonify::to_json(crds[1:100, ], ...), '];',
-      file = fl_data1, sep = "", append = TRUE)
-  pre2 = paste0('var data = data || {}; data["', grp2, '"] = ')
-  writeLines(pre2, fl_data2)
-  cat('[', jsonify::to_json(crds[101:nrow(crds), ], ...), '];',
-      file = fl_data2, sep = "", append = TRUE)
-
-  # color
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
-
-  fl_color = paste0(dir_color, "/", group, "_color.json")
-  pre = paste0('var col = col || {}; col["', group, '"] = ')
-  writeLines(pre, fl_color)
-  cat('[', jsonify::to_json(color), '];',
-      file = fl_color, append = TRUE)
-
-  # popup
-  if (!is.null(popup)) {
-    fl_popup = paste0(dir_popup, "/", group, "_popup.json")
-    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
-    writeLines(pre, fl_popup)
-    cat('[', jsonify::to_json(data[[popup]]), '];',
-        file = fl_popup, append = TRUE)
-  } else {
-    popup = NULL
-  }
-
-  # dependencies
-  map$dependencies = c(
-    map$dependencies,
-    glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data1, grp1),
-    glifyDataAttachmentSrc(fl_data2, grp1, TRUE),
-    glifyColorAttachmentSrc(fl_color, group)
-  )
-
-  if (!is.null(popup)) {
-    map$dependencies = c(
-      map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, group)
-    )
-  }
-
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc2',
-                        group, opacity, weight, layerId)
-
-}
-
-
-
-### via attachments
-addGlPointsFl = function(map,
-                         data,
-                         color = cbind(0, 0.2, 1),
-                         opacity = 1,
-                         weight = 10,
-                         group = "glpoints",
-                         popup = NULL,
-                         layerId = NULL,
-                         ...) {
-
-  if (is.null(group)) group = deparse(substitute(data))
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
-
-  # temp directories
-  dir_data = tempfile(pattern = "glify_points_dt")
-  dir.create(dir_data)
-  dir_color = tempfile(pattern = "glify_points_cl")
-  dir.create(dir_color)
-  dir_popup = tempfile(pattern = "glify_points_pop")
-  dir.create(dir_popup)
-
-  # data
-  data = sf::st_transform(data, 4326)
-  crds = sf::st_coordinates(data)[, c(2, 1)]
-
-  fl_data = paste0(dir_data, "/", group, "_data.json")
-  cat(jsonify::to_json(crds, digits = 7), file = fl_data, append = FALSE)
-  data_var = paste0(group, "dt")
-
-  # color
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
-
-  jsn = jsonify::to_json(color)
-  fl_color = paste0(dir_color, "/", group, "_color.json")
-  color_var = paste0(group, "cl")
-  cat(jsn, file = fl_color, append = FALSE)
-
-  # popup
-  if (!is.null(popup)) {
-    pop = jsonify::to_json(data[[popup]])
-    fl_popup = paste0(dir_popup, "/", group, "_popup.json")
-    popup_var = paste0(group, "pop")
-    cat(pop, file = fl_popup, append = FALSE)
-  } else {
-    popup_var = NULL
-  }
-
-  # dependencies
-  map$dependencies = c(
-    map$dependencies,
-    glifyDependenciesFl(),
-    glifyDataAttachment(fl_data, group),
-    glifyColorAttachment(fl_color, group)
-  )
-
-  if (!is.null(popup)) {
-    map$dependencies = c(
-      map$dependencies,
-      glifyPopupAttachment(fl_popup, group)
-    )
-  }
-
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsFl',
-                        data_var, color_var, popup_var, opacity, weight, layerId)
-
-}
+# ### via src
+# addGlPointsSrc2 = function(map,
+#                            data,
+#                            color = cbind(0, 0.2, 1),
+#                            opacity = 1,
+#                            weight = 10,
+#                            group = "glpoints",
+#                            popup = NULL,
+#                            layerId = NULL,
+#                            ...) {
+#
+#   if (is.null(group)) group = deparse(substitute(data))
+#   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+#   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
+#
+#   # temp directories
+#   dir_data = tempfile(pattern = "glify_points_dat")
+#   dir.create(dir_data)
+#   dir_color = tempfile(pattern = "glify_points_col")
+#   dir.create(dir_color)
+#   dir_popup = tempfile(pattern = "glify_points_pop")
+#   dir.create(dir_popup)
+#
+#   # data
+#   data = sf::st_transform(data, 4326)
+#   crds = sf::st_coordinates(data)[, c(2, 1)]
+#
+#   grp1 = paste0(group, "_1")
+#   grp2 = paste0(group, "_2")
+#
+#   fl_data1 = paste0(dir_data, "/", grp1, "_data.json")
+#   fl_data2 = paste0(dir_data, "/", grp2, "_data.json")
+#   pre1 = paste0('var data = data || {}; data["', grp1, '"] = ')
+#   writeLines(pre1, fl_data1)
+#   cat('[', jsonify::to_json(crds[1:100, ], ...), '];',
+#       file = fl_data1, sep = "", append = TRUE)
+#   pre2 = paste0('var data = data || {}; data["', grp2, '"] = ')
+#   writeLines(pre2, fl_data2)
+#   cat('[', jsonify::to_json(crds[101:nrow(crds), ], ...), '];',
+#       file = fl_data2, sep = "", append = TRUE)
+#
+#   # color
+#   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+#   color = as.data.frame(color, stringsAsFactors = FALSE)
+#   colnames(color) = c("r", "g", "b")
+#
+#   fl_color = paste0(dir_color, "/", group, "_color.json")
+#   pre = paste0('var col = col || {}; col["', group, '"] = ')
+#   writeLines(pre, fl_color)
+#   cat('[', jsonify::to_json(color), '];',
+#       file = fl_color, append = TRUE)
+#
+#   # popup
+#   if (!is.null(popup)) {
+#     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
+#     pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
+#     writeLines(pre, fl_popup)
+#     cat('[', jsonify::to_json(data[[popup]]), '];',
+#         file = fl_popup, append = TRUE)
+#   } else {
+#     popup = NULL
+#   }
+#
+#   # dependencies
+#   map$dependencies = c(
+#     map$dependencies,
+#     glifyDependenciesSrc(),
+#     glifyDataAttachmentSrc(fl_data1, grp1),
+#     glifyDataAttachmentSrc(fl_data2, grp1, TRUE),
+#     glifyColorAttachmentSrc(fl_color, group)
+#   )
+#
+#   if (!is.null(popup)) {
+#     map$dependencies = c(
+#       map$dependencies,
+#       glifyPopupAttachmentSrc(fl_popup, group)
+#     )
+#   }
+#
+#   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc2',
+#                         group, opacity, weight, layerId)
+#
+# }
+#
+#
+#
+# ### via attachments
+# addGlPointsFl = function(map,
+#                          data,
+#                          color = cbind(0, 0.2, 1),
+#                          opacity = 1,
+#                          weight = 10,
+#                          group = "glpoints",
+#                          popup = NULL,
+#                          layerId = NULL,
+#                          ...) {
+#
+#   if (is.null(group)) group = deparse(substitute(data))
+#   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+#   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
+#
+#   # temp directories
+#   dir_data = tempfile(pattern = "glify_points_dt")
+#   dir.create(dir_data)
+#   dir_color = tempfile(pattern = "glify_points_cl")
+#   dir.create(dir_color)
+#   dir_popup = tempfile(pattern = "glify_points_pop")
+#   dir.create(dir_popup)
+#
+#   # data
+#   data = sf::st_transform(data, 4326)
+#   crds = sf::st_coordinates(data)[, c(2, 1)]
+#
+#   fl_data = paste0(dir_data, "/", group, "_data.json")
+#   cat(jsonify::to_json(crds, digits = 7), file = fl_data, append = FALSE)
+#   data_var = paste0(group, "dt")
+#
+#   # color
+#   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+#   color = as.data.frame(color, stringsAsFactors = FALSE)
+#   colnames(color) = c("r", "g", "b")
+#
+#   jsn = jsonify::to_json(color)
+#   fl_color = paste0(dir_color, "/", group, "_color.json")
+#   color_var = paste0(group, "cl")
+#   cat(jsn, file = fl_color, append = FALSE)
+#
+#   # popup
+#   if (!is.null(popup)) {
+#     pop = jsonify::to_json(data[[popup]])
+#     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
+#     popup_var = paste0(group, "pop")
+#     cat(pop, file = fl_popup, append = FALSE)
+#   } else {
+#     popup_var = NULL
+#   }
+#
+#   # dependencies
+#   map$dependencies = c(
+#     map$dependencies,
+#     glifyDependenciesFl(),
+#     glifyDataAttachment(fl_data, group),
+#     glifyColorAttachment(fl_color, group)
+#   )
+#
+#   if (!is.null(popup)) {
+#     map$dependencies = c(
+#       map$dependencies,
+#       glifyPopupAttachment(fl_popup, group)
+#     )
+#   }
+#
+#   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsFl',
+#                         data_var, color_var, popup_var, opacity, weight, layerId)
+#
+# }
