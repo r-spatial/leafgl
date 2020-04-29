@@ -5,38 +5,77 @@ library(sf)
 library(colourvalues)
 library(data.table)
 
-n = 1e3
+options(viewer = NULL)
+
+n = 1e5
+rad = sample(3:25, n, replace = TRUE)
 
 df1 = data.frame(id = 1:n,
-                 id2 = n:1,
+                 radius = rad,
                  x = rnorm(n, 10, 1),
                  y = rnorm(n, 49, 0.8))
 
 pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
-# pts$pop = leafpop::popupTable(pts)
+pts$pop = leafpop::popupTable(pts)
+
+cols = colour_values(pts$id, include_alpha = FALSE, palette = "magma")
+cols = sample(tolower(cols))
+
 
 system.time({
-  # cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
-  # cols = colour_values(pts$id, include_alpha = FALSE)
-
-  options(viewer = NULL)
-
-  m = mapview()@map %>%
-    addGlPoints(
+  m1 = mapview()@map %>%
+    # addTiles() %>%
+    leafgl:::addGlPoints(
       data = pts
-      # , color = cols
-      , popup = NULL
+      , fillColor = cols
+      , radius = pts$radius
+      , popup = pts$pop
       , group = "pts"
       , digits = 5
     ) %>%
-    addMouseCoordinates() %>%
+    leafem::addMouseCoordinates() %>%
     setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
     mapview:::updateOverlayGroups(group = "pts")
 })
 
-m
+m1
 
-mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
+system.time({
+  m2 = leaflet() %>%
+    addTiles() %>%
+    leafgl:::addGlPoints(
+      data = pts
+      , fillColor = cols
+      , radius = pts$radius
+      , popup = pts$pop
+      , group = "pts"
+      , digits = 5
+      # , src = TRUE
+    ) %>%
+    leafem::addMouseCoordinates() %>%
+    # setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
+    mapview:::updateOverlayGroups(group = "pts")
+})
+
+m2
+
+system.time({
+  m = mapview()@map %>%
+    addGlPoints(
+      data = pts
+      , color = cols
+      , radius = pts$radius
+      , popup = pts$pop
+      , group = "pts"
+      , digits = 5
+    ) %>%
+    leafem::addMouseCoordinates() %>%
+    setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
+    mapview:::updateOverlayGroups(group = "pts")
+})
+
+
+# mapshot(m, "/home/timpanse/Desktop/test.html", selfcontained = FALSE)
 
 ### try 10 mio - partition into 4 chunks to avoid size overflow in the browser
 # n = 1e7

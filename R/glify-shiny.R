@@ -88,7 +88,7 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 #' shinyApp(ui, server)
 #' }
 #'
-renderLeafgl <- function(expr, env = parent.frame(), quoted = FALSE){
+renderLeafgl <- function(expr, env = parent.frame(), quoted = TRUE){
   renderLeaflet(expr = expr, env = env, quoted = quoted)
 }
 

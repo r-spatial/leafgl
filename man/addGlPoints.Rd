@@ -14,20 +14,23 @@ addGlPolylines(
   opacity = 0.6,
   group = "glpolylines",
   popup = NULL,
-  weight = 2,
+  weight = 1,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 
 addGlPoints(
   map,
   data,
-  color = cbind(0, 0.2, 1),
+  fillColor = "#0033ff",
   opacity = 1,
-  weight = 10,
+  fillOpacity = 1,
+  radius = 10,
   group = "glpoints",
   popup = NULL,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 
@@ -35,10 +38,13 @@ addGlPolygons(
   map,
   data,
   color = cbind(0, 0.2, 1),
-  opacity = 0.6,
+  fillColor = color,
+  opacity = 0.8,
+  fillOpacity = 0.6,
   group = "glpolygons",
   popup = NULL,
   layerId = NULL,
+  src = FALSE,
   ...
 )
 }
@@ -64,7 +70,11 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 
 \item{layerId}{the layer id}
 
+\item{src}{whether to pass data to the widget via file attachments.}
+
 \item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
+
+\item{radius}{point size in pixels.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See
@@ -105,7 +115,6 @@ options(viewer = NULL)
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
   addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) \%>\%
-  addMouseCoordinates() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
 }
 
@@ -117,7 +126,7 @@ library(sf)
 library(colourvalues)
 library(jsonlite)
 
-n = 1e6
+n = 1e5
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
@@ -132,7 +141,6 @@ system.time({
   m = leaflet() \%>\%
     addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
     addGlPoints(data = pts, color = cols, popup = "id") \%>\%
-    addMouseCoordinates() \%>\%
     setView(lng = 10.5, lat = 49.5, zoom = 9)
 })
 
@@ -155,7 +163,6 @@ options(viewer = NULL)
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") \%>\%
-  addMouseCoordinates() \%>\%
   setView(lng = 10.5, lat = 49.5, zoom = 8)
 }
 

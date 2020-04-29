@@ -1,42 +1,50 @@
-LeafletWidget.methods.addGlifyPointsSrc = function(group, opacity, size, layerId) {
+LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId) {
 
   var map = this;
 
-    var cols = col[group][0];
-    var clrs;
-    if (cols.length === 1) {
-      clrs = cols[0];
-    } else {
-      clrs = function(index, feature) { return cols[index]; };
-    }
-    var pointslayer = L.glify.points({
-      map: map,
-      click: function (e, point, xy) {
-        //var idx = data[group][0].indexOf(point);
-        var idx = data[group][0].findIndex(k => k==point);
-        //set up a standalone popup (use a popup as a layer)
-        if (map.hasLayer(pointslayer.glLayer)) {
-          L.popup()
-            .setLatLng(point)
-            .setContent(popup[group][0][idx].toString())
-            .openOn(map);
-        }
+  // color
+  var clrs;
+  if (fillColor === null) {
+    clrs = function(index, feature) { return col[group][0][index]; };
+  } else {
+    clrs = fillColor;
+  }
 
-        console.log(point);
+  // radius
+  var size;
+  if (radius === null) {
+    size = function(index, point) { return rad[group][0][index]; };
+  } else {
+    size = radius;
+  }
 
-      },
-      data: data[group][0],
-      color: clrs,
-      opacity: opacity,
-      size: size,
-      className: group
-    });
+  var pointslayer = L.glify.points({
+    map: map,
+    click: function (e, point, xy) {
+      //var idx = data[group][0].indexOf(point);
+      var idx = data[group][0].findIndex(k => k==point);
+      //set up a standalone popup (use a popup as a layer)
+      if (map.hasLayer(pointslayer.glLayer)) {
+        L.popup()
+          .setLatLng(point)
+          .setContent(popup[group][0][idx].toString())
+          .openOn(map);
+      }
+      console.log(point);
+    },
+    data: data[group][0],
+    color: clrs,
+    opacity: fillOpacity,
+    size: size,
+    className: group
+  });
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 
 };
 
 
+/*
 LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerId) {
 
   var map = this;
@@ -111,4 +119,4 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerI
    add();
 
 };
-
+*/

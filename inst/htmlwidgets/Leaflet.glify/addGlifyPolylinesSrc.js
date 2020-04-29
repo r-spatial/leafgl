@@ -1,13 +1,21 @@
-LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId) {
 
   var map = this;
 
   // color
   var clrs;
-  if (fillColor === null) {
+  if (color === null) {
     clrs = function(index, feature) { return col[group][0][index]; };
   } else {
-    clrs = fillColor;
+    clrs = color;
+  }
+
+  // radius
+  var wght;
+  if (weight === null) {
+    wght = function(index, feature) { return wgt[group][0][index]; };
+  } else {
+    wght = weight;
   }
 
   var pop;
@@ -15,7 +23,7 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
     pop = null;
   } else {
     pop = function (e, feature) {
-      if (map.hasLayer(shapeslayer.glLayer)) {
+      if (map.hasLayer(lineslayer.glLayer)) {
         var idx = data[group][0].features.findIndex(k => k==feature);
         L.popup()
           .setLatLng(e.latlng)
@@ -25,15 +33,18 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
     };
   }
 
-  var shapeslayer = L.glify.shapes({
+  var lineslayer = L.glify.lines({
     map: map,
     click: pop,
+    latitudeKey: 1,
+    longitudeKey: 0,
     data: data[group][0],
     color: clrs,
-    opacity: fillOpacity,
+    opacity: opacity,
+    weight: wght,
     className: group
   });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
 
 };
