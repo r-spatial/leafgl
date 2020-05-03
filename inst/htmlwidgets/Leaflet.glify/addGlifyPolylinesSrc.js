@@ -21,8 +21,10 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
   var lineslayer = L.glify.lines({
     map: map,
     click: function (e, feature) {
-      if (typeof(popup[layerId]) === "undefined") {
+      if (typeof(popup) === "undefined") {
           return;
+      } else if (typeof(popup[layerId]) === "undefined") {
+        return;
       } else {
       if (map.hasLayer(lineslayer.glLayer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);

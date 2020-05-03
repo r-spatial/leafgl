@@ -15,8 +15,10 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
   var shapeslayer = L.glify.shapes({
     map: map,
     click: function (e, feature) {
-      if (typeof(popup[layerId]) === "undefined") {
+      if (typeof(popup) === "undefined") {
           return;
+      } else if (typeof(popup[layerId]) === "undefined") {
+        return;
       } else {
       if (map.hasLayer(shapeslayer.glLayer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);

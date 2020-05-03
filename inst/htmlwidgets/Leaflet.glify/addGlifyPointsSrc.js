@@ -21,14 +21,20 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
   var pointslayer = L.glify.points({
     map: map,
     click: function (e, point, xy) {
-      //var idx = data[layerId][0].indexOf(point);
-      var idx = data[layerId][0].findIndex(k => k==point);
-      //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.glLayer)) {
-        L.popup()
-          .setLatLng(point)
-          .setContent(popup[layerId][0][idx].toString())
-          .openOn(map);
+      if (typeof(popup) === "undefined") {
+        return;
+      } else if (typeof(popup[layerId]) === "undefined") {
+        return;
+      } else {
+        //var idx = data[layerId][0].indexOf(point);
+        var idx = data[layerId][0].findIndex(k => k==point);
+        //set up a standalone popup (use a popup as a layer)
+        if (map.hasLayer(pointslayer.glLayer)) {
+          L.popup()
+            .setLatLng(point)
+            .setContent(popup[layerId][0][idx].toString())
+            .openOn(map);
+        }
       }
     },
     data: data[layerId][0],
