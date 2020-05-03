@@ -5,7 +5,7 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
   // color
   var clrs;
   if (color === null) {
-    clrs = function(index, feature) { return col[group][0][index]; };
+    clrs = function(index, feature) { return col[layerId][0][index]; };
   } else {
     clrs = color;
   }
@@ -13,32 +13,29 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
   // radius
   var wght;
   if (weight === null) {
-    wght = function(index, feature) { return wgt[group][0][index]; };
+    wght = function(index, feature) { return wgt[layerId][0][index]; };
   } else {
     wght = weight;
   }
 
-  var pop;
-  if (typeof(popup) === "undefined") {
-    pop = null;
-  } else {
-    pop = function (e, feature) {
-      if (map.hasLayer(lineslayer.glLayer)) {
-        var idx = data[group][0].features.findIndex(k => k==feature);
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(popup[group][0][idx].toString())
-          .openOn(map);
-      }
-    };
-  }
-
   var lineslayer = L.glify.lines({
     map: map,
-    click: pop,
+    click: function (e, feature) {
+      if (typeof(popup[layerId]) === "undefined") {
+          return;
+      } else {
+      if (map.hasLayer(lineslayer.glLayer)) {
+          var idx = data[layerId][0].features.findIndex(k => k==feature);
+          L.popup()
+            .setLatLng(e.latlng)
+            .setContent(popup[layerId][0][idx].toString())
+            .openOn(map);
+        }
+      }
+    },
     latitudeKey: 1,
     longitudeKey: 0,
-    data: data[group][0],
+    data: data[layerId][0],
     color: clrs,
     opacity: opacity,
     weight: wght,

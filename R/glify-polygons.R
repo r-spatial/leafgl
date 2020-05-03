@@ -162,6 +162,7 @@ addGlPolygonsSrc = function(map,
                             ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
+  if (is.null(layerId)) layerId = paste0(group, "-pls")
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
   if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
@@ -182,8 +183,8 @@ addGlPolygonsSrc = function(map,
   geom = sf::st_geometry(data)
   data = sf::st_sf(id = 1:length(geom), geometry = geom)
 
-  fl_data = paste0(dir_data, "/", group, "_data.js")
-  pre = paste0('var data = data || {}; data["', group, '"] = ')
+  fl_data = paste0(dir_data, "/", layerId, "_data.js")
+  pre = paste0('var data = data || {}; data["', layerId, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
@@ -201,7 +202,7 @@ addGlPolygonsSrc = function(map,
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, group)
+    glifyDataAttachmentSrc(fl_data, layerId)
   )
 
   # color
@@ -211,15 +212,15 @@ addGlPolygonsSrc = function(map,
   colnames(fillColor) = c("r", "g", "b")
 
   if (nrow(fillColor) > 1) {
-    fl_color = paste0(dir_color, "/", group, "_color.js")
-    pre = paste0('var col = col || {}; col["', group, '"] = ')
+    fl_color = paste0(dir_color, "/", layerId, "_color.js")
+    pre = paste0('var col = col || {}; col["', layerId, '"] = ')
     writeLines(pre, fl_color)
     cat('[', jsonify::to_json(fillColor), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyColorAttachmentSrc(fl_color, group)
+      glifyColorAttachmentSrc(fl_color, layerId)
     )
 
     fillColor = NULL
@@ -236,15 +237,15 @@ addGlPolygonsSrc = function(map,
     }
     popup = makePopup(popup, data)
     # popup = jsonlite::toJSON(data[[popup]])
-    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
-    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
+    fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
+    pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)
     cat('[', jsonify::to_json(popup), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, group)
+      glifyPopupAttachmentSrc(fl_popup, layerId)
     )
 
   }
