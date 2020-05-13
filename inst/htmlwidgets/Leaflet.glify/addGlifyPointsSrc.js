@@ -5,7 +5,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
   // color
   var clrs;
   if (fillColor === null) {
-    clrs = function(index, feature) { return col[group][0][index]; };
+    clrs = function(index, feature) { return col[layerId][0][index]; };
   } else {
     clrs = fillColor;
   }
@@ -13,7 +13,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
   // radius
   var size;
   if (radius === null) {
-    size = function(index, point) { return rad[group][0][index]; };
+    size = function(index, point) { return rad[layerId][0][index]; };
   } else {
     size = radius;
   }
@@ -21,18 +21,23 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
   var pointslayer = L.glify.points({
     map: map,
     click: function (e, point, xy) {
-      //var idx = data[group][0].indexOf(point);
-      var idx = data[group][0].findIndex(k => k==point);
-      //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.glLayer)) {
-        L.popup()
-          .setLatLng(point)
-          .setContent(popup[group][0][idx].toString())
-          .openOn(map);
+      if (typeof(popup) === "undefined") {
+        return;
+      } else if (typeof(popup[layerId]) === "undefined") {
+        return;
+      } else {
+        //var idx = data[layerId][0].indexOf(point);
+        var idx = data[layerId][0].findIndex(k => k==point);
+        //set up a standalone popup (use a popup as a layer)
+        if (map.hasLayer(pointslayer.glLayer)) {
+          L.popup()
+            .setLatLng(point)
+            .setContent(popup[layerId][0][idx].toString())
+            .openOn(map);
+        }
       }
-      console.log(point);
     },
-    data: data[group][0],
+    data: data[layerId][0],
     color: clrs,
     opacity: fillOpacity,
     size: size,

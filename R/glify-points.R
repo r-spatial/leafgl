@@ -190,6 +190,7 @@ addGlPointsSrc = function(map,
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
+  if (is.null(layerId)) layerId = paste0(group, "-pts")
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
 
@@ -209,8 +210,8 @@ addGlPointsSrc = function(map,
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
 
-  fl_data = paste0(dir_data, "/", group, "_data.js")
-  pre = paste0('var data = data || {}; data["', group, '"] = ')
+  fl_data = paste0(dir_data, "/", layerId, "_data.js")
+  pre = paste0('var data = data || {}; data["', layerId, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
@@ -228,7 +229,7 @@ addGlPointsSrc = function(map,
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, group)
+    glifyDataAttachmentSrc(fl_data, layerId)
   )
 
   # color
@@ -238,15 +239,15 @@ addGlPointsSrc = function(map,
   colnames(fillColor) = c("r", "g", "b")
 
   if (nrow(fillColor) > 1) {
-    fl_color = paste0(dir_color, "/", group, "_color.js")
-    pre = paste0('var col = col || {}; col["', group, '"] = ')
+    fl_color = paste0(dir_color, "/", layerId, "_color.js")
+    pre = paste0('var col = col || {}; col["', layerId, '"] = ')
     writeLines(pre, fl_color)
     cat('[', jsonify::to_json(fillColor), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyColorAttachmentSrc(fl_color, group)
+      glifyColorAttachmentSrc(fl_color, layerId)
     )
 
     fillColor = NULL
@@ -263,30 +264,30 @@ addGlPointsSrc = function(map,
     }
     popup = makePopup(popup, data)
     # popup = jsonlite::toJSON(data[[popup]])
-    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
-    pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
+    fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
+    pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)
     cat('[', jsonify::to_json(popup), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, group)
+      glifyPopupAttachmentSrc(fl_popup, layerId)
     )
 
   }
 
   # radius
   if (length(unique(radius)) > 1) {
-    fl_radius = paste0(dir_radius, "/", group, "_radius.js")
-    pre = paste0('var rad = rad || {}; rad["', group, '"] = ')
+    fl_radius = paste0(dir_radius, "/", layerId, "_radius.js")
+    pre = paste0('var rad = rad || {}; rad["', layerId, '"] = ')
     writeLines(pre, fl_radius)
     cat('[', jsonify::to_json(radius), '];',
         file = fl_radius, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyRadiusAttachmentSrc(fl_radius, group)
+      glifyRadiusAttachmentSrc(fl_radius, layerId)
     )
 
     radius = NULL
