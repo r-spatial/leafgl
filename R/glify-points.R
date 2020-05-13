@@ -10,8 +10,10 @@
 #' @param color Object representing the color. Can be of class integer, character with
 #'   color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
 #'   See the examples or \link{makeColorMatrix} for more information.
+#' @param fillColor fill color.
 #' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
+#' @param fillOpacity fill opacity.
 #' @param radius point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
@@ -210,12 +212,13 @@ addGlPointsSrc = function(map,
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
 
+  ell_args <- list(...)
   fl_data = paste0(dir_data, "/", layerId, "_data.js")
   pre = paste0('var data = data || {}; data["', layerId, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
-      names(list(...))
+      names(ell_args)
       , names(as.list(args(jsonify::to_json)))
       , several.ok = TRUE
     )
@@ -223,7 +226,7 @@ addGlPointsSrc = function(map,
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "x")) jsonify_args = NULL
-  cat('[', do.call(jsonify::to_json, c(list(crds), list(...)[jsonify_args])), '];',
+  cat('[', do.call(jsonify::to_json, c(list(crds), ell_args[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
@@ -233,6 +236,10 @@ addGlPointsSrc = function(map,
   )
 
   # color
+  palette = "viridis"
+  if ("palette" %in% names(ell_args)) {
+    palette <- ell_args$palette
+  }
   fillColor <- makeColorMatrix(fillColor, data, palette = palette)
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
