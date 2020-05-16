@@ -81,7 +81,7 @@ addGlPolylines = function(map,
   # cols = jsonlite::toJSON(color)
   cols = jsonify::to_json(color, digits = 3)
 
-  # data
+  # popup
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
     geom = sf::st_geometry(data)
@@ -101,6 +101,8 @@ addGlPolylines = function(map,
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
+
+  # data
   if (length(args) == 0) {
     geojsonsf_args = NULL
   } else {
@@ -180,15 +182,17 @@ addGlPolylinesSrc = function(map,
   dir.create(dir_weight)
 
   # data
+  data_orig <- data
   geom = sf::st_geometry(data)
   data = sf::st_sf(id = 1:length(geom), geometry = geom)
 
+  ell_args <- list(...)
   fl_data = paste0(dir_data, "/", layerId, "_data.js")
   pre = paste0('var data = data || {}; data["', layerId, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
-      names(list(...))
+      names(ell_args)
       , names(as.list(args(geojsonsf::sf_geojson)))
       , several.ok = TRUE
     )
@@ -196,7 +200,7 @@ addGlPolylinesSrc = function(map,
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), list(...)[jsonify_args])), '];',
+  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), ell_args[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
@@ -206,7 +210,11 @@ addGlPolylinesSrc = function(map,
   )
 
   # color
-  color <- makeColorMatrix(color, data, palette = palette)
+  palette = "viridis"
+  if ("palette" %in% names(ell_args)) {
+    palette <- ell_args$palette
+  }
+  color <- makeColorMatrix(color, data_orig, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
@@ -235,7 +243,7 @@ addGlPolylinesSrc = function(map,
         htmldeps
       )
     }
-    popup = makePopup(popup, data)
+    popup = makePopup(popup, data_orig)
     # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')

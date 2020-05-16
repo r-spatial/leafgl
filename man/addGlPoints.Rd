@@ -74,6 +74,10 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 
 \item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
 
+\item{fillColor}{fill color.}
+
+\item{fillOpacity}{fill opacity.}
+
 \item{radius}{point size in pixels.}
 }
 \description{

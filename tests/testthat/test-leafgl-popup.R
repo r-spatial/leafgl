@@ -3,6 +3,7 @@ context("test-leafgl-popup")
 library(leaflet)
 library(jsonify)
 library(mapview)
+library(sf)
 
 ## POINTS #################################
 test_that("popup-points-character", {
@@ -14,6 +15,16 @@ test_that("popup-points-character", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]), breweries91$state)
+  rm(m)
+
+  sfpoints <- sf::st_as_sf(breweries91)
+  m <- leaflet() %>%
+    addGlPoints(data = st_sfc(st_geometry(sfpoints)),
+                popup = sfpoints$state,
+                group = "grp")
+  expect_is(m, "leaflet")
+  expect_is(m$x$calls[[1]]$args[[2]], "json")
+  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>% addTiles() %>%
@@ -75,6 +86,13 @@ test_that("popup-points-table", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
+  m <- leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = as.data.frame(breweries91),
+                group = "grp",
+                src = TRUE)
+  expect_is(m, "leaflet")
+
   ## Data.frame - wrong length ##############
   m <- expect_warning(leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
@@ -102,6 +120,13 @@ test_that("popup-points-spatial", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
+  m <- leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = breweries91,
+                group = "grp",
+                src = TRUE)
+  expect_is(m, "leaflet")
+
   ## Simple Feature ##############
   library(sf)
   m <- leaflet() %>% addTiles() %>%
@@ -123,6 +148,16 @@ test_that("popup-points-formula", {
                 group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = ~sprintf("<b>State</b>: %s<br>
+                                 <b>Address</b>: %s<br>
+                                 <b>Brauerei</b>: %s,",
+                                 state, address, brewery),
+                group = "grp",
+                src = TRUE)
+  expect_is(m, "leaflet")
 })
 
 test_that("popup-points-list", {
@@ -206,6 +241,13 @@ test_that("popup-points-logical", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
+  m <- leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = TRUE,
+                group = "grp",
+                src = TRUE)
+  expect_is(m, "leaflet")
+
   ## FALSE #################
   m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
@@ -234,6 +276,12 @@ test_that("popup-points-shiny.tag", {
                 group = "grp"))
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+
+  m <- expect_warning(leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = shiny::icon("car"),
+                group = "grp", src = TRUE))
+  expect_is(m, "leaflet")
 
   ## Shiny.Tag - icon - Length >1 ##############
   # m <- expect_warning(leaflet() %>% addTiles() %>%
