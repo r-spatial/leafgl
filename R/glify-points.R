@@ -48,7 +48,7 @@
 #' system.time({
 #'   m = leaflet() %>%
 #'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'     addGlPoints(data = pts, color = cols, popup = "id") %>%
+#'     addGlPoints(data = pts, fillColor = cols, popup = "id") %>%
 #'     setView(lng = 10.5, lat = 49.5, zoom = 9)
 #' })
 #'
