@@ -8,7 +8,6 @@
 #'
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
@@ -22,7 +21,6 @@
 #' m = leaflet() %>%
 #'  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'  addGlPoints(data = pts, group = "pts") %>%
-#'  addMouseCoordinates() %>%
 #'  setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
 #'  addLayersControl(overlayGroups = "pts")
 #'
@@ -58,7 +56,6 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 #'
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
@@ -73,7 +70,6 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 #' m = leaflet() %>%
 #'  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'  addGlPoints(data = pts, group = "pts") %>%
-#'  addMouseCoordinates() %>%
 #'  setView(lng = 10.5, lat = 49.5, zoom = 6) %>%
 #'  addLayersControl(overlayGroups = "pts")
 #'

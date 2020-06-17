@@ -27,12 +27,10 @@
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
 #' library(colourvalues)
-#' library(jsonlite)
 #'
 #' n = 1e5
 #'
@@ -43,16 +41,10 @@
 #'
 #' cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
 #'
-#' options(viewer = NULL)
+#' leaflet() %>%
+#'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+#'   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
 #'
-#' system.time({
-#'   m = leaflet() %>%
-#'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'     addGlPoints(data = pts, fillColor = cols, popup = "id") %>%
-#'     setView(lng = 10.5, lat = 49.5, zoom = 9)
-#' })
-#'
-#' m
 #' }
 #'
 #' @export addGlPoints
@@ -106,7 +98,6 @@ addGlPoints = function(map,
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
 
-  # fillColor = jsonlite::toJSON(fillColor)
   fillColor = jsonify::to_json(fillColor)
 
   # popup
@@ -119,7 +110,6 @@ addGlPoints = function(map,
       )
     }
     popup = makePopup(popup, data)
-    # popup = jsonlite::toJSON(data[[popup]])
     popup = jsonify::to_json(popup)
   } else {
     popup = NULL
@@ -129,7 +119,6 @@ addGlPoints = function(map,
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
   # convert data to json
-  # data = jsonlite::toJSON(crds, digits = 7)
   if (length(args) == 0) {
     jsonify_args = NULL
   } else {
@@ -270,7 +259,6 @@ addGlPointsSrc = function(map,
       )
     }
     popup = makePopup(popup, data)
-    # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)

@@ -103,32 +103,25 @@ MULTIPOLYGONs are currently not supported! Make sure you cast your data
 
 \examples{
 if (interactive()) {
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
 library(colourvalues)
 
-trls = st_cast(trails, "LINESTRING")
-trls = st_transform(trls, 4326)
+storms = st_as_sf(atlStorms2005)
 
-cols = colour_values_rgb(trls$district, include_alpha = FALSE) / 255
-
-options(viewer = NULL)
+cols = colour_values_rgb(storms$Name, include_alpha = FALSE) / 255
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
-  addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) \%>\%
-  setView(lng = 10.5, lat = 49.5, zoom = 8)
+  addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
 }
 
 if (interactive()) {
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
 library(colourvalues)
-library(jsonlite)
 
 n = 1e5
 
@@ -139,35 +132,25 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
 cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
 
-options(viewer = NULL)
+leaflet() \%>\%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
+  addGlPoints(data = pts, fillColor = cols, popup = TRUE)
 
-system.time({
-  m = leaflet() \%>\%
-    addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-    addGlPoints(data = pts, fillColor = cols, popup = "id") \%>\%
-    setView(lng = 10.5, lat = 49.5, zoom = 9)
-})
-
-m
 }
 
 if (interactive()) {
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
 library(colourvalues)
 
-fran = st_cast(franconia, "POLYGON")
-
-cols = colour_values_rgb(fran$NUTS_ID, include_alpha = FALSE) / 255
-
-options(viewer = NULL)
+gadm = st_as_sf(gadmCHE)
+gadm = st_cast(gadm, "POLYGON")
+cols = colour_values_rgb(gadm$ID_1, include_alpha = FALSE) / 255
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-  addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") \%>\%
-  setView(lng = 10.5, lat = 49.5, zoom = 8)
+  addGlPolygons(data = gadm, color = cols, popup = TRUE)
 }
 
 }

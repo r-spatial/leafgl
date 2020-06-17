@@ -6,23 +6,18 @@
 #'
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
 #' library(colourvalues)
 #'
-#' trls = st_cast(trails, "LINESTRING")
-#' trls = st_transform(trls, 4326)
+#' storms = st_as_sf(atlStorms2005)
 #'
-#' cols = colour_values_rgb(trls$district, include_alpha = FALSE) / 255
-#'
-#' options(viewer = NULL)
+#' cols = colour_values_rgb(storms$Name, include_alpha = FALSE) / 255
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.Positron) %>%
-#'   addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) %>%
-#'   setView(lng = 10.5, lat = 49.5, zoom = 8)
+#'   addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
 #' }
 #'
 #' @describeIn addGlPoints add polylines to a leaflet map using Leaflet.glify
@@ -78,7 +73,6 @@ addGlPolylines = function(map,
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
 
-  # cols = jsonlite::toJSON(color)
   cols = jsonify::to_json(color, digits = 3)
 
   # popup
@@ -244,7 +238,6 @@ addGlPolylinesSrc = function(map,
       )
     }
     popup = makePopup(popup, data_orig)
-    # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)

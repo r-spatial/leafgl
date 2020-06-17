@@ -1,6 +1,5 @@
 context("test-leafgl-remove_clear")
 
-library(mapview)
 library(leaflet)
 library(sf)
 library(jsonify)
@@ -11,10 +10,10 @@ df1 = data.frame(id = 1:n, id2 = n:1,
                  y = rnorm(n, 49, 0.8))
 pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
-lines = suppressWarnings(st_cast(trails, "LINESTRING"));
+lines = suppressWarnings(st_cast(st_as_sf(atlStorms2005), "LINESTRING"))
 lines = st_transform(lines, 4326)[1:100,]
 
-polys <- suppressWarnings(st_cast(franconia, "POLYGON"))
+polys <- suppressWarnings(st_cast(st_as_sf(gadmCHE), "POLYGON"))
 
 test_that("remove / clear", {
   ## Remove Points ########

@@ -6,22 +6,18 @@
 #'
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
 #' library(colourvalues)
 #'
-#' fran = st_cast(franconia, "POLYGON")
-#'
-#' cols = colour_values_rgb(fran$NUTS_ID, include_alpha = FALSE) / 255
-#'
-#' options(viewer = NULL)
+#' gadm = st_as_sf(gadmCHE)
+#' gadm = st_cast(gadm, "POLYGON")
+#' cols = colour_values_rgb(gadm$ID_1, include_alpha = FALSE) / 255
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") %>%
-#'   setView(lng = 10.5, lat = 49.5, zoom = 8)
+#'   addGlPolygons(data = gadm, color = cols, popup = TRUE)
 #' }
 #'
 #' @describeIn addGlPoints add polygons to a leaflet map using Leaflet.glify
@@ -80,7 +76,6 @@ addGlPolygons = function(map,
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
 
-  # cols = jsonlite::toJSON(fillColor)
   cols = jsonify::to_json(fillColor, digits = 3)
 
   # popup
@@ -244,7 +239,6 @@ addGlPolygonsSrc = function(map,
       )
     }
     popup = makePopup(popup, data_orig)
-    # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)

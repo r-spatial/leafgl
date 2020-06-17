@@ -1,13 +1,14 @@
 context("test-leafgl-addGlPolylines")
 
 test_that("addGlPolylines works", {
-  library(mapview)
   library(leaflet)
   library(leafgl)
   library(sf)
 
-  m = mapview()@map %>%
-    addGlPolylines(data = suppressWarnings(st_cast(trails, "LINESTRING")),
+  storms = st_as_sf(atlStorms2005)
+
+  m = leaflet() %>%
+    addGlPolylines(data = suppressWarnings(st_cast(storms, "LINESTRING")),
                    group = "pls", digits = 5)
 
   expect_is(m, "leaflet")

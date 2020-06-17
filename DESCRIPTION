@@ -9,7 +9,7 @@ Authors@R:
              email = "tim.appelhans@gmail.com"),
       person(given = "Colin",
              family = "Fay",
-             role = "aut",
+             role = "ctb",
              email = "colin@thinkr.fr",
              comment = structure("0000-0001-7343-1846", .Names = "ORCID")),
       person(given = "Robert",
@@ -33,13 +33,11 @@ RoxygenNote: 7.0.2
 Imports:
   geojsonsf,
   htmltools,
-  jsonify, 
-  jsonlite,
+  jsonify,
   leaflet,
   sf,
   grDevices
 Suggests:
-    colourvalues,
-    mapview,
-    shiny,
-    testthat (>= 2.1.0)
+  colourvalues,
+  shiny,
+  testthat (>= 2.1.0)

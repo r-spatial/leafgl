@@ -1,7 +1,6 @@
 context("test-leafgl-addGlPoints")
 
 test_that("addGlPoints works", {
-  library(mapview)
   library(leaflet)
   library(sf)
 
@@ -12,7 +11,7 @@ test_that("addGlPoints works", {
                    y = rnorm(n, 49, 0.8))
   pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
-  m = mapview()@map %>%
+  m = leaflet() %>%
     addGlPoints(data = pts, group = "pts", digits = 5)
 
   expect_is(m, "leaflet")
