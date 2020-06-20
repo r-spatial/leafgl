@@ -38,8 +38,8 @@
 
 leafglOutput <- function(outputId, width = "100%", height = 400){
   tagList(
-    leafletOutput(outputId = outputId, width = width, height = height),
-    tags$script(glifyDependencies())
+    leaflet::leafletOutput(outputId = outputId, width = width, height = height)
+    , tags$script(glifyDependencies())
   )
 }
 
@@ -85,6 +85,6 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 #' }
 #'
 renderLeafgl <- function(expr, env = parent.frame(), quoted = TRUE){
-  renderLeaflet(expr = expr, env = env, quoted = quoted)
+  leaflet::renderLeaflet(expr = expr, env = env, quoted = quoted)
 }
 
