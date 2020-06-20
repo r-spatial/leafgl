@@ -39,5 +39,6 @@ Imports:
   grDevices
 Suggests:
   colourvalues,
+  htmlwidgets,
   shiny,
   testthat (>= 2.1.0)
