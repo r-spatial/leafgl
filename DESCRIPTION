@@ -1,6 +1,6 @@
 Package: leafgl
 Type: Package
-Title: Bindings for Leaflet.glify
+Title: High-Performance 'WebGl' Rendering for Package 'leaflet'
 Version: 0.1.1
 Authors@R: 
     c(person(given = "Tim",
@@ -25,7 +25,7 @@ Authors@R:
              role = "ctb",
              email = "sebastian_gatscha@gmx.at"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
-Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.
+Description: Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

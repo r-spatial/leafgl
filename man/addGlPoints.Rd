@@ -70,7 +70,7 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 
 \item{src}{whether to pass data to the widget via file attachments.}
 
-\item{...}{Passed to \code{\link{to_json}{jsonify}} for the data coordinates}
+\item{...}{Passed to \code{\link[jsonify]{to_json}} for the data coordinates.}
 
 \item{fillColor}{fill color.}
 
