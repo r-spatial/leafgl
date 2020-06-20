@@ -51,8 +51,7 @@
 addGlPoints = function(map,
                        data,
                        fillColor = "#0033ff",
-                       opacity = 1,
-                       fillOpacity = 1,
+                       fillOpacity = 0.8,
                        radius = 10,
                        group = "glpoints",
                        popup = NULL,
@@ -65,7 +64,6 @@ addGlPoints = function(map,
       map = map
       , data = data
       , fillColor = fillColor
-      , opacity = opacity
       , fillOpacity = fillOpacity
       , radius = radius
       , group = group
@@ -77,7 +75,6 @@ addGlPoints = function(map,
   }
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -168,7 +165,6 @@ addGlPoints = function(map,
 addGlPointsSrc = function(map,
                           data,
                           fillColor = "#0033ff",
-                          opacity = 1,
                           fillOpacity = 1,
                           radius = 10,
                           group = "glpoints",
@@ -177,7 +173,6 @@ addGlPointsSrc = function(map,
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))

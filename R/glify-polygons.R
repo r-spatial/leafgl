@@ -27,8 +27,7 @@ addGlPolygons = function(map,
                          data,
                          color = cbind(0, 0.2, 1),
                          fillColor = color,
-                         opacity = 0.8,
-                         fillOpacity = 0.6,
+                         fillOpacity = 0.8,
                          group = "glpolygons",
                          popup = NULL,
                          layerId = NULL,
@@ -41,7 +40,6 @@ addGlPolygons = function(map,
       , data = data
       , color = color
       , fillColor = fillColor
-      , opacity = opacity
       , fillOpacity = fillOpacity
       , group = group
       , popup = popup
@@ -52,7 +50,6 @@ addGlPolygons = function(map,
   }
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -151,7 +148,6 @@ addGlPolygonsSrc = function(map,
                             data,
                             color = cbind(0, 0.2, 1),
                             fillColor = color,
-                            opacity = 0.8,
                             fillOpacity = 0.6,
                             group = "glpolygons",
                             popup = NULL,
