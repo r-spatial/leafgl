@@ -30,7 +30,6 @@
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
-#' library(colourvalues)
 #'
 #' n = 1e5
 #'
@@ -39,7 +38,7 @@
 #'                  y = rnorm(n, 49, 0.8))
 #' pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 #'
-#' cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
+#' cols = topo.colors(nrow(pts))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%

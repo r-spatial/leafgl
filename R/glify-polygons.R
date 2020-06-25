@@ -9,11 +9,10 @@
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
-#' library(colourvalues)
 #'
 #' gadm = st_as_sf(gadmCHE)
 #' gadm = st_cast(gadm, "POLYGON")
-#' cols = colour_values_rgb(gadm$ID_1, include_alpha = FALSE) / 255
+#' cols = grey.colors(nrow(gadm))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%

@@ -9,11 +9,10 @@
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
-#' library(colourvalues)
 #'
 #' storms = st_as_sf(atlStorms2005)
 #'
-#' cols = colour_values_rgb(storms$Name, include_alpha = FALSE) / 255
+#' cols = heat.colors(nrow(storms))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.Positron) %>%
