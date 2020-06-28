@@ -29,11 +29,18 @@ what you get here, make sure to star the original repo!
 
 ### Installation
 
-Currently not on CRAN, github only:
+##### Stable version from CRAN
+
+```{r cran}
+install.packages("leafgl")
+```
+
+##### Development version from Github
 
 ```{r install}
 devtools::install_github("r-spatial/leafgl")
 ```
+
 
 ### What does it do?
 

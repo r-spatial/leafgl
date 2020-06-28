@@ -17,7 +17,13 @@ what you get here, make sure to star the original repo\!
 
 ### Installation
 
-Currently not on CRAN, github only:
+##### Stable version from CRAN
+
+``` r
+install.packages("leafgl")
+```
+
+##### Development version from Github
 
 ``` r
 devtools::install_github("r-spatial/leafgl")
