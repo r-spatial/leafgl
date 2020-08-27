@@ -22,17 +22,14 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
-#' @param ... Passed to \code{\link{to_json}{jsonify}} for the data coordinates
+#' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
-#' library(colourvalues)
-#' library(jsonlite)
 #'
 #' n = 1e5
 #'
@@ -41,26 +38,19 @@
 #'                  y = rnorm(n, 49, 0.8))
 #' pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 #'
-#' cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
+#' cols = topo.colors(nrow(pts))
 #'
-#' options(viewer = NULL)
+#' leaflet() %>%
+#'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+#'   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
 #'
-#' system.time({
-#'   m = leaflet() %>%
-#'     addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'     addGlPoints(data = pts, color = cols, popup = "id") %>%
-#'     setView(lng = 10.5, lat = 49.5, zoom = 9)
-#' })
-#'
-#' m
 #' }
 #'
 #' @export addGlPoints
 addGlPoints = function(map,
                        data,
                        fillColor = "#0033ff",
-                       opacity = 1,
-                       fillOpacity = 1,
+                       fillOpacity = 0.8,
                        radius = 10,
                        group = "glpoints",
                        popup = NULL,
@@ -73,7 +63,6 @@ addGlPoints = function(map,
       map = map
       , data = data
       , fillColor = fillColor
-      , opacity = opacity
       , fillOpacity = fillOpacity
       , radius = radius
       , group = group
@@ -85,7 +74,6 @@ addGlPoints = function(map,
   }
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -106,7 +94,6 @@ addGlPoints = function(map,
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
 
-  # fillColor = jsonlite::toJSON(fillColor)
   fillColor = jsonify::to_json(fillColor)
 
   # popup
@@ -119,7 +106,6 @@ addGlPoints = function(map,
       )
     }
     popup = makePopup(popup, data)
-    # popup = jsonlite::toJSON(data[[popup]])
     popup = jsonify::to_json(popup)
   } else {
     popup = NULL
@@ -129,7 +115,6 @@ addGlPoints = function(map,
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
   # convert data to json
-  # data = jsonlite::toJSON(crds, digits = 7)
   if (length(args) == 0) {
     jsonify_args = NULL
   } else {
@@ -179,7 +164,6 @@ addGlPoints = function(map,
 addGlPointsSrc = function(map,
                           data,
                           fillColor = "#0033ff",
-                          opacity = 1,
                           fillOpacity = 1,
                           radius = 10,
                           group = "glpoints",
@@ -188,7 +172,6 @@ addGlPointsSrc = function(map,
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -270,7 +253,6 @@ addGlPointsSrc = function(map,
       )
     }
     popup = makePopup(popup, data)
-    # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)

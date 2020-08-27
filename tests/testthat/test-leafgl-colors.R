@@ -1,5 +1,4 @@
 context("test-leafgl-color_utils")
-library(mapview)
 library(leaflet)
 library(sf)
 library(jsonify)
@@ -10,10 +9,9 @@ df1 = data.frame(id = 1:n, id2 = n:1,
                  y = rnorm(n, 49, 0.8))
 pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
-lines = suppressWarnings(st_cast(trails, "LINESTRING"));
-lines = st_transform(lines, 4326)[1:100,]
+lines = suppressWarnings(st_cast(st_as_sf(atlStorms2005), "LINESTRING"));
 
-polys <- suppressWarnings(st_cast(franconia, "POLYGON"))
+polys <- suppressWarnings(st_cast(st_as_sf(gadmCHE), "POLYGON"))
 
 
 test_that("Character as color", {
@@ -75,7 +73,7 @@ test_that("Character as color", {
 
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = "FKN",
+                   color = "Name",
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -174,7 +172,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = ~FKN,
+                   color = ~Name,
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -183,7 +181,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = ~FKN,
+                   color = ~Name,
                    palette = "rainbow",
                    group = "lns");
   expect_is(m, "leaflet")
@@ -193,7 +191,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = ~FKN,
+                   color = ~Name,
                    palette = "rainbow",
                    group = "lns",
                    src = TRUE);
@@ -203,7 +201,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolygons(data = polys,
-                  color = ~district,
+                  color = ~NAME_1,
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -212,7 +210,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolygons(data = polys,
-                  color = ~district,
+                  color = ~NAME_1,
                   palette = "rainbow",
                   group = "lns");
   expect_is(m, "leaflet")
@@ -222,7 +220,7 @@ test_that("Formula as color", {
 
   m <- leaflet() %>%
     addGlPolygons(data = polys,
-                  color = ~district,
+                  color = ~NAME_1,
                   palette = "rainbow",
                   group = "lns",
                   src = TRUE)
@@ -499,7 +497,7 @@ test_that("JSON as color", {
   ## JSON with 1 color ###################
   m <- leaflet() %>%
     addGlPoints(data = pts,
-                fillColor = jsonlite::toJSON(data.frame(r = 54, g = 186, b = 1)),
+                fillColor = jsonify::to_json(data.frame(r = 54, g = 186, b = 1)),
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -509,7 +507,7 @@ test_that("JSON as color", {
   ## JSON with wrong dimension - Warning ###################
   m <- expect_warning(leaflet() %>%
     addGlPoints(data = pts,
-                fillColor = jsonlite::toJSON(data.frame(r = c(54, 123),
+                fillColor = jsonify::to_json(data.frame(r = c(54, 123),
                                                     g = c(1, 186),
                                                     b = c(1, 123))),
                 group = "pts"))

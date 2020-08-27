@@ -6,22 +6,17 @@
 #'
 #' @examples
 #' if (interactive()) {
-#' library(mapview)
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
-#' library(colourvalues)
 #'
-#' fran = st_cast(franconia, "POLYGON")
-#'
-#' cols = colour_values_rgb(fran$NUTS_ID, include_alpha = FALSE) / 255
-#'
-#' options(viewer = NULL)
+#' gadm = st_as_sf(gadmCHE)
+#' gadm = st_cast(gadm, "POLYGON")
+#' cols = grey.colors(nrow(gadm))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-#'   addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") %>%
-#'   setView(lng = 10.5, lat = 49.5, zoom = 8)
+#'   addGlPolygons(data = gadm, color = cols, popup = TRUE)
 #' }
 #'
 #' @describeIn addGlPoints add polygons to a leaflet map using Leaflet.glify
@@ -31,8 +26,7 @@ addGlPolygons = function(map,
                          data,
                          color = cbind(0, 0.2, 1),
                          fillColor = color,
-                         opacity = 0.8,
-                         fillOpacity = 0.6,
+                         fillOpacity = 0.8,
                          group = "glpolygons",
                          popup = NULL,
                          layerId = NULL,
@@ -45,7 +39,6 @@ addGlPolygons = function(map,
       , data = data
       , color = color
       , fillColor = fillColor
-      , opacity = opacity
       , fillOpacity = fillOpacity
       , group = group
       , popup = popup
@@ -56,7 +49,6 @@ addGlPolygons = function(map,
   }
 
   ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
   fillOpacity = fillOpacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -80,7 +72,6 @@ addGlPolygons = function(map,
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
 
-  # cols = jsonlite::toJSON(fillColor)
   cols = jsonify::to_json(fillColor, digits = 3)
 
   # popup
@@ -156,7 +147,6 @@ addGlPolygonsSrc = function(map,
                             data,
                             color = cbind(0, 0.2, 1),
                             fillColor = color,
-                            opacity = 0.8,
                             fillOpacity = 0.6,
                             group = "glpolygons",
                             popup = NULL,
@@ -244,7 +234,6 @@ addGlPolygonsSrc = function(map,
       )
     }
     popup = makePopup(popup, data_orig)
-    # popup = jsonlite::toJSON(data[[popup]])
     fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
     pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
     writeLines(pre, fl_popup)

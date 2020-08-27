@@ -17,7 +17,13 @@ what you get here, make sure to star the original repo\!
 
 ### Installation
 
-Currently not on CRAN, github only:
+##### Stable version from CRAN
+
+``` r
+install.packages("leafgl")
+```
+
+##### Development version from Github
 
 ``` r
 devtools::install_github("r-spatial/leafgl")
@@ -85,7 +91,6 @@ way, we would very much love to hear from you\!
 This will render 1 Mio. points on a standard leaflet map.
 
 ``` r
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -100,16 +105,10 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
 options(viewer = NULL) # view in browser
 
-system.time({
-  m = leaflet() %>%
-    addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlPoints(data = pts, group = "pts") %>%
-    addMouseCoordinates() %>%
-    setView(lng = 10.5, lat = 49.5, zoom = 6) %>% 
-    addLayersControl(overlayGroups = "pts")
-})
-
-m
+leaflet() %>%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+  addGlPoints(data = pts, group = "pts") %>%
+  setView(lng = 10.5, lat = 49.5, zoom = 6)
 ```
 
 ![](man/figures/pts_blue.png)
@@ -124,7 +123,6 @@ For this we use `library(colourvalues)` because it can create color
 voctors in the blink of an eye\!
 
 ``` r
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -140,18 +138,10 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
 cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
 
-options(viewer = NULL)
-
-system.time({
-  m = leaflet() %>%
-    addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlPoints(data = pts, color = cols, group = "pts") %>%
-    addMouseCoordinates() %>%
-    setView(lng = 10.5, lat = 49.5, zoom = 6) %>% 
-    addLayersControl(overlayGroups = "pts")
-})
-
-m
+leaflet() %>%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+  addGlPoints(data = pts, fillColor = cols, group = "pts") %>%
+  setView(lng = 10.5, lat = 49.5, zoom = 6)
 ```
 
 ![](man/figures/pts_viridis.png)
@@ -168,7 +158,6 @@ This data was downloaded from
 <https://download.geofabrik.de/europe/switzerland.html>
 
 ``` r
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -182,19 +171,14 @@ options(viewer = NULL)
 
 cols = colour_values_rgb(ch_lu$type, include_alpha = FALSE) / 255
 
-system.time({
-  m = leaflet() %>%
-    addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
-    addGlPolygons(data = ch_lu, 
-                     color = cols, 
-                     popup = "type",
-                     group = "pols") %>%
-    addMouseCoordinates() %>%
-    setView(lng = 8.3, lat = 46.85, zoom = 9) %>% 
-    addLayersControl(overlayGroups = "pols")
-})
-
-m
+leaflet() %>%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
+  addGlPolygons(data = ch_lu, 
+                color = cols, 
+                popup = "type",
+                group = "pols") %>%
+  setView(lng = 8.3, lat = 46.85, zoom = 9) %>% 
+  addLayersControl(overlayGroups = "pols")
 ```
 
 ![](man/figures/polys_ch.png)
@@ -205,13 +189,12 @@ m
 
 ## Shiny
 
-Thanks to [\@ColinFay](<https://github.com/ColinFay>) `leafgl` has
+Thanks to \[@ColinFay\](<https://github.com/ColinFay>) `leafgl` has
 dedicated shiny functions. Given that what `leafgl` produces is a
 `leaflet` map, we only need to use `leafglOutput` in our `ui` call. In
 the `server` call we can simply use `renderLeaflet`. Here an example:
 
 ``` r
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -230,7 +213,6 @@ options(viewer = NULL) # view in browser
 m = leaflet() %>%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
   addGlPoints(data = pts, group = "pts") %>%
-  addMouseCoordinates() %>%
   setView(lng = 10.5, lat = 49.5, zoom = 4) %>% 
   addLayersControl(overlayGroups = "pts")
 
