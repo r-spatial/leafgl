@@ -91,12 +91,3 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 };
-
-
-LeafletWidget.methods.removeGlPoints = function(layerId) {
-  this.layerManager.removeLayer("glify", layerId);
-};
-
-LeafletWidget.methods.clearGlLayers = function() {
-  this.layerManager.clearLayers("glify");
-};
