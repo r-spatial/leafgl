@@ -56,6 +56,6 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     className: group
   });
 
-  map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(lineslayer.glLayer, "glify", null, group);
 
 };

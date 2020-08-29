@@ -53,7 +53,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
     className: group
   });
 
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointslayer.glLayer, "glify", null, group);
 
 };
 

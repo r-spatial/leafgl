@@ -46,6 +46,6 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
     className: group
   });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(shapeslayer.glLayer, "glify", null, group);
 
 };
