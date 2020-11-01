@@ -17,12 +17,12 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
   }
 
   var click_event = function(e, feature, addpopup, popup) {
-    if (map.hasLayer(lineslayer.glLayer)) {
+    if (map.hasLayer(lineslayer.layer)) {
       var idx = data.features.findIndex(k => k==feature);
       if (HTMLWidgets.shinyMode) {
         Shiny.setInputValue(map.id + "_glify_click", {
           id: layerId ? layerId[idx] : idx+1,
-          group: Object.values(lineslayer.glLayer._eventParents)[0].groupname,
+          group: Object.values(lineslayer.layer._eventParents)[0].groupname,
           lat: e.latlng.lat,
           lng: e.latlng.lng,
           data: feature.properties
@@ -54,7 +54,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
     weight: wght
   });
 
-  map.layerManager.addLayer(lineslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(lineslayer.layer, "glify", layerId, group);
 };
 
 

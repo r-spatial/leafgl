@@ -26,7 +26,7 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
       } else if (typeof(popup[layerId]) === "undefined") {
         return;
       } else {
-      if (map.hasLayer(lineslayer.glLayer)) {
+      if (map.hasLayer(lineslayer.layer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
           L.popup()
             .setLatLng(e.latlng)
@@ -44,6 +44,6 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     className: group
   });
 
-  map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(lineslayer.layer, null, null, group);
 
 };

@@ -10,12 +10,12 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
   }
 
   var click_event = function(e, feature, addpopup, popup) {
-    if (map.hasLayer(shapeslayer.glLayer)) {
+    if (map.hasLayer(shapeslayer.layer)) {
       var idx = data.features.findIndex(k => k==feature);
       if (HTMLWidgets.shinyMode) {
         Shiny.setInputValue(map.id + "_glify_click", {
           id: layerId ? layerId[idx] : idx+1,
-          group: Object.values(shapeslayer.glLayer._eventParents)[0].groupname,
+          group: Object.values(shapeslayer.layer._eventParents)[0].groupname,
           lat: e.latlng.lat,
           lng: e.latlng.lng,
           data: feature.properties
@@ -44,7 +44,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     className: group
   });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(shapeslayer.layer, "glify", layerId, group);
 };
 
 

@@ -24,7 +24,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
       if (popup === true) {
         pop = function (e, feature) {
           var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
-          if (map.hasLayer(pointslayer.glLayer)) {
+          if (map.hasLayer(pointslayer.layer)) {
             L.popup({ maxWidth: 2000 })
               .setLatLng(e.latlng)
               .setContent(popUp)
@@ -33,7 +33,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
         };
       } else {
         pop = function (e, feature) {
-          if (map.hasLayer(pointslayer.glLayer)) {
+          if (map.hasLayer(pointslayer.layer)) {
             L.popup({ maxWidth: 2000 })
               .setLatLng(e.latlng)
               .setContent(feature.properties[[popup]].toString())
@@ -55,7 +55,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     className: group
   });
 
-  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(pointslayer.layer, null, null, group);
 */
 
   var pointslayer = L.glify.points({
@@ -63,7 +63,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     click: (e, point, xy) => {
       var idx = data.findIndex(k => k==point);
       //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.glLayer)) {
+      if (map.hasLayer(pointslayer.layer)) {
         var content = popup ? popup[idx].toString() : null;
         if (HTMLWidgets.shinyMode) {
               Shiny.setInputValue(map.id + "_glify_click", {
@@ -89,7 +89,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     className: group
   });
 
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
 };
 
 

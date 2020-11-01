@@ -20,7 +20,7 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
       } else if (typeof(popup[layerId]) === "undefined") {
         return;
       } else {
-      if (map.hasLayer(shapeslayer.glLayer)) {
+      if (map.hasLayer(shapeslayer.layer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
           L.popup()
             .setLatLng(e.latlng)
@@ -35,6 +35,6 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
     className: group
   });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(shapeslayer.layer, null, null, group);
 
 };
