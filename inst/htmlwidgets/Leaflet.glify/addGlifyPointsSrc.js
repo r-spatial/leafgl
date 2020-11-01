@@ -30,10 +30,11 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
         var idx = data[layerId][0].findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
         if (map.hasLayer(pointslayer.layer)) {
-          L.popup()
+          var pops = L.popup()
             .setLatLng(point)
-            .setContent(popup[layerId][0][idx].toString())
-            .openOn(map);
+            .setContent(popup[layerId][0][idx].toString());
+
+          map.layerManager.addLayer(pops, "popup");
         }
       }
     },

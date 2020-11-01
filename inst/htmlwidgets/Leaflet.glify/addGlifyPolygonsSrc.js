@@ -22,10 +22,11 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
       } else {
       if (map.hasLayer(shapeslayer.layer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
-          L.popup()
+          var pops = L.popup()
             .setLatLng(e.latlng)
-            .setContent(popup[layerId][0][idx].toString())
-            .openOn(map);
+            .setContent(popup[layerId][0][idx].toString());
+
+          map.layerManager.addLayer(pops, "popup");
         }
       }
     },

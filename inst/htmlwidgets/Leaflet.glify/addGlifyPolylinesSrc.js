@@ -28,10 +28,11 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
       } else {
       if (map.hasLayer(lineslayer.layer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
-          L.popup()
+          var pops = L.popup()
             .setLatLng(e.latlng)
-            .setContent(popup[layerId][0][idx].toString())
-            .openOn(map);
+            .setContent(popup[layerId][0][idx].toString());
+
+          map.layerManager.addLayer(pops, "popup");
         }
       }
     },

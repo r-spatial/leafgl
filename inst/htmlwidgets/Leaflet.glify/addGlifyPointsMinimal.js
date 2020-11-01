@@ -22,10 +22,11 @@ LeafletWidget.methods.addGlifyPointsMinimal = function(data, cols, popup, opacit
         var idx = data.findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
         if (map.hasLayer(pointslayer.layer)) {
-          L.popup()
+          var pops = L.popup()
             .setLatLng(point)
-            .setContent(popup[idx].toString())
-            .openOn(map);
+            .setContent(popup[idx].toString());
+
+          map.layerManager.addLayer(pops, "popup");
         }
 
       },

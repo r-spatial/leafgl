@@ -23,10 +23,11 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       }
       if (addpopup) {
         var content = popup === true ? '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>' : popup[idx].toString();
-        L.popup({ maxWidth: 2000 })
-        .setLatLng(e.latlng)
-        .setContent(content)
-        .openOn(map);
+        var pops = L.popup({ maxWidth: 2000 })
+            .setLatLng(e.latlng)
+            .setContent(content);
+
+        map.layerManager.addLayer(pops, "popup");
       }
     }
   };

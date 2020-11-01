@@ -75,10 +75,11 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
               });
         }
         if (popup !== null) {
-          L.popup()
+          var pops = L.popup()
             .setLatLng(point)
-            .setContent(content)
-            .openOn(map);
+            .setContent(content);
+
+          map.layerManager.addLayer(pops, "popup");
         }
       }
     },
