@@ -22,6 +22,7 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
+#' @param fragmentShader GL shader to use for drawing, default "point"
 #' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
@@ -56,6 +57,7 @@ addGlPoints = function(map,
                        popup = NULL,
                        layerId = NULL,
                        src = FALSE,
+                       fragmentShader = NULL,
                        ...) {
 
   if (isTRUE(src)) {
@@ -148,6 +150,7 @@ addGlPoints = function(map,
     , radius
     , group
     , layerId
+    , fragmentShader
   )
 
   leaflet::expandLimits(
