@@ -96,7 +96,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
   }
 
   var pointsLayer = L.glify.points(pointsArgs);
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointsLayer.glLayer, "glify", layerId, group);
 };
 
 
