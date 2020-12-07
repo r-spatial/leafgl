@@ -30,6 +30,7 @@ addGlPoints(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  fragmentShader = NULL,
   ...
 )
 
@@ -77,6 +78,10 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 \item{fillOpacity}{fill opacity.}
 
 \item{radius}{point size in pixels.}
+
+\item{fragmentShader}{GL shader to use for drawing. \code{"point"} (default)
+renders points as circles with a black outline.
+\code{"simpleCircle"} renders points without outlines.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See

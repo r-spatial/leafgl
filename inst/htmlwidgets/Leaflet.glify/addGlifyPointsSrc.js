@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId) {
+LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId, fragmentShader) {
 
   var map = this;
 
@@ -18,7 +18,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
     size = radius;
   }
 
-  var pointslayer = L.glify.points({
+  var pointsArgs = {
     map: map,
     click: function (e, point, xy) {
       if (typeof(popup) === "undefined") {
@@ -42,8 +42,15 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
     opacity: fillOpacity,
     size: size,
     className: group
-  });
+  };
 
+  if (fragmentShader !== undefined && fragmentShader !== null) {
+    pointsArgs.fragmentShaderSource = () => {
+        return L.glify.shader.fragment[fragmentShader];
+      };
+  }
+
+  var pointsLayer = L.glify.points(pointsArgs);
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 
 };

@@ -22,7 +22,9 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
-#' @param fragmentShader GL shader to use for drawing, default "point"
+#' @param fragmentShader GL shader to use for drawing. \code{"point"} (default)
+#' renders points as circles with a black outline.
+#' \code{"simpleCircle"} renders points without outlines.
 #' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
@@ -70,6 +72,7 @@ addGlPoints = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , fragmentShader = fragmentShader
       , ...
     )
     return(m)
@@ -172,6 +175,7 @@ addGlPointsSrc = function(map,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
+                          fragmentShader = NULL,
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -304,6 +308,7 @@ addGlPointsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , fragmentShader
   )
 
   leaflet::expandLimits(
