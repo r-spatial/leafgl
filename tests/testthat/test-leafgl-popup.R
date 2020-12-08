@@ -416,10 +416,11 @@ test_that("popup-lines-table", {
 })
 
 test_that("popup-lines-spatial", {
+  popups <- suppressWarnings(sf::as_Spatial(storms))
   ## SpatialLinesDataFrame ##############
   m <- leaflet() %>% addTiles() %>%
     addGlPolylines(data = storms,
-                   popup = sf::as_Spatial(storms),
+                   popup = popups,
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
@@ -570,9 +571,10 @@ test_that("popup-polygon-table", {
 
 test_that("popup-polygon-spatial", {
   ## SpatialPolygonsDataFrame ##############
+  popups <- suppressWarnings(sf::as_Spatial(gadm))
   m <- leaflet() %>% addTiles() %>%
     addGlPolygons(data = gadm,
-                   popup = sf::as_Spatial(gadm),
+                   popup = popups,
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))

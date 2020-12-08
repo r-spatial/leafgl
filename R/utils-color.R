@@ -75,9 +75,9 @@ makeColorMatrix.numeric <- makeColorMatrix.integer
 
 #' @export
 makeColorMatrix.factor <- function(x, data = NULL, palette = "viridis", ...) {
-  x <- tryCatch(as.integer(as.character(as.factor(x))),
-                error = function(e) as.numeric(as.factor(x)),
-                warning = function(e) as.numeric(as.factor(x)),
+  x <- tryCatch(as.integer(as.character((x))),
+                error = function(e) as.numeric((x)),
+                warning = function(e) as.numeric((x)),
                 finally = function(e) stop("Cannot process factor."))
 
   makeColorMatrix(x, data, palette, ...)
@@ -125,7 +125,7 @@ makeColorMatrix.data.frame <- makeColorMatrix.matrix
 
 #' @export
 makeColorMatrix.list <- function(x, data = NULL, palette = "viridis", ...) {
-  classes <- lapply(x, class)
+  classes <- lapply(x, function(x) class(x)[[1]])
   if (all(classes == "numeric")) {
     x <- unlist(x)
   } else if (all(classes == "matrix")) {
@@ -164,7 +164,7 @@ checkDim <- function(x, data) {
   if (inherits(x, "matrix") || inherits(x, "data.frame")) {
     if (nrow(x) != 1 && nro_d != nrow(x)) {
       warning("Number of rows of color matrix does not match number of data rows.\n",
-              "  Just the first row is taken.")
+              "  Just the first color is used.")
       x <- x[1,,drop = FALSE]
     }
   } else {
