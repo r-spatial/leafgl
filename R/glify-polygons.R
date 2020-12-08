@@ -31,6 +31,9 @@ addGlPolygons = function(map,
                          popup = NULL,
                          layerId = NULL,
                          src = FALSE,
+                         border = FALSE,
+                         hover = NULL,
+                         hoverwait = 500,
                          ...) {
 
   if (isTRUE(src)) {
@@ -95,6 +98,19 @@ addGlPolygons = function(map,
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
 
+  # hover
+  if (!is.null(hover)) {
+    htmldeps <- htmltools::htmlDependencies(hover)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    hover = makePopup(hover, data)
+    hover = jsonify::to_json(hover)
+  }
+
   # data
   if (length(args) == 0) {
     geojsonsf_args = NULL
@@ -130,6 +146,9 @@ addGlPolygons = function(map,
     , fillOpacity
     , group
     , layerId
+    , border
+    , hover
+    , hoverwait
   )
 
   leaflet::expandLimits(

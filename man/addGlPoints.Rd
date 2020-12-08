@@ -43,6 +43,9 @@ addGlPolygons(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  border = FALSE,
+  hover = NULL,
+  hoverwait = 500,
   ...
 )
 }
