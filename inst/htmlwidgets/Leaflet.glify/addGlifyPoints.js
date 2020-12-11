@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, hover, hoverWait, sensitivityHover, pane) {
 
   const map = this;
 
@@ -58,36 +58,48 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
   map.layerManager.addLayer(pointslayer.layer, null, null, group);
 */
 
+  var mouse_event = function(e, point, addpopup, popup, event) {
+    var etype = event === "hover" ? "_glify_mouseover" : "_glify_click"
+    if (map.hasLayer(pointslayer.layer)) {
+      var idx = data.findIndex(k => k==point);
+      if (HTMLWidgets.shinyMode) {
+        var content = popup ? popup[idx].toString() : null;
+        Shiny.setInputValue(map.id + etype, {
+          id: layerId ? layerId[idx] : idx+1,
+          lat: point[0],
+          lng: point[1],
+          data: content
+        });
+      }
+      if (addpopup) {
+        var content = popup === true ? '<pre>'+JSON.stringify(point,null,' ').replace(/[\{\}"]/g,'')+'</pre>' : popup[idx].toString();
+        var pops = L.popup({ maxWidth: 2000 })
+            .setLatLng(e.latlng)
+            .setContent(content);
+        map.layerManager.removeLayer("leafglpopups");
+        map.layerManager.addLayer(pops, "popup", "leafglpopups");
+      }
+    }
+  }
+  var pop = function (e, point, xy) {
+    mouse_event(e, point, popup !== null, popup, "click");
+  };
+  var hov = function (e, point, xy) {
+    mouse_event(e, point, hover !== null, hover, "hover");
+  };
+
   var pointslayer = L.glify.points({
     map: map,
-    click: (e, point, xy) => {
-      var idx = data.findIndex(k => k==point);
-      //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.layer)) {
-        var content = popup ? popup[idx].toString() : null;
-        if (HTMLWidgets.shinyMode) {
-              Shiny.setInputValue(map.id + "_glify_click", {
-                id: layerId ? layerId[idx] : idx+1,
-                group: pointslayer.settings.className,
-                lat: point[0],
-                lng: point[1],
-                data: content
-              });
-        }
-        if (popup !== null) {
-          var pops = L.popup()
-            .setLatLng(point)
-            .setContent(content);
-
-          map.layerManager.addLayer(pops, "popup");
-        }
-      }
-    },
+    click: pop,
+    hover: hov,
+    hoverWait: hoverWait,
+    sensitivityHover: sensitivityHover,
     data: data,
     color: clrs,
     opacity: opacity,
     size: rad,
-    className: group
+    className: group,
+    pane: pane
   });
 
   map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);

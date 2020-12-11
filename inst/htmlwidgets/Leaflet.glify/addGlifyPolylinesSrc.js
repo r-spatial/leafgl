@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId, hover, hoverWait, pane) {
 
   var map = this;
 
@@ -18,6 +18,8 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     wght = weight;
   }
 
+  var hov = null;
+
   var lineslayer = L.glify.lines({
     map: map,
     click: function (e, feature) {
@@ -36,13 +38,16 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
         }
       }
     },
+    hover: hov,
+    hoverWait: hoverWait,
     latitudeKey: 1,
     longitudeKey: 0,
     data: data[layerId][0],
     color: clrs,
     opacity: opacity,
     weight: wght,
-    className: group
+    className: group,
+    pane: pane
   });
 
   map.layerManager.addLayer(lineslayer.layer, null, null, group);

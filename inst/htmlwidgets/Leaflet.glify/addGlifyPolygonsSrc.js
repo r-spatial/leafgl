@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, group, layerId, border, hover, hoverWait, pane) {
 
   var map = this;
 
@@ -30,10 +30,14 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
         }
       }
     },
+    hover: hov,
+    hoverWait: hoverWait,
     data: data[layerId][0],
     color: clrs,
     opacity: fillOpacity,
-    className: group
+    border: border,
+    className: group,
+    pane: pane
   });
 
   map.layerManager.addLayer(shapeslayer.layer, null, null, group);

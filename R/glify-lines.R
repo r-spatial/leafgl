@@ -31,6 +31,9 @@ addGlPolylines = function(map,
                           weight = 1,
                           layerId = NULL,
                           src = FALSE,
+                          hover = NULL,
+                          hoverWait = 500,
+                          pane = "overlayPane",
                           ...) {
 
   if (isTRUE(src)) {
@@ -43,6 +46,9 @@ addGlPolylines = function(map,
       , popup = popup
       , weight = weight
       , layerId = layerId
+      , hover = hover
+      , hoverWait = hoverWait
+      , pane = pane
       , ...
     )
     return(m)
@@ -132,6 +138,9 @@ addGlPolylines = function(map,
     , group
     , weight
     , layerId
+    , hover
+    , hoverWait
+    , pane
   )
 
   leaflet::expandLimits(
@@ -152,6 +161,9 @@ addGlPolylinesSrc = function(map,
                              popup = NULL,
                              weight = 1,
                              layerId = NULL,
+                             hover = NULL,
+                             hoverWait = 500,
+                             pane = "overlayPane",
                              ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -275,6 +287,9 @@ addGlPolylinesSrc = function(map,
     , opacity
     , group
     , layerId
+    , hover
+    , hoverwait
+    , pane
   )
 
   leaflet::expandLimits(

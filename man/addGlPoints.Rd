@@ -17,6 +17,9 @@ addGlPolylines(
   weight = 1,
   layerId = NULL,
   src = FALSE,
+  hover = NULL,
+  hoverWait = 500,
+  pane = "overlayPane",
   ...
 )
 
@@ -30,6 +33,10 @@ addGlPoints(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  hover = NULL,
+  hoverWait = 500,
+  sensitivityHover = 0.03,
+  pane = "overlayPane",
   ...
 )
 
@@ -45,7 +52,8 @@ addGlPolygons(
   src = FALSE,
   border = FALSE,
   hover = NULL,
-  hoverwait = 500,
+  hoverWait = 500,
+  pane = "overlayPane",
   ...
 )
 }

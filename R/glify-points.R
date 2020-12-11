@@ -56,6 +56,10 @@ addGlPoints = function(map,
                        popup = NULL,
                        layerId = NULL,
                        src = FALSE,
+                       hover = NULL,
+                       hoverWait = 500,
+                       sensitivityHover = 0.03,
+                       pane = "overlayPane",
                        ...) {
 
   if (isTRUE(src)) {
@@ -68,6 +72,10 @@ addGlPoints = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , hover = hover
+      , hoverWait = hoverWait
+      , sensitivityHover = sensitivityHover
+      , pane = pane
       , ...
     )
     return(m)
@@ -111,6 +119,19 @@ addGlPoints = function(map,
     popup = NULL
   }
 
+  # hover
+  if (!is.null(hover)) {
+    htmldeps <- htmltools::htmlDependencies(hover)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    hover = makePopup(hover, data)
+    hover = jsonify::to_json(hover)
+  }
+
   # data
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
@@ -148,6 +169,10 @@ addGlPoints = function(map,
     , radius
     , group
     , layerId
+    , hover
+    , hoverWait
+    , sensitivityHover
+    , pane
   )
 
   leaflet::expandLimits(
@@ -169,6 +194,10 @@ addGlPointsSrc = function(map,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
+                          hover = NULL,
+                          hoverWait = 500,
+                          sensitivityHover = 0.03,
+                          pane = "overlayPane",
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -301,6 +330,10 @@ addGlPointsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , hover
+    , hoverWait
+    , sensitivityHover
+    , pane
   )
 
   leaflet::expandLimits(
