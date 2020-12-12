@@ -45,7 +45,6 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
 
   var hov = null;
 
-  debugger;
   var lineslayer = L.glify.lines({
     map: map,
     click: pop,
