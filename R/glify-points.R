@@ -17,12 +17,23 @@
 #' @param radius point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
-#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
 #'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
-#' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
+#' @param hover Object representing the hover. Can be of type character with column names,
+#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
+#'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
+#' @param hoverWait Amount of milliseconds to wait before the next hover event is triggered.
+#' @param pane A string which defines the pane of the layer.
+#' @param sensitivity A numeric value which exaggerates the size of the clickable
+#'   area to make it easier to click a point/line.
+#' @param sensitivityHover A numeric value which exaggerates the size of the hoverable
+#'   area to make it easier to hover a point/line.
+#' @param border Boolean value which determines if a border should be drawn.
+#' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates,
+#'   except for the \code{palette} argument, which is used for the coloring method.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
@@ -57,7 +68,8 @@ addGlPoints = function(map,
                        layerId = NULL,
                        src = FALSE,
                        hover = NULL,
-                       hoverWait = 500,
+                       hoverWait = 250,
+                       sensitivity = 0.1,
                        sensitivityHover = 0.03,
                        pane = "overlayPane",
                        ...) {
@@ -74,6 +86,7 @@ addGlPoints = function(map,
       , layerId = layerId
       , hover = hover
       , hoverWait = hoverWait
+      , sensitivity = sensitivity
       , sensitivityHover = sensitivityHover
       , pane = pane
       , ...
@@ -169,6 +182,7 @@ addGlPoints = function(map,
     , layerId
     , hover
     , hoverWait
+    , sensitivity
     , sensitivityHover
     , pane
   )
@@ -193,7 +207,8 @@ addGlPointsSrc = function(map,
                           popup = NULL,
                           layerId = NULL,
                           hover = NULL,
-                          hoverWait = 500,
+                          hoverWait = 250,
+                          sensitivity = 0.1,
                           sensitivityHover = 0.03,
                           pane = "overlayPane",
                           ...) {
@@ -330,6 +345,7 @@ addGlPointsSrc = function(map,
     , layerId
     , hover
     , hoverWait
+    , sensitivity
     , sensitivityHover
     , pane
   )

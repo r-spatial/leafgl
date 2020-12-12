@@ -33,7 +33,7 @@ addGlPolygons = function(map,
                          src = FALSE,
                          border = FALSE,
                          hover = NULL,
-                         hoverWait = 500,
+                         hoverWait = 250,
                          pane = "overlayPane",
                          ...) {
 
@@ -178,7 +178,7 @@ addGlPolygonsSrc = function(map,
                             layerId = NULL,
                             border = FALSE,
                             hover = NULL,
-                            hoverWait = 500,
+                            hoverWait = 250,
                             pane = "overlayPane",
                             ...) {
 

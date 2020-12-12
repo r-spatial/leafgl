@@ -1,4 +1,5 @@
-LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId, hover, hoverWait, sensitivityHover, pane) {
+LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId,
+                                                   hover, hoverWait, sensitivity, sensitivityHover, pane) {
 
   var map = this;
 
@@ -54,6 +55,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
     hover: hov,
     hoverWait: hoverWait,
     sensitivityHover: sensitivityHover,
+    sensitivity: sensitivity,
     data: data[layerId][0],
     color: clrs,
     opacity: fillOpacity,

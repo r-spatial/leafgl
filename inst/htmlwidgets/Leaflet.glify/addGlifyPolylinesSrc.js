@@ -1,4 +1,5 @@
-LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId, hover, hoverWait, pane) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId,
+                                                      hover, hoverWait, sensitivity, sensitivityHover, pane) {
 
   var map = this;
 
@@ -40,6 +41,8 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     },
     hover: hov,
     hoverWait: hoverWait,
+    sensitivityHover: sensitivityHover,
+    sensitivity: sensitivity,
     latitudeKey: 1,
     longitudeKey: 0,
     data: data[layerId][0],

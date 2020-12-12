@@ -32,7 +32,9 @@ addGlPolylines = function(map,
                           layerId = NULL,
                           src = FALSE,
                           hover = NULL,
-                          hoverWait = 500,
+                          hoverWait = 250,
+                          sensitivity = 0.1,
+                          sensitivityHover = 0.03,
                           pane = "overlayPane",
                           ...) {
 
@@ -48,6 +50,8 @@ addGlPolylines = function(map,
       , layerId = layerId
       , hover = hover
       , hoverWait = hoverWait
+      , sensitivity = sensitivity
+      , sensitivityHover = sensitivityHover
       , pane = pane
       , ...
     )
@@ -153,6 +157,8 @@ addGlPolylines = function(map,
     , layerId
     , hover
     , hoverWait
+    , sensitivity
+    , sensitivityHover
     , pane
   )
 
@@ -175,7 +181,9 @@ addGlPolylinesSrc = function(map,
                              weight = 1,
                              layerId = NULL,
                              hover = NULL,
-                             hoverWait = 500,
+                             hoverWait = 250,
+                             sensitivity = 0.1,
+                             sensitivityHover = 0.03,
                              pane = "overlayPane",
                              ...) {
 
@@ -301,7 +309,9 @@ addGlPolylinesSrc = function(map,
     , group
     , layerId
     , hover
-    , hoverwait
+    , hoverWait
+    , sensitivity
+    , sensitivityHover
     , pane
   )
 
