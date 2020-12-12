@@ -80,6 +80,19 @@ addGlPolylines = function(map,
 
   cols = jsonify::to_json(color, digits = 3)
 
+  # hover
+  if (!is.null(hover) && !isTRUE(hover)) {
+    htmldeps <- htmltools::htmlDependencies(hover)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    hover = makePopup(hover, data)
+    hover = jsonify::to_json(hover)
+  }
+
   # popup
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)

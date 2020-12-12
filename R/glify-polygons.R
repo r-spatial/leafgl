@@ -82,6 +82,19 @@ addGlPolygons = function(map,
 
   cols = jsonify::to_json(fillColor, digits = 3)
 
+  # hover
+  if (!is.null(hover) && !isTRUE(hover)) {
+    htmldeps <- htmltools::htmlDependencies(hover)
+    if (length(htmldeps) != 0) {
+      map$dependencies = c(
+        map$dependencies,
+        htmldeps
+      )
+    }
+    hover = makePopup(hover, data)
+    hover = jsonify::to_json(hover)
+  }
+
   # popup
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
@@ -101,19 +114,6 @@ addGlPolygons = function(map,
     popup = jsonify::to_json(popup)
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
-  }
-
-  # hover
-  if (!is.null(hover)) {
-    htmldeps <- htmltools::htmlDependencies(hover)
-    if (length(htmldeps) != 0) {
-      map$dependencies = c(
-        map$dependencies,
-        htmldeps
-      )
-    }
-    hover = makePopup(hover, data)
-    hover = jsonify::to_json(hover)
   }
 
   # data

@@ -9,11 +9,12 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     clrs = function(index, feature) { return cols[index]; };
   }
 
-  var click_event = function(e, feature, addpopup, popup) {
+  var mouse_event = function(e, feature, addpopup, popup, event) {
+    var etype = event === "hover" ? "_glify_mouseover" : "_glify_click";
     if (map.hasLayer(shapeslayer.layer)) {
       var idx = data.features.findIndex(k => k==feature);
       if (HTMLWidgets.shinyMode) {
-        Shiny.setInputValue(map.id + "_glify_click", {
+        Shiny.setInputValue(map.id + etype, {
           id: layerId ? layerId[idx] : idx+1,
           group: Object.values(shapeslayer.layer._eventParents)[0].groupname,
           lat: e.latlng.lat,
@@ -26,40 +27,16 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
         var pops = L.popup({ maxWidth: 2000 })
             .setLatLng(e.latlng)
             .setContent(content);
-
-        map.layerManager.addLayer(pops, "popup");
-      }
-    }
-  };
-  var pop = function (e, feature) {
-    click_event(e, feature, popup !== null, popup);
-  };
-
-  var hover_event = function(e, feature, addhover, hover) {
-    if (map.hasLayer(shapeslayer.layer)) {
-      var idx = data.features.findIndex(k => k==feature);
-      if (HTMLWidgets.shinyMode) {
-        Shiny.setInputValue(map.id + "_glify_mouseover", {
-          id: layerId ? layerId[idx] : idx+1,
-          group: Object.values(shapeslayer.layer._eventParents)[0].groupname,
-          lat: e.latlng.lat,
-          lng: e.latlng.lng,
-          data: feature.properties
-        });
-      }
-      if (addhover) {
-        var content = hover === true ? '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>' : hover[idx].toString();
-        var pops = L.popup({ maxWidth: 2000 })
-            .setLatLng(e.latlng)
-            .setContent(content);
-
         map.layerManager.removeLayer("leafglpopups");
         map.layerManager.addLayer(pops, "popup", "leafglpopups");
       }
     }
+  }
+  var pop = function (e, feature) {
+    mouse_event(e, feature, popup !== null, popup, "click");
   };
   var hov = function (e, feature) {
-    hover_event(e, feature, hover !== null, hover);
+    mouse_event(e, feature, hover !== null, hover, "hover");
   };
 
   var shapeslayer = L.glify.shapes({

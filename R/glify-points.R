@@ -115,8 +115,6 @@ addGlPoints = function(map,
     }
     popup = makePopup(popup, data)
     popup = jsonify::to_json(popup)
-  } else {
-    popup = NULL
   }
 
   # hover

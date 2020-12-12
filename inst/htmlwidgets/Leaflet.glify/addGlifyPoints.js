@@ -58,12 +58,12 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
   map.layerManager.addLayer(pointslayer.layer, null, null, group);
 */
 
-  var mouse_event = function(e, point, addpopup, popup, event) {
-    var etype = event === "hover" ? "_glify_mouseover" : "_glify_click"
+  var mouse_event_pts = function(e, point, addpopup, popup, event) {
+    var etype = event === "hover" ? "_glify_mouseover" : "_glify_click";
     if (map.hasLayer(pointslayer.layer)) {
       var idx = data.findIndex(k => k==point);
+      var content = popup ? popup[idx].toString() : null;
       if (HTMLWidgets.shinyMode) {
-        var content = popup ? popup[idx].toString() : null;
         Shiny.setInputValue(map.id + etype, {
           id: layerId ? layerId[idx] : idx+1,
           lat: point[0],
@@ -72,7 +72,6 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
         });
       }
       if (addpopup) {
-        var content = popup === true ? '<pre>'+JSON.stringify(point,null,' ').replace(/[\{\}"]/g,'')+'</pre>' : popup[idx].toString();
         var pops = L.popup({ maxWidth: 2000 })
             .setLatLng(e.latlng)
             .setContent(content);
@@ -82,10 +81,10 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     }
   }
   var pop = function (e, point, xy) {
-    mouse_event(e, point, popup !== null, popup, "click");
+    mouse_event_pts(e, point, popup !== null, popup, "click");
   };
   var hov = function (e, point, xy) {
-    mouse_event(e, point, hover !== null, hover, "hover");
+    mouse_event_pts(e, point, hover !== null, hover, "hover");
   };
 
   var pointslayer = L.glify.points({
