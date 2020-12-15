@@ -31,6 +31,7 @@ addGlPolygons = function(map,
                          popup = NULL,
                          layerId = NULL,
                          src = FALSE,
+                         preserveDrawingBuffer = FALSE,
                          ...) {
 
   if (isTRUE(src)) {
@@ -43,6 +44,7 @@ addGlPolygons = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , preserveDrawingBuffer = preserveDrawingBuffer
       , ...
     )
     return(m)
@@ -130,6 +132,7 @@ addGlPolygons = function(map,
     , fillOpacity
     , group
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(
@@ -151,6 +154,7 @@ addGlPolygonsSrc = function(map,
                             group = "glpolygons",
                             popup = NULL,
                             layerId = NULL,
+                            preserveDrawingBuffer = FALSE,
                             ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -255,6 +259,7 @@ addGlPolygonsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(

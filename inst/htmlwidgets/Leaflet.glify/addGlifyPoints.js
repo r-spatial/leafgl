@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, preserveDrawingBuffer) {
 
   const map = this;
 
@@ -86,7 +86,8 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     color: clrs,
     opacity: opacity,
     size: rad,
-    className: group
+    className: group,
+    preserveDrawingBuffer: preserveDrawingBuffer
   });
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);

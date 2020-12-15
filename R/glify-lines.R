@@ -31,6 +31,7 @@ addGlPolylines = function(map,
                           weight = 1,
                           layerId = NULL,
                           src = FALSE,
+                          preserveDrawingBuffer = FALSE,
                           ...) {
 
   if (isTRUE(src)) {
@@ -43,6 +44,7 @@ addGlPolylines = function(map,
       , popup = popup
       , weight = weight
       , layerId = layerId
+      , preserveDrawingBuffer = preserveDrawingBuffer
       , ...
     )
     return(m)
@@ -132,6 +134,7 @@ addGlPolylines = function(map,
     , group
     , weight
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(
@@ -152,6 +155,7 @@ addGlPolylinesSrc = function(map,
                              popup = NULL,
                              weight = 1,
                              layerId = NULL,
+                             preserveDrawingBuffer = FALSE,
                              ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -275,6 +279,7 @@ addGlPolylinesSrc = function(map,
     , opacity
     , group
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(

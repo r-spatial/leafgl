@@ -17,6 +17,7 @@ addGlPolylines(
   weight = 1,
   layerId = NULL,
   src = FALSE,
+  preserveDrawingBuffer = FALSE,
   ...
 )
 
@@ -30,6 +31,7 @@ addGlPoints(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  preserveDrawingBuffer = FALSE,
   ...
 )
 
@@ -43,6 +45,7 @@ addGlPolygons(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  preserveDrawingBuffer = FALSE,
   ...
 )
 }
@@ -69,6 +72,9 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 \item{layerId}{the layer id}
 
 \item{src}{whether to pass data to the widget via file attachments.}
+
+\item{preserveDrawingBuffer}{whether to preserve draw buffer on WebGL context.
+NOTE: Setting to \code{TRUE} may cause performance issues with large data sets.}
 
 \item{...}{Passed to \code{\link[jsonify]{to_json}} for the data coordinates.}
 

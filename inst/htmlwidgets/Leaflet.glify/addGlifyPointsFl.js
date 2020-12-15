@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size, layerId) {
+LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size, layerId, preserveDrawingBuffer) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
@@ -32,6 +32,7 @@ LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var
       opacity: opacity,
       size: size,
       // className: "test"
+      preserveDrawingBuffer: preserveDrawingBuffer
     });
     //map.layerManager.addLayer(test, null, null, "test");
   });

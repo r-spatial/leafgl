@@ -22,6 +22,8 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
+#' @param preserveDrawingBuffer whether to preserve draw buffer on WebGL context.
+#'   NOTE: Setting to \code{TRUE} may cause performance issues with large data sets.
 #' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
@@ -56,6 +58,7 @@ addGlPoints = function(map,
                        popup = NULL,
                        layerId = NULL,
                        src = FALSE,
+                       preserveDrawingBuffer = FALSE,
                        ...) {
 
   if (isTRUE(src)) {
@@ -68,6 +71,7 @@ addGlPoints = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , preserveDrawingBuffer = preserveDrawingBuffer
       , ...
     )
     return(m)
@@ -148,6 +152,7 @@ addGlPoints = function(map,
     , radius
     , group
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(
@@ -169,6 +174,7 @@ addGlPointsSrc = function(map,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
+                          preserveDrawingBuffer = FALSE,
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -301,6 +307,7 @@ addGlPointsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , preserveDrawingBuffer
   )
 
   leaflet::expandLimits(

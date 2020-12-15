@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId, preserveDrawingBuffer) {
 
   var map = this;
 
@@ -41,7 +41,8 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     color: clrs,
     opacity: opacity,
     weight: wght,
-    className: group
+    className: group,
+    preserveDrawingBuffer: preserveDrawingBuffer
   });
 
   map.layerManager.addLayer(lineslayer.glLayer, null, null, group);

@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsMinimal = function(data, cols, popup, opacity, size, group, layerId) {
+LeafletWidget.methods.addGlifyPointsMinimal = function(data, cols, popup, opacity, size, group, layerId, preserveDrawingBuffer) {
 
   var map = this;
   //var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
@@ -33,7 +33,8 @@ LeafletWidget.methods.addGlifyPointsMinimal = function(data, cols, popup, opacit
       color: clrs,
       opacity: opacity,
       size: size,
-      className: group
+      className: group,
+      preserveDrawingBuffer: preserveDrawingBuffer
     });
 
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
