@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, dotOptions) {
 
   const map = this;
 
@@ -18,49 +18,8 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     rad = function(index, point) { return radius[index]; };
   }
 
-/*
-  var pop;
-  if (popup) {
-      if (popup === true) {
-        pop = function (e, feature) {
-          var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
-          if (map.hasLayer(pointslayer.glLayer)) {
-            L.popup({ maxWidth: 2000 })
-              .setLatLng(e.latlng)
-              .setContent(popUp)
-              .openOn(map);
-          }
-        };
-      } else {
-        pop = function (e, feature) {
-          if (map.hasLayer(pointslayer.glLayer)) {
-            L.popup({ maxWidth: 2000 })
-              .setLatLng(e.latlng)
-              .setContent(feature.properties[[popup]].toString())
-              .openOn(map);
-          }
-        };
-      }
-  } else {
-      pop = null;
-  }
-
-  var pointslayer = L.glify.points({
-    map: map,
-    click: pop,
-    data: data,
-    color: clrs,
-    opacity: opacity,
-    size: size,
-    className: group
-  });
-
-  map.layerManager.addLayer(pointslayer.glLayer, null, null, group);
-*/
-
-  var pointslayer = L.glify.points({
-    map: map,
-    click: (e, point, xy) => {
+  // click function
+  let clickFun = (e, point, xy) => {
       var idx = data.findIndex(k => k==point);
       //set up a standalone popup (use a popup as a layer)
       if (map.hasLayer(pointslayer.glLayer)) {
@@ -81,14 +40,34 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
             .openOn(map);
         }
       }
-    },
+    };
+
+  // arguments for gl layer
+  var pointsArgs = {
+    map: map,
+    click: clickFun,
     data: data,
     color: clrs,
     opacity: opacity,
     size: rad,
     className: group
-  });
+  };
 
+  // extract correct fragmentShaderSource if provided via dotOptions
+  if (dotOptions.fragmentShaderSource !== undefined && dotOptions.fragmentShaderSource !== null) {
+    let fragmentShader = dotOptions.fragmentShaderSource;
+    dotOptions.fragmentShaderSource = () => {
+      return L.glify.shader.fragment[fragmentShader];
+    };
+  }
+
+  // append dotOptions to layer arguments
+  Object.entries(dotOptions).forEach(([key,value]) => { pointsArgs[key] = value });
+
+  // initialze layer
+  var pointslayer = L.glify.points(pointsArgs);
+
+  // add layer to map using RStudio leaflet's layerManager
   map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
 };
 

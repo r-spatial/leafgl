@@ -22,7 +22,13 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
-#' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
+#' @param ... Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
+#'   & to pass additional arguments to the underlying JavaScript functions. Typical
+#'   use-cases include setting 'digits' to round the point coordinates or to pass
+#'   a different 'fragmentShaderSource' to control the shape of the points. Use
+#'   'point' (default) to render circles with a thin black outline,
+#'   'simpleCircle' for circles without outline or
+#'   'sqaure' for squares (without outline).
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
@@ -57,6 +63,8 @@ addGlPoints = function(map,
                        layerId = NULL,
                        src = FALSE,
                        ...) {
+
+  dotopts = list(...)
 
   if (isTRUE(src)) {
     m = addGlPointsSrc(
@@ -148,6 +156,7 @@ addGlPoints = function(map,
     , radius
     , group
     , layerId
+    , dotopts
   )
 
   leaflet::expandLimits(
