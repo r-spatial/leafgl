@@ -22,7 +22,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
   let clickFun = (e, point, xy) => {
       var idx = data.findIndex(k => k==point);
       //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.glLayer)) {
+      if (map.hasLayer(pointslayer.layer)) {
         var content = popup ? popup[idx].toString() : null;
         if (HTMLWidgets.shinyMode) {
               Shiny.setInputValue(map.id + "_glify_click", {
@@ -68,7 +68,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
   var pointslayer = L.glify.points(pointsArgs);
 
   // add layer to map using RStudio leaflet's layerManager
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
 };
 
 

@@ -70,7 +70,13 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 
 \item{src}{whether to pass data to the widget via file attachments.}
 
-\item{...}{Passed to \code{\link[jsonify]{to_json}} for the data coordinates.}
+\item{...}{Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
+& to pass additional arguments to the underlying JavaScript functions. Typical
+use-cases include setting 'digits' to round the point coordinates or to pass
+a different 'fragmentShaderSource' to control the shape of the points. Use
+'point' (default) to render circles with a thin black outline,
+'simpleCircle' for circles without outline or
+'sqaure' for squares (without outline).}
 
 \item{fillColor}{fill color.}
 

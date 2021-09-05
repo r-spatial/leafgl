@@ -3,14 +3,13 @@ glifyDependencies = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '3.0.1',
+      '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPoints.js"
         , "addGlifyPolygons.js"
         , "addGlifyPolylines.js"
         , "glify-browser.js"
-        # , "glify-browser.js.map"
       )
     )
   )
@@ -38,7 +37,7 @@ glifyDependenciesSrc = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '2.2.0',
+      '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "addGlifyPointsSrc.js"
