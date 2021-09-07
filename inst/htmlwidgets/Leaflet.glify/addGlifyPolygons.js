@@ -37,9 +37,28 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     click_event(e, feature, popup !== null, popup);
   };
 
+  var label = "testtest";
+
+  var hover_event = function(e, feature, addlabel, label) {
+    if (map.hasLayer(shapeslayer.layer)) {
+      if (addlabel) {
+        ttp = L.tooltip({sticky: true})
+         .setLatLng(e.latlng)
+         .setContent(feature.properties.NAME_1.toString());
+
+        ttp.addTo(map);
+      }
+    }
+  }
+
+  var hvr = function(e, feature) {
+    hover_event(e, feature, label !== null, label);
+  }
+
   var shapeslayer = L.glify.shapes({
     map: map,
     click: pop,
+    hover: hvr,
     data: data,
     color: clrs,
     opacity: opacity,
