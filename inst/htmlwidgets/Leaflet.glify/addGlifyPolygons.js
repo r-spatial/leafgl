@@ -38,15 +38,15 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
   };
 
   var label = "testtest";
+  let tooltip = new L.Tooltip();
 
   var hover_event = function(e, feature, addlabel, label) {
     if (map.hasLayer(shapeslayer.layer)) {
       if (addlabel) {
-        ttp = L.tooltip({sticky: true})
+        tooltip
          .setLatLng(e.latlng)
-         .setContent(feature.properties.NAME_1.toString());
-
-        ttp.addTo(map);
+         .setContent(feature.properties.NAME_1.toString())
+         .addTo(map);
       }
     }
   }
