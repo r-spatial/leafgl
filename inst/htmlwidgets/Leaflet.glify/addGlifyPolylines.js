@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, group, weight, layerId) {
+LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, group, weight, layerId, pane) {
 
   var map = this;
 
@@ -52,7 +52,8 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
     color: clrs,
     opacity: opacity,
     className: group,
-    weight: wght
+    weight: wght,
+    pane: pane
   });
 
   map.layerManager.addLayer(lineslayer.layer, "glify", layerId, group);

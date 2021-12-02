@@ -22,6 +22,7 @@
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
+#' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
 #' @param ... Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
 #'   & to pass additional arguments to the underlying JavaScript functions. Typical
 #'   use-cases include setting 'digits' to round the point coordinates or to pass
@@ -62,6 +63,7 @@ addGlPoints = function(map,
                        popup = NULL,
                        layerId = NULL,
                        src = FALSE,
+                       pane = "overlayPane",
                        ...) {
 
   dotopts = list(...)
@@ -76,6 +78,7 @@ addGlPoints = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , pane = pane
       , ...
     )
     return(m)
@@ -157,6 +160,7 @@ addGlPoints = function(map,
     , group
     , layerId
     , dotopts
+    , pane
   )
 
   leaflet::expandLimits(
@@ -164,8 +168,6 @@ addGlPoints = function(map,
     c(bounds[2], bounds[4]),
     c(bounds[1], bounds[3])
   )
-
-
 }
 
 
@@ -178,6 +180,7 @@ addGlPointsSrc = function(map,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
+                          pane = "overlayPane",
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -310,6 +313,7 @@ addGlPointsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , pane
   )
 
   leaflet::expandLimits(

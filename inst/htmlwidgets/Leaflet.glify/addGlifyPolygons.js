@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group, layerId, pane) {
 
   var map = this;
 
@@ -63,7 +63,8 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     color: clrs,
     opacity: opacity,
     className: group,
-    border: false
+    border: false,
+    pane: pane
   });
 
   map.layerManager.addLayer(shapeslayer.layer, "glify", layerId, group);

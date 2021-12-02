@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, dotOptions) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, dotOptions, pane) {
 
   const map = this;
 
@@ -50,7 +50,8 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
     color: clrs,
     opacity: opacity,
     size: rad,
-    className: group
+    className: group,
+    pane: pane
   };
 
   // extract correct fragmentShaderSource if provided via dotOptions
