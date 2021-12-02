@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size, layerId) {
+LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var, opacity, size, layerId, pane) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
@@ -31,6 +31,7 @@ LeafletWidget.methods.addGlifyPointsFl = function(data_var, color_var, popup_var
       color: clrs,
       opacity: opacity,
       size: size,
+      pane: pane,
       // className: "test"
     });
     //map.layerManager.addLayer(test, null, null, "test");

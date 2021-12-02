@@ -17,6 +17,7 @@ addGlPolylines(
   weight = 1,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 
@@ -30,6 +31,7 @@ addGlPoints(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 
@@ -43,6 +45,7 @@ addGlPolygons(
   popup = NULL,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 }
@@ -69,6 +72,8 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 \item{layerId}{the layer id}
 
 \item{src}{whether to pass data to the widget via file attachments.}
+
+\item{pane}{A string which defines the pane of the layer. The default is \code{"overlayPane"}.}
 
 \item{...}{Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
 & to pass additional arguments to the underlying JavaScript functions. Typical

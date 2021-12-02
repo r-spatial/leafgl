@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygonsFl = function(data_var, color_var, popup_var, opacity) {
+LeafletWidget.methods.addGlifyPolygonsFl = function(data_var, color_var, popup_var, opacity, pane) {
 
   var map = this;
   var data_fl = document.getElementById(data_var + '-1-attachment' ).href;
@@ -38,6 +38,7 @@ LeafletWidget.methods.addGlifyPolygonsFl = function(data_var, color_var, popup_v
       color: clrs,
       opacity: opacity,
       // className: "glify-pls"
+      pane: pane
     });
   });
 

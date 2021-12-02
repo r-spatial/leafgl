@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId) {
+LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacity, group, layerId, pane) {
 
   var map = this;
 
@@ -29,7 +29,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
         //var idx = data[layerId][0].indexOf(point);
         var idx = data[layerId][0].findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
-        if (map.hasLayer(pointslayer.glLayer)) {
+        if (map.hasLayer(pointslayer.layer)) {
           L.popup()
             .setLatLng(point)
             .setContent(popup[layerId][0][idx].toString())
@@ -41,10 +41,11 @@ LeafletWidget.methods.addGlifyPointsSrc = function(fillColor, radius, fillOpacit
     color: clrs,
     opacity: fillOpacity,
     size: size,
-    className: group
+    className: group,
+    pane: pane
   });
 
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
 
 };
 
@@ -69,7 +70,7 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerI
         //var idx = data[group][0].indexOf(point);
         var idx = data[group][0].findIndex(k => k==point);
         //set up a standalone popup (use a popup as a layer)
-        if (map.hasLayer(pointslayer.glLayer)) {
+        if (map.hasLayer(pointslayer.layer)) {
           L.popup()
             .setLatLng(point)
             .setContent(popup[group][0][idx].toString())
@@ -86,7 +87,7 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerI
       className: group
     });
 
-  map.layerManager.addLayer(pointslayer.glLayer, "glify", layerId, group);
+  map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
 
   function add() {
         if (typeof data[grp2] === 'undefined') {
@@ -100,7 +101,7 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerI
                 //var idx = data[group][0].indexOf(point);
                 var idx = data[group][0].findIndex(k => k==point);
                 //set up a standalone popup (use a popup as a layer)
-                if (map.hasLayer(pointslayer.glLayer)) {
+                if (map.hasLayer(pointslayer.layer)) {
                   L.popup()
                     .setLatLng(point)
                     .setContent(popup[group][0][idx].toString())
@@ -117,7 +118,7 @@ LeafletWidget.methods.addGlifyPointsSrc2 = function(group, opacity, size, layerI
               className: group
             });
 
-           map.layerManager.addLayer(pointslayer2.glLayer, null, null, group);
+           map.layerManager.addLayer(pointslayer2.layer, "glify", null, group);
         }
     }
 

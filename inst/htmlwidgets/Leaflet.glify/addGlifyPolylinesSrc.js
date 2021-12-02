@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId, pane) {
 
   var map = this;
 
@@ -26,7 +26,7 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
       } else if (typeof(popup[layerId]) === "undefined") {
         return;
       } else {
-      if (map.hasLayer(lineslayer.glLayer)) {
+      if (map.hasLayer(lineslayer.layer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
           L.popup()
             .setLatLng(e.latlng)
@@ -41,9 +41,10 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, gr
     color: clrs,
     opacity: opacity,
     weight: wght,
-    className: group
+    className: group,
+    pane: pane
   });
 
-  map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(lineslayer.layer, "glify", null, group);
 
 };
