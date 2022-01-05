@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, group, layerId, pane) {
+LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label, opacity, group, layerId, pane) {
 
   var map = this;
 
@@ -37,7 +37,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     click_event(e, feature, popup !== null, popup);
   };
 
-  var label = "testtest";
+  // var label = "testtest";
   let tooltip = new L.Tooltip();
 
   var hover_event = function(e, feature, addlabel, label) {
@@ -45,7 +45,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
       if (addlabel) {
         tooltip
          .setLatLng(e.latlng)
-         .setContent(feature.properties.NAME_1.toString())
+         .setContent(feature.properties[[label]].toString())
          .addTo(map);
       }
     }
@@ -63,7 +63,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, opacity, gr
     color: clrs,
     opacity: opacity,
     className: group,
-    border: false,
+    border: true,
     pane: pane
   });
 

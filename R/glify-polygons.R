@@ -29,6 +29,7 @@ addGlPolygons = function(map,
                          fillOpacity = 0.8,
                          group = "glpolygons",
                          popup = NULL,
+                         label = NULL,
                          layerId = NULL,
                          src = FALSE,
                          pane = "overlayPane",
@@ -128,6 +129,7 @@ addGlPolygons = function(map,
     , data
     , cols
     , popup
+    , label
     , fillOpacity
     , group
     , layerId

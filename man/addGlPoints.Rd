@@ -43,6 +43,7 @@ addGlPolygons(
   fillOpacity = 0.8,
   group = "glpolygons",
   popup = NULL,
+  label = NULL,
   layerId = NULL,
   src = FALSE,
   pane = "overlayPane",
