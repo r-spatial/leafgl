@@ -28,6 +28,7 @@ addGlPolylines = function(map,
                           opacity = 0.6,
                           group = "glpolylines",
                           popup = NULL,
+                          label = NULL,
                           weight = 1,
                           layerId = NULL,
                           src = FALSE,
@@ -130,6 +131,7 @@ addGlPolylines = function(map,
     , data
     , cols
     , popup
+    , label
     , opacity
     , group
     , weight

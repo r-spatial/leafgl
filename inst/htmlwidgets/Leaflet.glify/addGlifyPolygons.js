@@ -55,6 +55,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label, opac
     hover_event(e, feature, label !== null, label);
   }
 
+
   var shapeslayer = L.glify.shapes({
     map: map,
     click: pop,

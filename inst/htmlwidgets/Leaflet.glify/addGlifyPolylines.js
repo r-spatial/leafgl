@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, group, weight, layerId, pane) {
+LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label, opacity, group, weight, layerId, pane) {
 
   var map = this;
 
@@ -43,9 +43,29 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, opacity, g
     click_event(e, feature, popup !== null, popup);
   };
 
+  // var label = "testtest";
+  let tooltip = new L.Tooltip();
+
+  var hover_event = function(e, feature, addlabel, label) {
+    if (map.hasLayer(lineslayer.layer)) {
+      if (addlabel) {
+        tooltip
+         .setLatLng(e.latlng)
+         .setContent(feature.properties[[label]].toString())
+         .addTo(map);
+      }
+    }
+  }
+
+  var hvr = function(e, feature) {
+    hover_event(e, feature, label !== null, label);
+  }
+
+
   var lineslayer = L.glify.lines({
     map: map,
     click: pop,
+    hover: hvr,
     latitudeKey: 1,
     longitudeKey: 0,
     data: data,

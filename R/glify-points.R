@@ -17,8 +17,10 @@
 #' @param radius point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
-#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
 #'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
+#' @param label either a column name (currently only supported for polygons and polylines)
+#'   or a character vector to be used as label.
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
@@ -61,6 +63,7 @@ addGlPoints = function(map,
                        radius = 10,
                        group = "glpoints",
                        popup = NULL,
+                       label = NULL,
                        layerId = NULL,
                        src = FALSE,
                        pane = "overlayPane",
@@ -155,6 +158,7 @@ addGlPoints = function(map,
     , data
     , fillColor
     , popup
+    , label
     , fillOpacity
     , radius
     , group

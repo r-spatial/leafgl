@@ -14,6 +14,7 @@ addGlPolylines(
   opacity = 0.6,
   group = "glpolylines",
   popup = NULL,
+  label = NULL,
   weight = 1,
   layerId = NULL,
   src = FALSE,
@@ -29,6 +30,7 @@ addGlPoints(
   radius = 10,
   group = "glpoints",
   popup = NULL,
+  label = NULL,
   layerId = NULL,
   src = FALSE,
   pane = "overlayPane",
@@ -65,8 +67,11 @@ Note: expect funny results if you set this to < 1.}
 \item{group}{a group name for the feature layer.}
 
 \item{popup}{Object representing the popup. Can be of type character with column names,
-formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
 match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
+
+\item{label}{either a column name (currently only supported for polygons and polylines)
+or a character vector to be used as label.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 

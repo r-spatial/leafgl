@@ -1,4 +1,4 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radius, group, layerId, dotOptions, pane) {
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity, radius, group, layerId, dotOptions, pane) {
 
   const map = this;
 
@@ -42,10 +42,31 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, opacity, radi
       }
     };
 
+  let tooltip = new L.Tooltip();
+
+  var hover_event = function(e, point, addlabel, label) {
+    var idx = data.findIndex(k => k==point);
+      //set up a standalone label (use a label as a layer)
+      if (map.hasLayer(pointslayer.layer)) {
+        var content = label ? label[idx].toString() : null;
+        if (label !== null) {
+          tooltip
+            .setLatLng(point)
+            .setContent(content)
+            .addTo(map);
+        }
+      }
+  }
+
+  var hvr = function(e, feature) {
+    hover_event(e, feature, label !== null, label);
+  }
+
   // arguments for gl layer
   var pointsArgs = {
     map: map,
     click: clickFun,
+    hover: hvr,
     data: data,
     color: clrs,
     opacity: opacity,

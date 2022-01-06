@@ -1,5 +1,9 @@
 ## leafgl 0.2.1
 
+new features:
+
+  * all methods can now have labels/tooltips. Currently only lines and polygons support passing of a column name, points need a predefined label vector.
+
 miscallaneous:
 
   * all methods now have a pane argument to control layer ordering (thanks to @trafficonese). #67 #64
