@@ -57,6 +57,7 @@ makePopup.sf <- function(x, data) {
   x <- data.frame(x)
   ## Remove Geometry Columns ???
   x[,"geometry"] <- NULL
+  x[, "geom"] = NULL
   x[,"latitude"] <- NULL
   x[,"longitude"] <- NULL
   x[,"optional"] <- NULL
