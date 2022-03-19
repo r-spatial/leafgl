@@ -4,6 +4,8 @@
 
 #### 🐛 bug fixes
 
+  * src version now works also in shiny. #71
+
 #### 💬 documentation etc
 
 #### 🍬 miscellaneous
