@@ -16,27 +16,10 @@ glifyDependencies = function() {
 }
 
 # helpers
-glifyDependenciesFl = function() {
-  list(
-    htmltools::htmlDependency(
-      "Leaflet.glify",
-      '2.2.0',
-      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
-      script = c(
-        "addGlifyPoints.js"
-        , "addGlifyPolygonsFl.js"
-        , "addGlifyPolylines.js"
-        , "glify.js"
-      )
-    )
-  )
-}
-
-# helpers
 glifyDependenciesSrc = function() {
   list(
     htmltools::htmlDependency(
-      "Leaflet.glify",
+      "Leaflet.glifySrc",
       '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
@@ -148,6 +131,26 @@ glifyPopupAttachment = function(fl_popup, group) {
       version = 1,
       src = c(file = data_dir),
       attachment = list(data_file)
+    )
+  )
+}
+
+
+
+
+# helpers
+glifyDependenciesFl = function() {
+  list(
+    htmltools::htmlDependency(
+      "Leaflet.glify",
+      '2.2.0',
+      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
+      script = c(
+        "addGlifyPoints.js"
+        , "addGlifyPolygonsFl.js"
+        , "addGlifyPolylines.js"
+        , "glify.js"
+      )
     )
   )
 }
