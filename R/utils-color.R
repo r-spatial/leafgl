@@ -161,6 +161,7 @@ makeColorMatrix.POSIXlt <- makeColorMatrix.Date
 #' @param data The dataset
 checkDim <- function(x, data) {
   if (inherits(data, "sfc")) nro_d = length(data) else nro_d = nrow(data)
+  lnths = lengths(sf::st_geometry(data))
   if (inherits(x, "matrix") || inherits(x, "data.frame")) {
     if (nrow(x) != 1 && nro_d != nrow(x)) {
       warning("Number of rows of color matrix does not match number of data rows.\n",
@@ -173,6 +174,9 @@ checkDim <- function(x, data) {
       warning("Length of color vector does not match number of data rows.\n",
               "  The vector is repeated to match the number of rows.")
       x <- rep(x, ceiling(nro_d / len_x))[1:nro_d]
+    }
+    if (any(lnths != 1)) {
+      x = rep(x, times = lnths / 2)
     }
   }
   return(x)
