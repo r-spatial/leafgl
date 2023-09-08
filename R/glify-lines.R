@@ -118,8 +118,8 @@ addGlPolylines = function(map,
 
   # dependencies
   map$dependencies = c(
-    glifyDependencies()
-    , map$dependencies
+    map$dependencies
+    , glifyDependencies()
   )
 
   # weight is about double the weight of svg, so / 2

@@ -118,8 +118,8 @@ addGlPolygons = function(map,
 
   # dependencies
   map$dependencies = c(
-    glifyDependencies()
-    , map$dependencies
+    map$dependencies
+    , glifyDependencies()
   )
 
   map = leaflet::invokeMethod(
