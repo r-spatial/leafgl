@@ -109,13 +109,13 @@ MULTIPOLYGONs are currently not supported! Make sure you cast your data
 }
 \section{Functions}{
 \itemize{
-\item \code{addGlPolylines}: add polylines to a leaflet map using Leaflet.glify
+\item \code{addGlPolylines()}: add polylines to a leaflet map using Leaflet.glify
 
-\item \code{addGlPoints}: add points to a leaflet map using Leaflet.glify
+\item \code{addGlPoints()}: add points to a leaflet map using Leaflet.glify
 
-\item \code{addGlPolygons}: add polygons to a leaflet map using Leaflet.glify
+\item \code{addGlPolygons()}: add polygons to a leaflet map using Leaflet.glify
+
 }}
-
 \examples{
 if (interactive()) {
 library(leaflet)
