@@ -34,7 +34,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label, opac
   };
 
   var pop = function (e, feature) {
-    click_event(e, feature, popup !== null, popup);
+    click_event(e, feature, popup !== null && popup !== false, popup);
   };
 
   // var label = "testtest";

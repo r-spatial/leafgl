@@ -40,7 +40,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label, opa
   };
 
   var pop = function (e, feature) {
-    click_event(e, feature, popup !== null, popup);
+    click_event(e, feature, popup !== null && popup !== false, popup);
   };
 
   // var label = "testtest";
