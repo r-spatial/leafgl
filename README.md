@@ -3,6 +3,8 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/trafficonese/leafgl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/trafficonese/leafgl/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/trafficonese/leafgl/branch/master/graph/badge.svg)](https://app.codecov.io/gh/trafficonese/leafgl?branch=master)
+
 [![monthly](http://cranlogs.r-pkg.org/badges/leafgl)](https://www.rpackages.io/package/leafgl)
 [![total](http://cranlogs.r-pkg.org/badges/grand-total/leafgl)](https://www.rpackages.io/package/leafgl)
 [![CRAN](http://www.r-pkg.org/badges/version/leafgl?color=009999)](https://cran.r-project.org/package=leafgl)
