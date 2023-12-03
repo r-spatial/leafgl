@@ -34,11 +34,11 @@ makePopup.character <- function(x, data) {
 makePopup.shiny.tag <- function(x, data) {
   x <- as.character(x)
   x <- checkDimPop(x, data)
-  # if (length(x) == 1) {
+  if (length(x) == 1) {
     htmltools::HTML(x)
-  # } else {
-  #   lapply(x, htmltools::HTML)
-  # }
+  } else {
+    lapply(x, htmltools::HTML)
+  }
 }
 
 #' @export

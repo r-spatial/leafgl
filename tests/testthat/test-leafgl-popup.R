@@ -371,6 +371,56 @@ test_that("popup-lines-character", {
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   rm(m)
 
+  ## Buttons / Icons / Emojis ?? ##############
+  library(shiny)
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                  popup = paste0(
+                    storms$Name, ": ", storms$MaxWind,
+                    actionButton("showmodal", "Expand to show more details",
+                                 onclick = 'Shiny.onInputChange("button_click",  Math.random())')),
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                  popup = shiny::icon("cog"),
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                   src = TRUE,
+                   popup = shiny::icon("cog"),
+                   opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  # storms$icontext <- sample(c(htmltools::tagList(shiny::icon("cog")),
+  #                             htmltools::tagList(shiny::icon("person")),
+  #                             htmltools::tagList(shiny::icon("car")),
+  #                             htmltools::tagList(shiny::icon("circle"))),
+  #                             nrow(storms), replace = TRUE)
+  # m <- leaflet() %>% addTiles() %>%
+  #   addGlPolylines(data = storms,
+  #                  popup = ~icontext,
+  #                  opacity = 1)
+  # expect_is(m, "leaflet")
+  # rm(m)
+
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                  popup = "\U0001f600",
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+
+
+
   ## Single Random Character ##############
   m <- leaflet() %>% addTiles() %>%
                         addGlPolylines(data = storms,
@@ -570,6 +620,42 @@ test_that("popup-polygon-character", {
                   src=TRUE,
                   opacity = 1)
   expect_is(m, "leaflet")
+
+  ## Buttons / Icons / Emojis ##############
+  library(shiny)
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = paste0(
+                    gadm$NAME_1, ": ", gadm$NAME_0,
+                    actionButton("showmodal", "Expand to show more details",
+                                 onclick = 'Shiny.onInputChange("button_click",  Math.random())')),
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = shiny::icon("cog"),
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = shiny::icon("cog"),
+                  src = TRUE,
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = "\U0001f600",
+                  opacity = 1)
+  expect_is(m, "leaflet")
+  rm(m)
+
+
 
 
   ## Single Random Character ##############
