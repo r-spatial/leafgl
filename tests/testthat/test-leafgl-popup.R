@@ -46,20 +46,20 @@ test_that("popup-points-character", {
   rm(m)
 
   ## Single Random Character ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = "Text 1",
-                group = "grp"))
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]), rep("Text 1", nrow(breweries91)))
   rm(m)
 
   ## Multiple Random Characters - (wrong length) ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
-                        addGlPoints(data = breweries91,
-                                    popup = c("Text 1", "Text 2"),
-                                    group = "grp"))
+  m <- leaflet() %>% addTiles() %>%
+    addGlPoints(data = breweries91,
+                popup = c("Text 1", "Text 2"),
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]),
@@ -93,10 +93,10 @@ test_that("popup-points-table", {
   expect_is(m, "leaflet")
 
   ## Data.frame - wrong length ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = as.data.frame(breweries91)[1:4,],
-                group = "grp"))
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
@@ -161,21 +161,21 @@ test_that("popup-points-formula", {
 
 test_that("popup-points-list", {
   ## List with length 1 ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = as.list(data.frame(city="Berlin",
                                            district=5029, stringsAsFactors = F)),
-                group = "grp"))
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
   ## List with length >1 ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
         addGlPoints(data = breweries91,
                     popup=as.list(data.frame(city=c("Vienna","Berlin"),
                                              district=c(1010,40302),
                                              stringsAsFactors = F)),
-                    group = "grp"))
+                    group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
@@ -214,10 +214,10 @@ test_that("popup-points-json", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = jsonify::to_json(as.data.frame(breweries91[1,])),
-                group = "grp"))
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
@@ -228,7 +228,6 @@ test_that("popup-points-json", {
                 group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
-
 })
 
 test_that("popup-points-logical", {
@@ -269,17 +268,17 @@ test_that("popup-points-logical", {
 test_that("popup-points-shiny.tag", {
   library(shiny)
   ## Shiny.Tag - icon - Length 1 ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = shiny::icon("car"),
-                group = "grp"))
+                group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
                 popup = shiny::icon("car"),
-                group = "grp", src = TRUE))
+                group = "grp", src = TRUE)
   expect_is(m, "leaflet")
 
   ## Shiny.Tag - icon - Length >1 ##############
@@ -292,15 +291,14 @@ test_that("popup-points-shiny.tag", {
   #                                   group = "grp"))
   # expect_is(m, "leaflet")
   # expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
-
 })
 
 test_that("popup-points-default", {
   ## POSIX* ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPoints(data = breweries91,
                                     popup = Sys.time(),
-                                    group = "grp"))
+                                    group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
@@ -314,10 +312,10 @@ test_that("popup-points-default", {
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
   ## Date ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPoints(data = breweries91,
                                     popup = Sys.Date(),
-                                    group = "grp"))
+                                    group = "grp")
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 })
@@ -358,20 +356,20 @@ test_that("popup-lines-character", {
   rm(m)
 
   ## Single Random Character ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPolylines(data = storms,
                                        popup = "Text 1",
-                                       opacity = 1))
+                                       opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]), rep("Text 1", nrow(storms)))
   rm(m)
 
   ## Multiple Random Characters - (wrong length) ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPolylines(data = storms,
                                     popup = c("Text 1", "Text 2"),
-                                    opacity = 1))
+                                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]),
@@ -398,10 +396,10 @@ test_that("popup-lines-table", {
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
   ## Data.frame - wrong length ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPolylines(data = storms,
                                        popup = as.data.frame(storms)[1:4,],
-                                       opacity = 1))
+                                       opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
@@ -412,7 +410,6 @@ test_that("popup-lines-table", {
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
-
 })
 
 test_that("popup-lines-spatial", {
@@ -512,20 +509,20 @@ test_that("popup-polygon-character", {
   rm(m)
 
   ## Single Random Character ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPolygons(data = gadm,
                                        popup = "Text 1",
-                                       opacity = 1))
+                                       opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]), rep("Text 1", nrow(gadm)))
   rm(m)
 
   ## Multiple Random Characters - (wrong length) ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
+  m <- leaflet() %>% addTiles() %>%
                         addGlPolygons(data = gadm,
                                        popup = c("Text 1", "Text 2"),
-                                       opacity = 1))
+                                       opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]),
@@ -546,23 +543,23 @@ test_that("popup-polygon-table", {
   ## Data.frame ##############
   m <- leaflet() %>% addTiles() %>%
     addGlPolygons(data = gadm,
-                   popup = as.data.frame(gadm),
+                   popup = as.data.frame(gadm)[1:6],
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
   ## Data.frame - wrong length ##############
-  m <- expect_warning(leaflet() %>% addTiles() %>%
-                        addGlPolygons(data = gadm,
-                                       popup = as.data.frame(gadm)[1:4,],
-                                       opacity = 1))
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = as.data.frame(gadm)[1, 1:4],
+                  opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
 
   ## Matrix ##############
   m <- leaflet() %>% addTiles() %>%
     addGlPolygons(data = gadm,
-                   popup = as.matrix(as.data.frame(gadm)),
+                   popup = as.matrix(as.data.frame(gadm)[1:6]),
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
