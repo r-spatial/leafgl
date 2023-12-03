@@ -12,7 +12,32 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 lines = suppressWarnings(st_cast(st_as_sf(atlStorms2005), "LINESTRING"));
 
 polys <- suppressWarnings(st_cast(st_as_sf(gadmCHE), "POLYGON"))
+multipolys <- st_as_sf(gadmCHE)
 
+test_that("makeColorMatrix directly", {
+  vec <- 1
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+  vec <- LETTERS[1:10]
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+  vec <- 1:10
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+})
+
+test_that("Multi-geometry", {
+  vec <- 1
+  a <- makeColorMatrix(vec, multipolys)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+})
 
 test_that("Character as color", {
   ## Character - Color Name ###################

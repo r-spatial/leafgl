@@ -4,8 +4,24 @@ library(leaflet)
 library(jsonify)
 library(sf)
 
+## makePopup solo #######
+test_that("makePopup direct", {
+  vec <- 1
+  a <- makePopup(vec, NULL)
+  expect_identical(a, as.character(vec))
+
+  vec <- LETTERS[1:10]
+  a <- makePopup(vec, NULL)
+  expect_identical(a, as.character(vec))
+
+  vec <- 1:10
+  a <- makePopup(vec, NULL)
+  expect_identical(a, as.character(vec))
+})
+
 ## POINTS #################################
 test_that("popup-points-character", {
+
   ## Column Name Single ##############
   m <- leaflet() %>% addTiles() %>%
     addGlPoints(data = breweries91,
@@ -394,6 +410,14 @@ test_that("popup-lines-table", {
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+  m$x$calls[[2]]$args[[3]]
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                   popup = as.data.frame(storms),
+                   src = TRUE,
+                   opacity = 1)
+  expect_is(m, "leaflet")
 
   ## Data.frame - wrong length ##############
   m <- leaflet() %>% addTiles() %>%
@@ -402,6 +426,23 @@ test_that("popup-lines-table", {
                                        opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                   popup = as.data.frame(storms)[1:4,],
+                   src = TRUE,
+                   opacity = 1)
+  expect_is(m, "leaflet")
+
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                   popup = as.data.frame(storms)[1:4,],
+                   weight = sample(0.5:5, nrow(storms), replace=TRUE),
+                   src = TRUE,
+                   opacity = 1)
+  expect_is(m, "leaflet")
+
 
   ## Matrix ##############
   m <- leaflet() %>% addTiles() %>%
@@ -491,12 +532,27 @@ test_that("popup-polygon-character", {
 
   m <- leaflet() %>% addTiles() %>%
     addGlPolygons(data = gadm,
+                  popup = "HASC_1",
+                  src = TRUE,
+                  opacity = 1)
+  expect_is(m, "leaflet")
+
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
                   popup = gadm$HASC_1,
                   opacity = 1)
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   expect_identical(from_json(m$x$calls[[2]]$args[[3]]), gadm$HASC_1)
   rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = gadm$HASC_1,
+                  src = TRUE,
+                  opacity = 1)
+  expect_is(m, "leaflet")
 
 
   ## Column Names ##############
@@ -507,6 +563,14 @@ test_that("popup-polygon-character", {
   expect_is(m, "leaflet")
   expect_true(jsonify::validate_json(m$x$calls[[2]]$args[[3]]))
   rm(m)
+
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = c("HASC_1", "NAME_0"),
+                  src=TRUE,
+                  opacity = 1)
+  expect_is(m, "leaflet")
+
 
   ## Single Random Character ##############
   m <- leaflet() %>% addTiles() %>%

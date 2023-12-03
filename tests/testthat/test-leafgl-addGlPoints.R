@@ -11,9 +11,16 @@ test_that("addGlPoints works", {
                    y = rnorm(n, 49, 0.8))
   pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
+
+  m = leaflet() %>%
+    addGlPoints(data = pts, group = "pts", digits = 5,
+                randomarg=TRUE,
+                by ="row", numeric_dates=F)
+  expect_is(m, "leaflet")
+
+
   m = leaflet() %>%
     addGlPoints(data = pts, group = "pts", digits = 5)
-
   expect_is(m, "leaflet")
 
   m = leaflet() %>%
