@@ -34,11 +34,11 @@ makePopup.character <- function(x, data) {
 makePopup.shiny.tag <- function(x, data) {
   x <- as.character(x)
   x <- checkDimPop(x, data)
-  # if (length(x) == 1) {
+  if (length(x) == 1) {
     htmltools::HTML(x)
-  # } else {
-  #   lapply(x, htmltools::HTML)
-  # }
+  } else {
+    lapply(x, htmltools::HTML)
+  }
 }
 
 #' @export
@@ -102,11 +102,12 @@ makePopup.default <- function(x, data) {
 #' @param x The popup vector
 #' @param data The dataset
 checkDimPop <- function(x, data) {
+  if (is.null(data)) { return(x) }
   if (inherits(data, "sfc")) nro_d = length(data) else nro_d = nrow(data)
   len_x <- length(x)
   if (len_x != nro_d) {
-    warning("Length of popups does not match number of data rows.\n",
-            "  The vector is repeated to match the number of rows.")
+    # warning("Length of popups does not match number of data rows.\n",
+    #         "  The vector is repeated to match the number of rows.")
     x <- rep(x, ceiling(nro_d / len_x))[1:nro_d]
   }
   return(x)

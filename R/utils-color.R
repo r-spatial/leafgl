@@ -31,15 +31,17 @@
 #' makeColorMatrix(data.frame(matrix(1:99, ncol = 3, byrow = TRUE)), data.frame(x=c(1:33)))
 #'
 #' ## For characters
-#' library(leaflet)
-#' makeColorMatrix("red", breweries91)
-#' makeColorMatrix("blue", breweries91)
-#' makeColorMatrix("#36ba01", breweries91)
-#' makeColorMatrix("founded", data.frame(breweries91))
+#' testdf <- data.frame(
+#'   texts = LETTERS[1:10],
+#'   vals = 1:10,
+#'   vals1 = 11:20
+#' )
+#' makeColorMatrix("red", testdf)
+#' makeColorMatrix("val", testdf)
 #'
 #' ## For formulaes
-#' makeColorMatrix(~founded, breweries91)
-#' makeColorMatrix(~founded + zipcode, breweries91)
+#' makeColorMatrix(~vals, testdf)
+#' makeColorMatrix(~vals1, testdf)
 #'
 #' ## For JSON
 #' library(jsonify)
@@ -160,8 +162,9 @@ makeColorMatrix.POSIXlt <- makeColorMatrix.Date
 #' @param x The color vector
 #' @param data The dataset
 checkDim <- function(x, data) {
+  if (is.null(data)) { return(x) }
   if (inherits(data, "sfc")) nro_d = length(data) else nro_d = nrow(data)
-  if (length(grep("MULTI", sf::st_geometry_type(data))) > 0) {
+  if (inherits(data, c("sf","sfc")) && length(grep("MULTI", sf::st_geometry_type(data))) > 0) {
     lnths = lengths(sf::st_geometry(data))
   } else {
     lnths = nro_d
@@ -172,11 +175,12 @@ checkDim <- function(x, data) {
               "  Just the first color is used.")
       x <- x[1,,drop = FALSE]
     }
-  } else {
+  }
+  else {
     len_x <- length(x)
-    if ((length(x) != 1) && (len_x != nro_d)) {
-      warning("Length of color vector does not match number of data rows.\n",
-              "  The vector is repeated to match the number of rows.")
+    if ((len_x != nro_d)) {
+      # warning("Length of color vector does not match number of data rows.\n",
+      #         "  The vector is repeated to match the number of rows.")
       x <- rep(x, ceiling(nro_d / len_x))[1:nro_d]
     }
     if (any(lnths != 1) & length(lnths) == nro_d & length(x) != 1) {
