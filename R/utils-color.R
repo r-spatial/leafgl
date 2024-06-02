@@ -31,15 +31,17 @@
 #' makeColorMatrix(data.frame(matrix(1:99, ncol = 3, byrow = TRUE)), data.frame(x=c(1:33)))
 #'
 #' ## For characters
-#' library(leaflet)
-#' makeColorMatrix("red", breweries91)
-#' makeColorMatrix("blue", breweries91)
-#' makeColorMatrix("#36ba01", breweries91)
-#' makeColorMatrix("founded", data.frame(breweries91))
+#' testdf <- data.frame(
+#'   texts = LETTERS[1:10],
+#'   vals = 1:10,
+#'   vals1 = 11:20
+#' )
+#' makeColorMatrix("red", testdf)
+#' makeColorMatrix("val", testdf)
 #'
 #' ## For formulaes
-#' makeColorMatrix(~founded, breweries91)
-#' makeColorMatrix(~founded + zipcode, breweries91)
+#' makeColorMatrix(~vals, testdf)
+#' makeColorMatrix(~vals1, testdf)
 #'
 #' ## For JSON
 #' library(jsonify)
@@ -75,9 +77,9 @@ makeColorMatrix.numeric <- makeColorMatrix.integer
 
 #' @export
 makeColorMatrix.factor <- function(x, data = NULL, palette = "viridis", ...) {
-  x <- tryCatch(as.integer(as.character(as.factor(x))),
-                error = function(e) as.numeric(as.factor(x)),
-                warning = function(e) as.numeric(as.factor(x)),
+  x <- tryCatch(as.integer(as.character((x))),
+                error = function(e) as.numeric((x)),
+                warning = function(e) as.numeric((x)),
                 finally = function(e) stop("Cannot process factor."))
 
   makeColorMatrix(x, data, palette, ...)
@@ -125,7 +127,7 @@ makeColorMatrix.data.frame <- makeColorMatrix.matrix
 
 #' @export
 makeColorMatrix.list <- function(x, data = NULL, palette = "viridis", ...) {
-  classes <- lapply(x, class)
+  classes <- lapply(x, function(x) class(x)[[1]])
   if (all(classes == "numeric")) {
     x <- unlist(x)
   } else if (all(classes == "matrix")) {
@@ -160,19 +162,29 @@ makeColorMatrix.POSIXlt <- makeColorMatrix.Date
 #' @param x The color vector
 #' @param data The dataset
 checkDim <- function(x, data) {
+  if (is.null(data)) { return(x) }
   if (inherits(data, "sfc")) nro_d = length(data) else nro_d = nrow(data)
+  if (inherits(data, c("sf","sfc")) && length(grep("MULTI", sf::st_geometry_type(data))) > 0) {
+    lnths = lengths(sf::st_geometry(data))
+  } else {
+    lnths = nro_d
+  }
   if (inherits(x, "matrix") || inherits(x, "data.frame")) {
     if (nrow(x) != 1 && nro_d != nrow(x)) {
       warning("Number of rows of color matrix does not match number of data rows.\n",
-              "  Just the first row is taken.")
+              "  Just the first color is used.")
       x <- x[1,,drop = FALSE]
     }
-  } else {
+  }
+  else {
     len_x <- length(x)
-    if ((length(x) != 1) && (len_x != nro_d)) {
-      warning("Length of color vector does not match number of data rows.\n",
-              "  The vector is repeated to match the number of rows.")
+    if ((len_x != nro_d)) {
+      # warning("Length of color vector does not match number of data rows.\n",
+      #         "  The vector is repeated to match the number of rows.")
       x <- rep(x, ceiling(nro_d / len_x))[1:nro_d]
+    }
+    if (any(lnths != 1) & length(lnths) == nro_d & length(x) != 1) {
+      x = rep(x, times = lnths / 2)
     }
   }
   return(x)

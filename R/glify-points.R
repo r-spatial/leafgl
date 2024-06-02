@@ -17,12 +17,21 @@
 #' @param radius point size in pixels.
 #' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
-#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+#'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
 #'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
+#' @param label either a column name (currently only supported for polygons and polylines)
+#'   or a character vector to be used as label.
 #' @param layerId the layer id
 #' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
-#' @param ... Passed to \code{\link[jsonify]{to_json}} for the data coordinates.
+#' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
+#' @param ... Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
+#'   & to pass additional arguments to the underlying JavaScript functions. Typical
+#'   use-cases include setting 'digits' to round the point coordinates or to pass
+#'   a different 'fragmentShaderSource' to control the shape of the points. Use
+#'   'point' (default) to render circles with a thin black outline,
+#'   'simpleCircle' for circles without outline or
+#'   'sqaure' for squares (without outline).
 #'
 #' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
 #' @examples
@@ -54,9 +63,13 @@ addGlPoints = function(map,
                        radius = 10,
                        group = "glpoints",
                        popup = NULL,
+                       label = NULL,
                        layerId = NULL,
                        src = FALSE,
+                       pane = "overlayPane",
                        ...) {
+
+  dotopts = list(...)
 
   if (isTRUE(src)) {
     m = addGlPointsSrc(
@@ -68,6 +81,7 @@ addGlPoints = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , pane = pane
       , ...
     )
     return(m)
@@ -132,8 +146,8 @@ addGlPoints = function(map,
 
   # dependencies
   map$dependencies = c(
-    glifyDependencies()
-    , map$dependencies
+    map$dependencies
+    , glifyDependencies()
   )
 
 
@@ -144,10 +158,13 @@ addGlPoints = function(map,
     , data
     , fillColor
     , popup
+    , label
     , fillOpacity
     , radius
     , group
     , layerId
+    , dotopts
+    , pane
   )
 
   leaflet::expandLimits(
@@ -155,8 +172,6 @@ addGlPoints = function(map,
     c(bounds[2], bounds[4]),
     c(bounds[1], bounds[3])
   )
-
-
 }
 
 
@@ -169,6 +184,7 @@ addGlPointsSrc = function(map,
                           group = "glpoints",
                           popup = NULL,
                           layerId = NULL,
+                          pane = "overlayPane",
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -301,6 +317,7 @@ addGlPointsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , pane
   )
 
   leaflet::expandLimits(

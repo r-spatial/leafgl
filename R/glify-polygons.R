@@ -29,8 +29,10 @@ addGlPolygons = function(map,
                          fillOpacity = 0.8,
                          group = "glpolygons",
                          popup = NULL,
+                         label = NULL,
                          layerId = NULL,
                          src = FALSE,
+                         pane = "overlayPane",
                          ...) {
 
   if (isTRUE(src)) {
@@ -43,6 +45,7 @@ addGlPolygons = function(map,
       , group = group
       , popup = popup
       , layerId = layerId
+      , pane = pane
       , ...
     )
     return(m)
@@ -115,10 +118,9 @@ addGlPolygons = function(map,
 
   # dependencies
   map$dependencies = c(
-    glifyDependencies()
-    , map$dependencies
+    map$dependencies
+    , glifyDependencies()
   )
-
 
   map = leaflet::invokeMethod(
     map
@@ -127,9 +129,11 @@ addGlPolygons = function(map,
     , data
     , cols
     , popup
+    , label
     , fillOpacity
     , group
     , layerId
+    , pane
   )
 
   leaflet::expandLimits(
@@ -137,7 +141,6 @@ addGlPolygons = function(map,
     c(bounds[2], bounds[4]),
     c(bounds[1], bounds[3])
   )
-
 }
 
 
@@ -151,6 +154,7 @@ addGlPolygonsSrc = function(map,
                             group = "glpolygons",
                             popup = NULL,
                             layerId = NULL,
+                            pane = "overlayPane",
                             ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -255,6 +259,7 @@ addGlPolygonsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , pane
   )
 
   leaflet::expandLimits(

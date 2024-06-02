@@ -3,7 +3,7 @@ glifyDependencies = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '3.0.1',
+      '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "GlifyUtils.js"
@@ -11,25 +11,6 @@ glifyDependencies = function() {
         , "addGlifyPolygons.js"
         , "addGlifyPolylines.js"
         , "glify-browser.js"
-        # , "glify-browser.js.map"
-      )
-    )
-  )
-}
-
-# helpers
-glifyDependenciesFl = function() {
-  list(
-    htmltools::htmlDependency(
-      "Leaflet.glify",
-      '2.2.0',
-      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
-      script = c(
-        "GlifyUtils.js"
-        , "addGlifyPoints.js"
-        , "addGlifyPolygonsFl.js"
-        , "addGlifyPolylines.js"
-        , "glify.js"
       )
     )
   )
@@ -39,8 +20,8 @@ glifyDependenciesFl = function() {
 glifyDependenciesSrc = function() {
   list(
     htmltools::htmlDependency(
-      "Leaflet.glify",
-      '2.2.0',
+      "Leaflet.glifySrc",
+      '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "GlifyUtils.js"
@@ -152,6 +133,26 @@ glifyPopupAttachment = function(fl_popup, group) {
       version = 1,
       src = c(file = data_dir),
       attachment = list(data_file)
+    )
+  )
+}
+
+
+
+
+# helpers
+glifyDependenciesFl = function() {
+  list(
+    htmltools::htmlDependency(
+      "Leaflet.glify",
+      '2.2.0',
+      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
+      script = c(
+        "addGlifyPoints.js"
+        , "addGlifyPolygonsFl.js"
+        , "addGlifyPolylines.js"
+        , "glify.js"
+      )
     )
   )
 }

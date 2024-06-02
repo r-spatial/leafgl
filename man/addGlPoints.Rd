@@ -14,9 +14,11 @@ addGlPolylines(
   opacity = 0.6,
   group = "glpolylines",
   popup = NULL,
+  label = NULL,
   weight = 1,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 
@@ -28,8 +30,10 @@ addGlPoints(
   radius = 10,
   group = "glpoints",
   popup = NULL,
+  label = NULL,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 
@@ -41,8 +45,10 @@ addGlPolygons(
   fillOpacity = 0.8,
   group = "glpolygons",
   popup = NULL,
+  label = NULL,
   layerId = NULL,
   src = FALSE,
+  pane = "overlayPane",
   ...
 )
 }
@@ -61,8 +67,11 @@ Note: expect funny results if you set this to < 1.}
 \item{group}{a group name for the feature layer.}
 
 \item{popup}{Object representing the popup. Can be of type character with column names,
-formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
 match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
+
+\item{label}{either a column name (currently only supported for polygons and polylines)
+or a character vector to be used as label.}
 
 \item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 
@@ -70,7 +79,15 @@ match the number of rows in the dataset, the popup vector is repeated to match t
 
 \item{src}{whether to pass data to the widget via file attachments.}
 
-\item{...}{Passed to \code{\link[jsonify]{to_json}} for the data coordinates.}
+\item{pane}{A string which defines the pane of the layer. The default is \code{"overlayPane"}.}
+
+\item{...}{Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
+& to pass additional arguments to the underlying JavaScript functions. Typical
+use-cases include setting 'digits' to round the point coordinates or to pass
+a different 'fragmentShaderSource' to control the shape of the points. Use
+'point' (default) to render circles with a thin black outline,
+'simpleCircle' for circles without outline or
+'sqaure' for squares (without outline).}
 
 \item{fillColor}{fill color.}
 
@@ -92,13 +109,13 @@ MULTIPOLYGONs are currently not supported! Make sure you cast your data
 }
 \section{Functions}{
 \itemize{
-\item \code{addGlPolylines}: add polylines to a leaflet map using Leaflet.glify
+\item \code{addGlPolylines()}: add polylines to a leaflet map using Leaflet.glify
 
-\item \code{addGlPoints}: add points to a leaflet map using Leaflet.glify
+\item \code{addGlPoints()}: add points to a leaflet map using Leaflet.glify
 
-\item \code{addGlPolygons}: add polygons to a leaflet map using Leaflet.glify
+\item \code{addGlPolygons()}: add polygons to a leaflet map using Leaflet.glify
+
 }}
-
 \examples{
 if (interactive()) {
 library(leaflet)
