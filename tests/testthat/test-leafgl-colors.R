@@ -12,7 +12,32 @@ pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 lines = suppressWarnings(st_cast(st_as_sf(atlStorms2005), "LINESTRING"));
 
 polys <- suppressWarnings(st_cast(st_as_sf(gadmCHE), "POLYGON"))
+multipolys <- st_as_sf(gadmCHE)
 
+test_that("makeColorMatrix directly", {
+  vec <- 1
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+  vec <- LETTERS[1:10]
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+  vec <- 1:10
+  a <- makeColorMatrix(vec, NULL)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+
+})
+
+test_that("Multi-geometry", {
+  vec <- 1
+  a <- makeColorMatrix(vec, multipolys)
+  expect_is(a, "matrix")
+  expect_true(is.numeric(a))
+})
 
 test_that("Character as color", {
   ## Character - Color Name ###################
@@ -82,7 +107,7 @@ test_that("Character as color", {
 
   m <- leaflet() %>%
     addGlPolygons(data = polys,
-                  color = "NUTS_ID",
+                  color = "NAME_1",
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -120,7 +145,7 @@ test_that("Character as color", {
   ## Character - Character Column Name #############
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = "FGN",
+                   color = "Name",
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
@@ -130,7 +155,7 @@ test_that("Character as color", {
   ## Character - Character Column Name with Palette #############
   m <- leaflet() %>%
     addGlPolylines(data = lines,
-                   color = "FGN",
+                   color = "MaxWind",
                    palette = "magma",
                    group = "lns");
   expect_is(m, "leaflet")
@@ -402,10 +427,10 @@ test_that("Numeric as color", {
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
-  m <- expect_warning(leaflet() %>%
+  m <- leaflet() %>%
     addGlPoints(data = pts,
                 fillColor = as.factor(c("asd","bdc","fds")),
-                group = "pts"))
+                group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
@@ -434,10 +459,10 @@ test_that("Numeric as color", {
 
 test_that("List as color", {
   ## List ###################
-  m <- expect_warning(leaflet() %>%
+  m <- leaflet() %>%
     addGlPoints(data = pts,
                 fillColor = list(1,2),
-                group = "pts"))
+                group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
@@ -471,10 +496,10 @@ test_that("List as color", {
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
-  m <- expect_warning(leaflet() %>%
+  m <- leaflet() %>%
     addGlPoints(data = pts,
                 fillColor = list(c(100,200), cbind(2,1)),
-                group = "pts"))
+                group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
@@ -579,11 +604,10 @@ test_that("Warnings / Errors", {
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
-  ## Warnings ###################
-  m <- expect_warning(leaflet() %>%
+  m <- leaflet() %>%
     addGlPoints(data = pts,
                 fillColor = 1:33,
-                group = "pts"))
+                group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
   expect_true(validate_json(m$x$calls[[1]]$args[[2]]))

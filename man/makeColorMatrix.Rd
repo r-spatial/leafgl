@@ -43,15 +43,17 @@ makeColorMatrix(matrix(1:99, ncol = 3, byrow = TRUE), data.frame(x=c(1:33)))
 makeColorMatrix(data.frame(matrix(1:99, ncol = 3, byrow = TRUE)), data.frame(x=c(1:33)))
 
 ## For characters
-library(leaflet)
-makeColorMatrix("red", breweries91)
-makeColorMatrix("blue", breweries91)
-makeColorMatrix("#36ba01", breweries91)
-makeColorMatrix("founded", data.frame(breweries91))
+testdf <- data.frame(
+  texts = LETTERS[1:10],
+  vals = 1:10,
+  vals1 = 11:20
+)
+makeColorMatrix("red", testdf)
+makeColorMatrix("val", testdf)
 
 ## For formulaes
-makeColorMatrix(~founded, breweries91)
-makeColorMatrix(~founded + zipcode, breweries91)
+makeColorMatrix(~vals, testdf)
+makeColorMatrix(~vals1, testdf)
 
 ## For JSON
 library(jsonify)
