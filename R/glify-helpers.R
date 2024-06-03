@@ -6,7 +6,8 @@ glifyDependencies = function() {
       '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js"
+        "GlifyUtils.js"
+        , "addGlifyPoints.js"
         , "addGlifyPolygons.js"
         , "addGlifyPolylines.js"
         , "glify-browser.js"
@@ -23,7 +24,8 @@ glifyDependenciesSrc = function() {
       '3.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPointsSrc.js"
+        "GlifyUtils.js"
+        , "addGlifyPointsSrc.js"
         , "addGlifyPolygonsSrc.js"
         , "addGlifyPolylinesSrc.js"
         , "glify-browser.js"
@@ -146,10 +148,11 @@ glifyDependenciesFl = function() {
       '2.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js"
+        "GlifyUtils.js"
+        , "addGlifyPoints.js"
         , "addGlifyPolygonsFl.js"
         , "addGlifyPolylines.js"
-        , "glify.js"
+        , "glify-browser.js"
       )
     )
   )

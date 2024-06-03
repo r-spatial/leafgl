@@ -188,7 +188,7 @@ cols = heat.colors(nrow(storms))
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
-  addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1, preseveDrawingBuffer=TRUE)
+  addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
 
 gadm = st_as_sf(gadmCHE)
 gadm = st_cast(gadm, "POLYGON")
@@ -196,6 +196,6 @@ cols = grey.colors(nrow(gadm))
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-  addGlPolygons(data = gadm, color = cols, popup = TRUE, preseveDrawingBuffer=TRUE)
+  addGlPolygons(data = gadm, color = cols, popup = TRUE)
 
 }
