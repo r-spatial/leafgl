@@ -1,15 +1,4 @@
-#' add polygons to a leaflet map using Leaflet.glify
-#'
-#' @details
-#'   MULTIPOLYGONs are currently not supported! Make sure you cast your data
-#'   to POLYGON first (e.g. using \code{sf::st_cast(data, "POLYGON")}.
-#'
 #' @examples
-#' if (interactive()) {
-#' library(leaflet)
-#' library(leafgl)
-#' library(sf)
-#'
 #' gadm = st_as_sf(gadmCHE)
 #' gadm = st_cast(gadm, "POLYGON")
 #' cols = grey.colors(nrow(gadm))
@@ -17,10 +6,10 @@
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'   addGlPolygons(data = gadm, color = cols, popup = TRUE)
-#' }
 #'
-#' @describeIn addGlPoints add polygons to a leaflet map using Leaflet.glify
+#' @describeIn addGlPoints Add Polygons to a leaflet map using Leaflet.glify
 #' @aliases addGlPolygons
+#' @order 3
 #' @export addGlPolygons
 addGlPolygons = function(map,
                          data,
@@ -33,7 +22,15 @@ addGlPolygons = function(map,
                          layerId = NULL,
                          src = FALSE,
                          pane = "overlayPane",
+                         stroke = TRUE,
+                         popupOptions = NULL,
+                         labelOptions = NULL,
                          ...) {
+
+  if (missing(labelOptions)) labelOptions <- labelOptions()
+  if (missing(popupOptions)) popupOptions <- popupOptions()
+
+  dotopts = list(...)
 
   if (isTRUE(src)) {
     m = addGlPolygonsSrc(
@@ -46,6 +43,9 @@ addGlPolygons = function(map,
       , popup = popup
       , layerId = layerId
       , pane = pane
+      , stroke = stroke
+      , popupOptions = popupOptions
+      , labelOptions = labelOptions
       , ...
     )
     return(m)
@@ -64,26 +64,25 @@ addGlPolygons = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # fillColor
-  args <- list(...)
   palette = "viridis"
-  if ("palette" %in% names(args)) {
-    palette <- args$palette
-    args$palette = NULL
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   fillColor <- makeColorMatrix(fillColor, data, palette = palette)
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
-
   cols = jsonify::to_json(fillColor, digits = 3)
 
-  # popup
+  # label / popup
+  labels <- leaflet::evalFormula(label, data)
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   } else if (isTRUE(popup)) {
-    data = data[, popup]
+    ## Don't do anything. Pass all columns to JS
   } else {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -99,12 +98,12 @@ addGlPolygons = function(map,
   }
 
   # data
-  if (length(args) == 0) {
+  if (length(dotopts) == 0) {
     geojsonsf_args = NULL
   } else {
     geojsonsf_args = try(
       match.arg(
-        names(args)
+        names(dotopts)
         , names(as.list(args(geojsonsf::sf_geojson)))
         , several.ok = TRUE
       )
@@ -113,15 +112,12 @@ addGlPolygons = function(map,
     if (inherits(geojsonsf_args, "try-error")) geojsonsf_args = NULL
     if (identical(geojsonsf_args, "sf")) geojsonsf_args = NULL
   }
-  data = do.call(geojsonsf::sf_geojson, c(list(data), args[geojsonsf_args]))
-  # data = geojsonsf::sf_geojson(data, ...)
+  data = do.call(geojsonsf::sf_geojson, c(list(data), dotopts[geojsonsf_args]))
 
   # dependencies
-  map$dependencies = c(
-    map$dependencies
-    , glifyDependencies()
-  )
+  map$dependencies = c(map$dependencies, glifyDependencies())
 
+  # invoke leaflet method and zoom to bounds
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -129,11 +125,15 @@ addGlPolygons = function(map,
     , data
     , cols
     , popup
-    , label
+    , labels
     , fillOpacity
     , group
     , layerId
+    , dotopts
     , pane
+    , stroke
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -155,6 +155,9 @@ addGlPolygonsSrc = function(map,
                             popup = NULL,
                             layerId = NULL,
                             pane = "overlayPane",
+                            stroke = TRUE,
+                            popupOptions = NULL,
+                            labelOptions = NULL,
                             ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -248,7 +251,6 @@ addGlPolygonsSrc = function(map,
       map$dependencies,
       glifyPopupAttachmentSrc(fl_popup, layerId)
     )
-
   }
 
   map = leaflet::invokeMethod(
@@ -260,6 +262,9 @@ addGlPolygonsSrc = function(map,
     , group
     , layerId
     , pane
+    , stroke
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -271,7 +276,7 @@ addGlPolygonsSrc = function(map,
 }
 
 
-# ### via attachments
+# ### via attachments ############
 # addGlPolygonsFl = function(map,
 #                            data,
 #                            color = cbind(0, 0.2, 1),

@@ -1,59 +1,87 @@
-#' add points to a leaflet map using Leaflet.glify
+#' @title Add Data to a leaflet map using Leaflet.glify
 #'
 #' @description
-#'   Leaflet.glify is a web gl renderer plugin for leaflet. See
+#'   Leaflet.glify is a WebGL renderer plugin for leaflet. See
 #'   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
 #'   and documentation.
 #'
-#' @param map a leaflet map to add points/polygons to.
-#' @param data sf/sp point/polygon data to add to the map.
+#' @inheritParams leaflet::addPolylines
+#' @param data sf/sp point/polygon/line data to add to the map.
 #' @param color Object representing the color. Can be of class integer, character with
 #'   color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
 #'   See the examples or \link{makeColorMatrix} for more information.
-#' @param fillColor fill color.
 #' @param opacity feature opacity. Numeric between 0 and 1.
 #'   Note: expect funny results if you set this to < 1.
-#' @param fillOpacity fill opacity.
 #' @param radius point size in pixels.
-#' @param group a group name for the feature layer.
 #' @param popup Object representing the popup. Can be of type character with column names,
 #'   formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
-#'   match the number of rows in the dataset, the popup vector is repeated to match the dimension.
-#' @param label either a column name (currently only supported for polygons and polylines)
-#'   or a character vector to be used as label.
-#' @param layerId the layer id
-#' @param weight line width/thicknes in pixels for \code{addGlPolylines}.
+#'   match the number of rows in the data, the popup vector is repeated to match the dimension.
+#' @param weight line width/thickness in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
 #' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
 #' @param ... Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
 #'   & to pass additional arguments to the underlying JavaScript functions. Typical
-#'   use-cases include setting 'digits' to round the point coordinates or to pass
-#'   a different 'fragmentShaderSource' to control the shape of the points. Use
-#'   'point' (default) to render circles with a thin black outline,
-#'   'simpleCircle' for circles without outline or
-#'   'sqaure' for squares (without outline).
+#'   use-cases include setting \code{'digits'} to round the point coordinates or to pass
+#'   a different \code{'fragmentShaderSource'} to control the shape of the points. Use
+#'   \itemize{
+#'      \item{\code{'point'} (default) to render circles with a thin black outline}
+#'      \item{\code{'simpleCircle'} for circles without outline}
+#'      \item{\code{'square'} for squares without outline}
+#'   }
+#'   Additional arguments could be \code{'sensitivity'}, \code{'sensitivityHover'} or
+#'   \code{'vertexShaderSource'}. See a full list at the
+#'   \href{https://github.com/robertleeplummerjr/Leaflet.glify}{Leaflet.glify}
+#'   repository.
 #'
-#' @describeIn addGlPoints add points to a leaflet map using Leaflet.glify
-#' @examples
-#' if (interactive()) {
+#'
+#' @note
+#'   MULTILINESTRINGs and MULTIPOLYGONs are currently not supported!
+#'   Make sure you cast your data to LINESTRING or POLYGON first using:
+#'   \itemize{
+#'      \item{\code{sf::st_cast(data, "LINESTRING")}}
+#'      \item{\code{sf::st_cast(data, "POLYGON")}}
+#'   }
+#'
+#' @section Shiny Inputs:
+#'   The objects created with \code{leafgl} send input values to Shiny as the
+#'   user interacts with them. These events follow the pattern
+#'   \code{input$MAPID_glify_EVENTNAME}.
+#'   The following events are available:
+#'
+#'   \itemize{
+#'     \item \strong{Click Events:}
+#'       \code{input$MAPID_glify_click}
+#'     \item \strong{Mouseover Events:}
+#'       \code{input$MAPID_glify_mouseover}
+#'   }
+#'
+#'
+#'   Each event returns a list containing:
+#'   \itemize{
+#'     \item \code{lat}: Latitude of the object or mouse cursor
+#'     \item \code{lng}: Longitude of the object or mouse cursor
+#'     \item \code{id}: The layerId, if any
+#'     \item \code{group}: The group name of the object
+#'     \item \code{data}: The properties of the feature
+#'   }
+#'
+#' @describeIn addGlPoints Add Points to a leaflet map using Leaflet.glify
+#' @order 1
+#' @examples \donttest
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
 #'
 #' n = 1e5
-#'
 #' df1 = data.frame(id = 1:n,
 #'                  x = rnorm(n, 10, 1),
 #'                  y = rnorm(n, 49, 0.8))
 #' pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
-#'
 #' cols = topo.colors(nrow(pts))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
-#'
-#' }
 #'
 #' @export addGlPoints
 addGlPoints = function(map,
@@ -67,7 +95,12 @@ addGlPoints = function(map,
                        layerId = NULL,
                        src = FALSE,
                        pane = "overlayPane",
+                       popupOptions = NULL,
+                       labelOptions = NULL,
                        ...) {
+
+  if (missing(labelOptions)) labelOptions <- labelOptions()
+  if (missing(popupOptions)) popupOptions <- popupOptions()
 
   dotopts = list(...)
 
@@ -82,6 +115,8 @@ addGlPoints = function(map,
       , popup = popup
       , layerId = layerId
       , pane = pane
+      , popupOptions = popupOptions
+      , labelOptions = labelOptions
       , ...
     )
     return(m)
@@ -97,20 +132,19 @@ addGlPoints = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # fillColor
-  args <- list(...)
   palette = "viridis"
-  if ("palette" %in% names(args)) {
-    palette <- args$palette
-    args$palette = NULL
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   fillColor <- makeColorMatrix(fillColor, data, palette = palette)
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
-
   fillColor = jsonify::to_json(fillColor)
 
-  # popup
+  # label / popup
+  labels <- leaflet::evalFormula(label, data)
   if (!is.null(popup)) {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -126,15 +160,13 @@ addGlPoints = function(map,
   }
 
   # data
-  # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
-  # convert data to json
-  if (length(args) == 0) {
+  if (length(dotopts) == 0) {
     jsonify_args = NULL
   } else {
     jsonify_args = try(
       match.arg(
-        names(args)
+        names(dotopts)
         , names(as.list(args(jsonify::to_json)))
         , several.ok = TRUE
       )
@@ -142,15 +174,12 @@ addGlPoints = function(map,
     )
   }
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
-  data = do.call(jsonify::to_json, c(list(crds), args[jsonify_args]))
+  data = do.call(jsonify::to_json, c(list(crds), dotopts[jsonify_args]))
 
   # dependencies
-  map$dependencies = c(
-    map$dependencies
-    , glifyDependencies()
-  )
+  map$dependencies = c(map$dependencies, glifyDependencies())
 
-
+  # invoke leaflet method and zoom to bounds
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -158,13 +187,15 @@ addGlPoints = function(map,
     , data
     , fillColor
     , popup
-    , label
+    , labels
     , fillOpacity
     , radius
     , group
     , layerId
     , dotopts
     , pane
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -185,6 +216,8 @@ addGlPointsSrc = function(map,
                           popup = NULL,
                           layerId = NULL,
                           pane = "overlayPane",
+                          popupOptions = NULL,
+                          labelOptions = NULL,
                           ...) {
 
   ## currently leaflet.glify only supports single (fill)opacity!
@@ -298,16 +331,6 @@ addGlPointsSrc = function(map,
     radius = NULL
   }
 
-  # leaflet::invokeMethod(
-  #   map
-  #   , leaflet::getMapData(map)
-  #   , 'addGlifyPointsSrc'
-  #   , fillOpacity
-  #   , radius
-  #   , group
-  #   , layerId
-  # )
-
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -318,6 +341,8 @@ addGlPointsSrc = function(map,
     , group
     , layerId
     , pane
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -325,11 +350,10 @@ addGlPointsSrc = function(map,
     c(bounds[2], bounds[4]),
     c(bounds[1], bounds[3])
   )
-
 }
 
 
-# ### via src
+# ### via src ##############
 # addGlPointsSrc2 = function(map,
 #                            data,
 #                            color = cbind(0, 0.2, 1),

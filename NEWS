@@ -5,8 +5,16 @@ features and improvements
 bug fixes
 
   * src version now works also in shiny. #71
+  * added `popupOptions` and `labelOptions`. #83
+  * added `stroke` (default=TRUE) in `addGlPolygons` and `addGlPolygonsSrc` for drawing borders. #3
+  * Labels work similar to `leaflet`. `leafgl` accepts a single string, a vector of strings or a formula. #78
+  * The `...` arguments are now passed to all methods in the underlying library. This allows us to set
+    additional arguments like `fragmentShaderSource`, sensitivity` or `sensitivityHover`.
 
 documentation etc
+
+ * Added some @details for Shiny click and mouseover events and their corresponding input. #77
+ * Using `@inheritParams leaflet::addPolylines` instead of writing the documentation on our own.
 
 miscellaneous
 

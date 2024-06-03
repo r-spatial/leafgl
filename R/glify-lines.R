@@ -1,26 +1,14 @@
-#' add polylines to a leaflet map using Leaflet.glify
-#'
-#' @details
-#'   MULTILINESTRINGs are currently not supported! Make sure you cast your data
-#'   to LINETSRING first (e.g. using \code{sf::st_cast(data, "LINESTRING")}.
-#'
 #' @examples
-#' if (interactive()) {
-#' library(leaflet)
-#' library(leafgl)
-#' library(sf)
-#'
 #' storms = st_as_sf(atlStorms2005)
-#'
 #' cols = heat.colors(nrow(storms))
 #'
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.Positron) %>%
 #'   addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
-#' }
 #'
-#' @describeIn addGlPoints add polylines to a leaflet map using Leaflet.glify
+#' @describeIn addGlPoints Add Lines to a leaflet map using Leaflet.glify
 #' @aliases addGlPolylines
+#' @order 2
 #' @export addGlPolylines
 addGlPolylines = function(map,
                           data,
@@ -33,7 +21,14 @@ addGlPolylines = function(map,
                           layerId = NULL,
                           src = FALSE,
                           pane = "overlayPane",
+                          popupOptions = NULL,
+                          labelOptions = NULL,
                           ...) {
+
+  if (missing(labelOptions)) labelOptions <- labelOptions()
+  if (missing(popupOptions)) popupOptions <- popupOptions()
+
+  dotopts = list(...)
 
   if (isTRUE(src)) {
     m = addGlPolylinesSrc(
@@ -45,7 +40,8 @@ addGlPolylines = function(map,
       , popup = popup
       , weight = weight
       , layerId = layerId
-      , pane = pane
+      , popupOptions = popupOptions
+      , labelOptions = labelOptions
       , ...
     )
     return(m)
@@ -64,26 +60,24 @@ addGlPolylines = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color
-  args <- list(...)
   palette = "viridis"
-  if ("palette" %in% names(args)) {
-    palette <- args$palette
-    args$palette = NULL
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   color <- makeColorMatrix(color, data, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
-
   cols = jsonify::to_json(color, digits = 3)
 
-  # popup
+  # label / popup
+  labels <- leaflet::evalFormula(label, data)
   if (is.null(popup)) {
-    # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   } else if (isTRUE(popup)) {
-    data = data[, popup]
+    ## Don't do anything. Pass all columns to JS
   } else {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -99,12 +93,12 @@ addGlPolylines = function(map,
   }
 
   # data
-  if (length(args) == 0) {
+  if (length(dotopts) == 0) {
     geojsonsf_args = NULL
   } else {
     geojsonsf_args = try(
       match.arg(
-        names(args)
+        names(dotopts)
         , names(as.list(args(geojsonsf::sf_geojson)))
         , several.ok = TRUE
       )
@@ -113,17 +107,12 @@ addGlPolylines = function(map,
     if (inherits(geojsonsf_args, "try-error")) geojsonsf_args = NULL
     if (identical(geojsonsf_args, "sf")) geojsonsf_args = NULL
   }
-  data = do.call(geojsonsf::sf_geojson, c(list(data), args[geojsonsf_args]))
-  # data = geojsonsf::sf_geojson(data, ...)
+  data = do.call(geojsonsf::sf_geojson, c(list(data), dotopts[geojsonsf_args]))
 
   # dependencies
-  map$dependencies = c(
-    map$dependencies
-    , glifyDependencies()
-  )
+  map$dependencies = c(map$dependencies, glifyDependencies())
 
-  # weight is about double the weight of svg, so / 2
-
+  # invoke leaflet method and zoom to bounds
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -131,12 +120,15 @@ addGlPolylines = function(map,
     , data
     , cols
     , popup
-    , label
+    , labels
     , opacity
     , group
     , weight
     , layerId
+    , dotopts
     , pane
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -157,6 +149,8 @@ addGlPolylinesSrc = function(map,
                              weight = 1,
                              layerId = NULL,
                              pane = "overlayPane",
+                             popupOptions = NULL,
+                             labelOptions = NULL,
                              ...) {
 
   if (is.null(group)) group = deparse(substitute(data))
@@ -281,6 +275,8 @@ addGlPolylinesSrc = function(map,
     , group
     , layerId
     , pane
+    , popupOptions
+    , labelOptions
   )
 
   leaflet::expandLimits(
@@ -288,7 +284,6 @@ addGlPolylinesSrc = function(map,
     c(bounds[2], bounds[4]),
     c(bounds[1], bounds[3])
   )
-
 }
 
 
