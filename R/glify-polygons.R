@@ -35,6 +35,9 @@ addGlPolygons = function(map,
 
   dotopts = list(...)
 
+  if (!is.null(layerId) && inherits(layerId, "formula"))
+    layerId <- evalFormula(layerId, data)
+
   if (isTRUE(src)) {
     m = addGlPolygonsSrc(
       map = map
