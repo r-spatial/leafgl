@@ -11,8 +11,6 @@
 #'
 #' @return A UI for rendering leafgl
 #'
-#' @importFrom leaflet leafletOutput renderLeaflet evalFormula
-#' @importFrom htmltools tagList tags htmlDependencies
 #' @rdname glify-shiny
 #' @export
 #'
