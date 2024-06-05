@@ -1,4 +1,7 @@
 #' @examples
+#' library(leaflet)
+#' library(sf)
+#'
 #' storms = st_as_sf(atlStorms2005)
 #' cols = heat.colors(nrow(storms))
 #'

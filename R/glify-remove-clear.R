@@ -1,35 +1,38 @@
-#' removeGlPoints
-#' @description Remove points from a map, identified by layerId;
-#' @param map The map widget
-#' @param layerId The layerId to remove
+#' Remove Leaflet.Glify elements from a map
+#'
+#' Remove one or more features from a map, identified by `layerId`;
+#' or, clear all features of the given group.
+#'
+#' @inheritParams leaflet::removeShape
+#' @return the new `map` object
+#'
+#' @name remove
 #' @export
 removeGlPoints <- function(map, layerId) {
   leaflet::invokeMethod(map, NULL, "removeGlPoints", layerId)
 }
 
-#' removeGlPolylines
-#' @description Remove lines from a map, identified by layerId;
-#' @param map The map widget
-#' @param layerId The layerId to remove
+#' @rdname remove
 #' @export
 removeGlPolylines <- function(map, layerId) {
   leaflet::invokeMethod(map, NULL, "removeGlPolylines", layerId)
 }
 
-#' removeGlPolygons
-#' @description Remove polygons from a map, identified by layerId;
-#' @param map The map widget
-#' @param layerId The layerId to remove
+#' @rdname remove
 #' @export
 removeGlPolygons <- function(map, layerId) {
   leaflet::invokeMethod(map, NULL, "removeGlPolygons", layerId)
 }
 
-#' clearGlLayers
-#' @description Clear all Glify features
-#' @param map The map widget
+#' @rdname remove
 #' @export
 clearGlLayers <- function(map) {
   leaflet::invokeMethod(map, NULL, "clearGlLayers")
+}
+
+#' @rdname remove
+#' @export
+clearGlGroup <- function(map, group) {
+  leaflet::invokeMethod(map, NULL, "clearGlGroup", group)
 }
 

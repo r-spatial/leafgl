@@ -167,7 +167,7 @@ MULTILINESTRINGs and MULTIPOLYGONs are currently not supported!
 }
 
 \examples{
-\donttest
+\donttest{
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -182,6 +182,9 @@ cols = topo.colors(nrow(pts))
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
+}
+library(leaflet)
+library(sf)
 
 storms = st_as_sf(atlStorms2005)
 cols = heat.colors(nrow(storms))
@@ -189,6 +192,9 @@ cols = heat.colors(nrow(storms))
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
   addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
+
+library(leaflet)
+library(sf)
 
 gadm = st_as_sf(gadmCHE)
 gadm = st_cast(gadm, "POLYGON")

@@ -84,7 +84,8 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
     opacity: opacity,
     size: rad,
     className: group,
-    pane: pane
+    pane: pane,
+    layerId: layerId
   };
 
   // extract correct fragmentShaderSource if provided via dotOptions
@@ -103,5 +104,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
 
   // add layer to map using leaflet's layerManager
   map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
+
+  addGlifyEventListeners(map)
 };
 

@@ -1,4 +1,7 @@
 #' @examples
+#' library(leaflet)
+#' library(sf)
+#'
 #' gadm = st_as_sf(gadmCHE)
 #' gadm = st_cast(gadm, "POLYGON")
 #' cols = grey.colors(nrow(gadm))

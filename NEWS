@@ -2,6 +2,11 @@ leafgl 0.2.1.9005 (2023-09-08)
 
 features and improvements
 
+ * New method *clearGlGroup* removes a group from leaflet and the Leaflet.Glify instances.
+ * The JavaScript methods of the `removeGl**` functions was rewritten to correctly remove an element identified by `layerId`
+ * `clearGlLayers` now correctly removes all Leaflet.Glify instances
+ * When showing/hiding Leaflet.Glify layers, they are set to active = TRUE/FALSE to make mouseevents work again. #48, #50
+
 bug fixes
 
   * src version now works also in shiny. #71
@@ -9,12 +14,12 @@ bug fixes
   * added `stroke` (default=TRUE) in `addGlPolygons` and `addGlPolygonsSrc` for drawing borders. #3
   * Labels work similar to `leaflet`. `leafgl` accepts a single string, a vector of strings or a formula. #78
   * The `...` arguments are now passed to all methods in the underlying library. This allows us to set
-    additional arguments like `fragmentShaderSource`, sensitivity` or `sensitivityHover`.
+    additional arguments like `fragmentShaderSource`, `sensitivity` or `sensitivityHover`.
 
 documentation etc
 
  * Added some @details for Shiny click and mouseover events and their corresponding input. #77
- * Using `@inheritParams leaflet::addPolylines` instead of writing the documentation on our own.
+ * Use `@inheritParams leaflet::**` for identical function arguments
 
 miscellaneous
 

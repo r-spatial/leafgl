@@ -45,7 +45,8 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
     opacity: opacity,
     className: group,
     weight: wght,
-    pane: pane
+    pane: pane,
+    layerId: layerId
   };
 
   // append dotOptions to layer arguments
@@ -56,6 +57,8 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
 
   // add layer to map using leaflet's layerManager
   map.layerManager.addLayer(lineslayer.layer, "glify", layerId, group);
+
+  addGlifyEventListeners(map)
 };
 
 

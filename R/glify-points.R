@@ -67,7 +67,7 @@
 #'
 #' @describeIn addGlPoints Add Points to a leaflet map using Leaflet.glify
 #' @order 1
-#' @examples \donttest
+#' @examples \donttest{
 #' library(leaflet)
 #' library(leafgl)
 #' library(sf)
@@ -82,7 +82,7 @@
 #' leaflet() %>%
 #'   addProviderTiles(provider = providers$CartoDB.DarkMatter) %>%
 #'   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
-#'
+#' }
 #' @export addGlPoints
 addGlPoints = function(map,
                        data,
