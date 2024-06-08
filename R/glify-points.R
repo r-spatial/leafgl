@@ -265,7 +265,7 @@ addGlPointsSrc = function(map,
 
   map$dependencies = c(
     map$dependencies,
-    glifyDependenciesSrc(),
+    glifyDependencies(TRUE),
     glifyDataAttachmentSrc(fl_data, group)
   )
 
@@ -287,10 +287,7 @@ addGlPointsSrc = function(map,
     cat('[', convert_to_json(fillColor, digits = 3), '];',
         file = fl_color, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyColorAttachmentSrc(fl_color, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_color, group, "col"))
     fillColor = NULL
   }
 
@@ -302,10 +299,7 @@ addGlPointsSrc = function(map,
     cat('[', convert_to_json(leaflet::evalFormula(label, data)), '];',
         file = fl_label, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyLabelAttachmentSrc(fl_label, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_label, group, "lab"))
     label = NULL
   }
 
@@ -324,10 +318,7 @@ addGlPointsSrc = function(map,
     cat('[', convert_to_json(makePopup(popup, data)), '];',
         file = fl_popup, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_popup, group, "pop"))
     popup = NULL
   }
 
@@ -339,10 +330,7 @@ addGlPointsSrc = function(map,
     cat('[', convert_to_json(radius), '];',
         file = fl_radius, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyRadiusAttachmentSrc(fl_radius, layerId)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_radius, group, "rad"))
     radius = NULL
   }
 
@@ -436,17 +424,14 @@ addGlPointsSrc = function(map,
 #   # dependencies
 #   map$dependencies = c(
 #     map$dependencies,
-#     glifyDependenciesSrc(),
+#     glifyDependenciesSrc(TRUE),
 #     glifyDataAttachmentSrc(fl_data1, grp1),
 #     glifyDataAttachmentSrc(fl_data2, grp1, TRUE),
-#     glifyColorAttachmentSrc(fl_color, group)
+#     glifyAttachmentSrc(fl_color, group, "col")
 #   )
 #
 #   if (!is.null(popup)) {
-#     map$dependencies = c(
-#       map$dependencies,
-#       glifyPopupAttachmentSrc(fl_popup, group)
-#     )
+#     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_color, group, "col"))
 #   }
 #
 #   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addGlifyPointsSrc2',

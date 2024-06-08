@@ -1,5 +1,6 @@
-# helpers
-glifyDependencies = function() {
+# dependencies
+glifyDependencies = function(src = FALSE) {
+  src <- ifelse(src, "Src", "")
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
@@ -7,27 +8,9 @@ glifyDependencies = function() {
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "GlifyUtils.js"
-        , "addGlifyPoints.js"
-        , "addGlifyPolygons.js"
-        , "addGlifyPolylines.js"
-        , "glify-browser.js"
-      )
-    )
-  )
-}
-
-# helpers
-glifyDependenciesSrc = function() {
-  list(
-    htmltools::htmlDependency(
-      "Leaflet.glifySrc",
-      '3.2.0',
-      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
-      script = c(
-        "GlifyUtils.js"
-        , "addGlifyPointsSrc.js"
-        , "addGlifyPolygonsSrc.js"
-        , "addGlifyPolylinesSrc.js"
+        , paste0("addGlifyPoints", src, ".js")
+        , paste0("addGlifyPolygons", src, ".js")
+        , paste0("addGlifyPolylines", src, ".js")
         , "glify-browser.js"
       )
     )
@@ -58,120 +41,25 @@ glifyDataAttachmentSrc = function(fl_data, group, async = FALSE) {
   }
 }
 
-glifyColorAttachmentSrc = function(fl_color, group) {
-  data_dir <- dirname(fl_color)
-  data_file <- basename(fl_color)
+glifyAttachmentSrc <- function(fl, group, type) {
+  valid_types <- c("col", "pop", "lab", "rad")
+  if (!type %in% valid_types) {
+    stop("Invalid type. Valid types are: col, pop, lab, rad.")
+  }
+  data_dir <- dirname(fl)
+  data_file <- basename(fl)
   list(
     htmltools::htmlDependency(
-      name = paste0(group, "col"),
+      name = paste0(group, type),
       version = 1,
       src = c(file = data_dir),
       script = list(data_file)
     )
   )
 }
-
-glifyPopupAttachmentSrc = function(fl_popup, group) {
-  data_dir <- dirname(fl_popup)
-  data_file <- basename(fl_popup)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "pop"),
-      version = 1,
-      src = c(file = data_dir),
-      script = list(data_file)
-    )
-  )
-}
-glifyLabelAttachmentSrc = function(fl_popup, group) {
-  data_dir <- dirname(fl_popup)
-  data_file <- basename(fl_popup)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "lab"),
-      version = 1,
-      src = c(file = data_dir),
-      script = list(data_file)
-    )
-  )
-}
-
-glifyRadiusAttachmentSrc = function(fl_radius, group) {
-  data_dir <- dirname(fl_radius)
-  data_file <- basename(fl_radius)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "rad"),
-      version = 1,
-      src = c(file = data_dir),
-      script = list(data_file)
-    )
-  )
-}
-
-glifyDataAttachment = function(fl_data, group) {
-  data_dir <- dirname(fl_data)
-  data_file <- basename(fl_data)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "dt"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
-}
-
-
-glifyColorAttachment = function(fl_color, group) {
-  data_dir <- dirname(fl_color)
-  data_file <- basename(fl_color)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "cl"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
-}
-
-glifyPopupAttachment = function(fl_popup, group) {
-  data_dir <- dirname(fl_popup)
-  data_file <- basename(fl_popup)
-  list(
-    htmltools::htmlDependency(
-      name = paste0(group, "pop"),
-      version = 1,
-      src = c(file = data_dir),
-      attachment = list(data_file)
-    )
-  )
-}
-
-
 
 
 # helpers
-glifyDependenciesFl = function() {
-  list(
-    htmltools::htmlDependency(
-      "Leaflet.glify",
-      '2.2.0',
-      system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
-      script = c(
-        "GlifyUtils.js"
-        , "addGlifyPoints.js"
-        , "addGlifyPolygonsFl.js"
-        , "addGlifyPolylines.js"
-        , "glify-browser.js"
-      )
-    )
-  )
-}
-
-
-
 json_funccall <- function() {
   json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
   if (json_parser == "yyjsonr") {
@@ -193,18 +81,74 @@ convert_to_json <- function(data, ...) {
   return(json_data)
 }
 
+
+
+## Not used ##########
+# glifyDependenciesFl = function() {
+#   list(
+#     htmltools::htmlDependency(
+#       "Leaflet.glify",
+#       '2.2.0',
+#       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
+#       script = c(
+#         "GlifyUtils.js"
+#         , "addGlifyPoints.js"
+#         , "addGlifyPolygonsFl.js"
+#         , "addGlifyPolylines.js"
+#         , "glify-browser.js"
+#       )
+#     )
+#   )
+# }
+# glifyDataAttachment = function(fl_data, group) {
+#   data_dir <- dirname(fl_data)
+#   data_file <- basename(fl_data)
+#   list(
+#     htmltools::htmlDependency(
+#       name = paste0(group, "dt"),
+#       version = 1,
+#       src = c(file = data_dir),
+#       attachment = list(data_file)
+#     )
+#   )
+# }
+# glifyColorAttachment = function(fl_color, group) {
+#   data_dir <- dirname(fl_color)
+#   data_file <- basename(fl_color)
+#   list(
+#     htmltools::htmlDependency(
+#       name = paste0(group, "cl"),
+#       version = 1,
+#       src = c(file = data_dir),
+#       attachment = list(data_file)
+#     )
+#   )
+# }
+# glifyPopupAttachment = function(fl_popup, group) {
+#   data_dir <- dirname(fl_popup)
+#   data_file <- basename(fl_popup)
+#   list(
+#     htmltools::htmlDependency(
+#       name = paste0(group, "pop"),
+#       version = 1,
+#       src = c(file = data_dir),
+#       attachment = list(data_file)
+#     )
+#   )
+# }
+
 ## Not used as its not faster - Needs geometries to be the last column and be named geometry
-yyjsonr_2_geojson <- function(sfdata) {
-  # sfdata <- data
-  geom <- st_geometry(sfdata)
-  sfdata <- st_drop_geometry(sfdata)
-  sfdata$geometry <- geom
-  sfdata <- sf::st_as_sf(sfdata)
-  json_data <- yyjsonr::write_json_str(sfdata, digits=4)
-  json_data <- gsub("]}]", "]}}]}", fixed = TRUE,
-                     paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
-                            gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
-                                 substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
-  class(json_data) <- "geojson"
-  json_data
-}
+# yyjsonr_2_geojson <- function(sfdata) {
+#   # sfdata <- data
+#   geom <- st_geometry(sfdata)
+#   sfdata <- st_drop_geometry(sfdata)
+#   sfdata$geometry <- geom
+#   sfdata <- sf::st_as_sf(sfdata)
+#   json_data <- yyjsonr::write_json_str(sfdata, digits=4)
+#   json_data <- gsub("]}]", "]}}]}", fixed = TRUE,
+#                      paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
+#                             gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
+#                                  substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
+#   class(json_data) <- "geojson"
+#   json_data
+# }

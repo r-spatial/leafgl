@@ -40,4 +40,5 @@ Imports:
 Suggests:
   colourvalues,
   shiny,
+  yyjsonr,
   testthat (>= 2.1.0)

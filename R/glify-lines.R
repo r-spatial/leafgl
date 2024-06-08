@@ -202,7 +202,7 @@ addGlPolylinesSrc = function(map,
 
   map$dependencies = c(
     map$dependencies,
-    glifyDependenciesSrc(),
+    glifyDependencies(TRUE),
     glifyDataAttachmentSrc(fl_data, group)
   )
 
@@ -223,10 +223,7 @@ addGlPolylinesSrc = function(map,
     cat('[', convert_to_json(color, digits = 3), '];',
         file = fl_color, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyColorAttachmentSrc(fl_color, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_color, group, "col"))
     color = NULL
   }
 
@@ -238,10 +235,7 @@ addGlPolylinesSrc = function(map,
     cat('[', convert_to_json(leaflet::evalFormula(label, data_orig)), '];',
         file = fl_label, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyLabelAttachmentSrc(fl_label, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_label, group, "lab"))
     label = NULL
   }
 
@@ -260,10 +254,7 @@ addGlPolylinesSrc = function(map,
     cat('[', convert_to_json(makePopup(popup, data_orig)), '];',
         file = fl_popup, append = TRUE)
 
-    map$dependencies = c(
-      map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, group)
-    )
+    map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_popup, group, "pop"))
     popup = NULL
   }
 
@@ -276,9 +267,7 @@ addGlPolylinesSrc = function(map,
         file = fl_weight, append = TRUE)
 
     map$dependencies = c(
-      map$dependencies,
-      glifyRadiusAttachmentSrc(fl_weight, group)
-    )
+      map$dependencies, glifyAttachmentSrc(fl_weight, group, "rad"))
     weight = NULL
   }
 
