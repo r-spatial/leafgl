@@ -169,3 +169,42 @@ glifyDependenciesFl = function() {
     )
   )
 }
+
+
+
+json_funccall <- function() {
+  json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
+  if (json_parser == "yyjsonr") {
+    yyjsonr::write_json_str
+  } else {
+    jsonify::to_json
+  }
+}
+convert_to_json <- function(data, ...) {
+  json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
+  if (json_parser == "yyjsonr") {
+    print("I am using yyjsonr")
+    json_data <- yyjsonr::write_json_str(data, ...)
+    class(json_data) <- "json"
+  } else {
+    print("I am using jsonify")
+    json_data <- jsonify::to_json(data, ...)
+  }
+  return(json_data)
+}
+
+## Not used as its not faster - Needs geometries to be the last column and be named geometry
+yyjsonr_2_geojson <- function(sfdata) {
+  # sfdata <- data
+  geom <- st_geometry(sfdata)
+  sfdata <- st_drop_geometry(sfdata)
+  sfdata$geometry <- geom
+  sfdata <- sf::st_as_sf(sfdata)
+  json_data <- yyjsonr::write_json_str(sfdata, digits=4)
+  json_data <- gsub("]}]", "]}}]}", fixed = TRUE,
+                     paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
+                            gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
+                                 substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
+  class(json_data) <- "geojson"
+  json_data
+}

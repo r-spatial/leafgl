@@ -137,7 +137,7 @@ addGlPoints = function(map,
   dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # fillColor ###########
+  # color ###########
   palette = "viridis"
   if ("palette" %in% names(dotopts)) {
     palette <- dotopts$palette
@@ -147,7 +147,7 @@ addGlPoints = function(map,
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
-  fillColor = jsonify::to_json(fillColor)
+  fillColor = convert_to_json(fillColor, digits = 3)
 
   # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
@@ -159,8 +159,7 @@ addGlPoints = function(map,
         htmldeps
       )
     }
-    popup = makePopup(popup, data)
-    popup = jsonify::to_json(popup)
+    popup = convert_to_json(makePopup(popup, data))
   } else {
     popup = NULL
   }
@@ -173,14 +172,15 @@ addGlPoints = function(map,
     jsonify_args = try(
       match.arg(
         names(dotopts)
-        , names(as.list(args(jsonify::to_json)))
+        , names(as.list(args(json_funccall)))
         , several.ok = TRUE
       )
       , silent = TRUE
     )
   }
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
-  data = do.call(jsonify::to_json, c(list(crds), dotopts[jsonify_args]))
+  data = do.call(json_funccall(), c(list(crds), dotopts[jsonify_args]))
+  class(data) <- "json"
 
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
@@ -284,7 +284,7 @@ addGlPointsSrc = function(map,
     fl_color = paste0(dir_color, "/", group, "_color.js")
     pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
-    cat('[', jsonify::to_json(fillColor), '];',
+    cat('[', convert_to_json(fillColor, digits = 3), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
@@ -296,11 +296,10 @@ addGlPointsSrc = function(map,
 
   # labels ############
   if (!is.null(label)) {
-    labels <- leaflet::evalFormula(label, data)
     fl_label = paste0(dir_labels, "/", group, "_label.js")
     pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
     writeLines(pre, fl_label)
-    cat('[', jsonify::to_json(labels), '];',
+    cat('[', convert_to_json(leaflet::evalFormula(label, data)), '];',
         file = fl_label, append = TRUE)
 
     map$dependencies = c(
@@ -319,11 +318,10 @@ addGlPointsSrc = function(map,
         htmldeps
       )
     }
-    popup = makePopup(popup, data)
     fl_popup = paste0(dir_popup, "/", group, "_popup.js")
     pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', jsonify::to_json(popup), '];',
+    cat('[', convert_to_json(makePopup(popup, data)), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
@@ -338,7 +336,7 @@ addGlPointsSrc = function(map,
     fl_radius = paste0(dir_radius, "/", layerId, "_radius.js")
     pre = paste0('var rad = rad || {}; rad["', layerId, '"] = ')
     writeLines(pre, fl_radius)
-    cat('[', jsonify::to_json(radius), '];',
+    cat('[', convert_to_json(radius), '];',
         file = fl_radius, append = TRUE)
 
     map$dependencies = c(

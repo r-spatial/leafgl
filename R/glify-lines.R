@@ -79,7 +79,7 @@ addGlPolylines = function(map,
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
-  cols = jsonify::to_json(color, digits = 3)
+  cols = convert_to_json(color, digits = 3)
 
   # label / popup ########
   labels <- leaflet::evalFormula(label, data)
@@ -96,8 +96,7 @@ addGlPolylines = function(map,
         htmldeps
       )
     }
-    popup = makePopup(popup, data)
-    popup = jsonify::to_json(popup)
+    popup = convert_to_json(makePopup(popup, data))
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
@@ -221,7 +220,7 @@ addGlPolylinesSrc = function(map,
     fl_color = paste0(dir_color, "/", group, "_color.js")
     pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
-    cat('[', jsonify::to_json(color), '];',
+    cat('[', convert_to_json(color, digits = 3), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
@@ -233,11 +232,10 @@ addGlPolylinesSrc = function(map,
 
   # labels ############
   if (!is.null(label)) {
-    labels <- leaflet::evalFormula(label, data_orig)
     fl_label = paste0(dir_labels, "/", group, "_label.js")
     pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
     writeLines(pre, fl_label)
-    cat('[', jsonify::to_json(labels), '];',
+    cat('[', convert_to_json(leaflet::evalFormula(label, data_orig)), '];',
         file = fl_label, append = TRUE)
 
     map$dependencies = c(
@@ -256,11 +254,10 @@ addGlPolylinesSrc = function(map,
         htmldeps
       )
     }
-    popup = makePopup(popup, data_orig)
     fl_popup = paste0(dir_popup, "/", group, "_popup.js")
     pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', jsonify::to_json(popup), '];',
+    cat('[', convert_to_json(makePopup(popup, data_orig)), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
@@ -275,7 +272,7 @@ addGlPolylinesSrc = function(map,
     fl_weight = paste0(dir_weight, "/", group, "_weight.js")
     pre = paste0('var wgt = wgt || {}; wgt["', group, '"] = ')
     writeLines(pre, fl_weight)
-    cat('[', jsonify::to_json(weight), '];',
+    cat('[', convert_to_json(weight), '];',
         file = fl_weight, append = TRUE)
 
     map$dependencies = c(
