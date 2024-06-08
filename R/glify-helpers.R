@@ -62,7 +62,9 @@ glifyAttachmentSrc <- function(fl, group, type) {
 # helpers
 json_funccall <- function() {
   json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
-  if (json_parser == "yyjsonr") {
+  if (is.function(json_parser)) {
+    json_parser
+  } else if (json_parser == "yyjsonr") {
     yyjsonr::write_json_str
   } else {
     jsonify::to_json
@@ -70,12 +72,15 @@ json_funccall <- function() {
 }
 convert_to_json <- function(data, ...) {
   json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
-  if (json_parser == "yyjsonr") {
-    print("I am using yyjsonr")
+  if (is.function(json_parser)) {
+    # print("I am using a custom JSON parser function")
+    json_data <- json_parser(data, ...)
+  } else if (json_parser == "yyjsonr") {
+    # print("I am using yyjsonr")
     json_data <- yyjsonr::write_json_str(data, ...)
     class(json_data) <- "json"
   } else {
-    print("I am using jsonify")
+    # print("I am using jsonify")
     json_data <- jsonify::to_json(data, ...)
   }
   return(json_data)
