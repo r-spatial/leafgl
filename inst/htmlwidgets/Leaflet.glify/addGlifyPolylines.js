@@ -1,5 +1,4 @@
 /* global LeafletWidget, L */
-
 LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
                                                    opacity, group, weight, layerId, dotOptions, pane,
                                                    popupOptions, labelOptions) {

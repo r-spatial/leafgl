@@ -99,14 +99,21 @@ addGlPoints = function(map,
                        labelOptions = NULL,
                        ...) {
 
+  # check data ##########
   if (missing(labelOptions)) labelOptions <- labelOptions()
   if (missing(popupOptions)) popupOptions <- popupOptions()
 
-  dotopts = list(...)
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
 
   if (!is.null(layerId) && inherits(layerId, "formula"))
     layerId <- evalFormula(layerId, data)
 
+  ## currently leaflet.glify only supports single (fill)opacity!
+  fillOpacity = fillOpacity[1]
+
+  # call SRC function ##############
   if (isTRUE(src)) {
     m = addGlPointsSrc(
       map = map
@@ -116,6 +123,7 @@ addGlPoints = function(map,
       , radius = radius
       , group = group
       , popup = popup
+      , label = label
       , layerId = layerId
       , pane = pane
       , popupOptions = popupOptions
@@ -125,16 +133,11 @@ addGlPoints = function(map,
     return(m)
   }
 
-  ## currently leaflet.glify only supports single (fill)opacity!
-  fillOpacity = fillOpacity[1]
-
-  if (is.null(group)) group = deparse(substitute(data))
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
-
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # fillColor
+  # fillColor ###########
   palette = "viridis"
   if ("palette" %in% names(dotopts)) {
     palette <- dotopts$palette
@@ -146,7 +149,7 @@ addGlPoints = function(map,
   colnames(fillColor) = c("r", "g", "b")
   fillColor = jsonify::to_json(fillColor)
 
-  # label / popup
+  # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
   if (!is.null(popup)) {
     htmldeps <- htmltools::htmlDependencies(popup)
@@ -162,7 +165,7 @@ addGlPoints = function(map,
     popup = NULL
   }
 
-  # data
+  # data ###########
   crds = sf::st_coordinates(data)[, c(2, 1)]
   if (length(dotopts) == 0) {
     jsonify_args = NULL
@@ -182,7 +185,7 @@ addGlPoints = function(map,
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
 
-  # invoke leaflet method and zoom to bounds
+  # invoke leaflet method and zoom to bounds ###########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -217,23 +220,18 @@ addGlPointsSrc = function(map,
                           radius = 10,
                           group = "glpoints",
                           popup = NULL,
+                          label = NULL,
                           layerId = NULL,
                           pane = "overlayPane",
                           popupOptions = NULL,
                           labelOptions = NULL,
                           ...) {
 
-  ## currently leaflet.glify only supports single (fill)opacity!
-  fillOpacity = fillOpacity[1]
-
-  if (is.null(group)) group = deparse(substitute(data))
-  if (is.null(layerId)) layerId = paste0(group, "-pts")
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POINT", "sfc_MULTIPOINT")))
-
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # temp directories
+  # temp directories ############
   dir_data = tempfile(pattern = "glify_points_dat")
   dir.create(dir_data)
   dir_color = tempfile(pattern = "glify_points_col")
@@ -242,38 +240,40 @@ addGlPointsSrc = function(map,
   dir.create(dir_popup)
   dir_radius = tempfile(pattern = "glify_points_rad")
   dir.create(dir_radius)
+  dir_labels = tempfile(pattern = "glify_polylines_labl")
+  dir.create(dir_labels)
 
-  # data
+  # data ############
   # data = sf::st_transform(data, 4326)
   crds = sf::st_coordinates(data)[, c(2, 1)]
 
-  ell_args <- list(...)
-  fl_data = paste0(dir_data, "/", layerId, "_data.js")
-  pre = paste0('var data = data || {}; data["', layerId, '"] = ')
+  fl_data = paste0(dir_data, "/", group, "_data.js")
+  pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
-      names(ell_args)
-      , names(as.list(args(jsonify::to_json)))
+      names(dotopts)
+      , names(as.list(args(json_funccall)))
       , several.ok = TRUE
     )
     , silent = TRUE
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "x")) jsonify_args = NULL
-  cat('[', do.call(jsonify::to_json, c(list(crds), ell_args[jsonify_args])), '];',
+  cat('[', do.call(json_funccall(), c(list(crds), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, layerId)
+    glifyDataAttachmentSrc(fl_data, group)
   )
 
-  # color
+  # color ############
   palette = "viridis"
-  if ("palette" %in% names(ell_args)) {
-    palette <- ell_args$palette
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   fillColor <- makeColorMatrix(fillColor, data, palette = palette)
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
@@ -281,21 +281,36 @@ addGlPointsSrc = function(map,
   colnames(fillColor) = c("r", "g", "b")
 
   if (nrow(fillColor) > 1) {
-    fl_color = paste0(dir_color, "/", layerId, "_color.js")
-    pre = paste0('var col = col || {}; col["', layerId, '"] = ')
+    fl_color = paste0(dir_color, "/", group, "_color.js")
+    pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
     cat('[', jsonify::to_json(fillColor), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyColorAttachmentSrc(fl_color, layerId)
+      glifyColorAttachmentSrc(fl_color, group)
     )
-
     fillColor = NULL
   }
 
-  # popup
+  # labels ############
+  if (!is.null(label)) {
+    labels <- leaflet::evalFormula(label, data)
+    fl_label = paste0(dir_labels, "/", group, "_label.js")
+    pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
+    writeLines(pre, fl_label)
+    cat('[', jsonify::to_json(labels), '];',
+        file = fl_label, append = TRUE)
+
+    map$dependencies = c(
+      map$dependencies,
+      glifyLabelAttachmentSrc(fl_label, group)
+    )
+    label = NULL
+  }
+
+  # popup ############
   if (!is.null(popup)) {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -305,20 +320,20 @@ addGlPointsSrc = function(map,
       )
     }
     popup = makePopup(popup, data)
-    fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
-    pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
+    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
+    pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
     cat('[', jsonify::to_json(popup), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, layerId)
+      glifyPopupAttachmentSrc(fl_popup, group)
     )
-
+    popup = NULL
   }
 
-  # radius
+  # radius ############
   if (length(unique(radius)) > 1) {
     fl_radius = paste0(dir_radius, "/", layerId, "_radius.js")
     pre = paste0('var rad = rad || {}; rad["', layerId, '"] = ')
@@ -330,19 +345,20 @@ addGlPointsSrc = function(map,
       map$dependencies,
       glifyRadiusAttachmentSrc(fl_radius, layerId)
     )
-
     radius = NULL
   }
 
+  # invoke method ###########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
     , 'addGlifyPointsSrc'
     , fillColor
-    , radius
     , fillOpacity
+    , radius
     , group
     , layerId
+    , dotopts
     , pane
     , popupOptions
     , labelOptions

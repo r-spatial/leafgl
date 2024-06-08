@@ -1,41 +1,60 @@
-LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, group, layerId, pane) {
+/* global LeafletWidget, L */
+LeafletWidget.methods.addGlifyPolygonsSrc = function(cols, opacity, group,
+                                                     layerId, dotOptions, pane, stroke,
+                                                     popupOptions, labelOptions) {
 
-  var map = this;
-
-// FIX ME clrs, pop need to be layer specificly named!!!!!
+  const map = this;
 
   // color
-  var clrs;
-  if (fillColor === null) {
-    clrs = function(index, feature) { return col[layerId][0][index]; };
+  let clrs;
+  if (cols === null) {
+    clrs = function(index, feature) { return col[group][0][index]; };
   } else {
-    clrs = fillColor;
+    clrs = cols;
   }
 
-  var shapeslayer = L.glify.shapes({
+  // click & hover function
+  const clickFun = function (e, feature) {
+    if (typeof pops !== 'undefined' && pops?.[group]?.[0]) {
+      let popsrc = pops[group][0];
+      popsrc = popsrc.length == 1 ? popsrc[0] : popsrc;
+      click_event(e, feature, popsrc !== null, popsrc, popupOptions,
+                  shapeslayer, layerId, data[group][0], map);
+    }
+  };
+
+  const tooltip = new L.Tooltip(labelOptions);
+  const mouseoverFun = function(e, feature) {
+    if (typeof labs !== 'undefined' && labs?.[group]?.[0]) {
+      let labsrc = labs[group][0];
+      labsrc = labsrc.length == 1 ? labsrc[0] : labsrc;
+      hover_event(e, feature, labsrc !== null, labsrc, shapeslayer, tooltip,
+                  layerId, data[group][0], map);
+    }
+  }
+
+  // arguments for gl layer
+  const layerArgs = {
     map: map,
-    click: function (e, feature) {
-      if (typeof(popup) === "undefined") {
-          return;
-      } else if (typeof(popup[layerId]) === "undefined") {
-        return;
-      } else {
-      if (map.hasLayer(shapeslayer.layer)) {
-          var idx = data[layerId][0].features.findIndex(k => k==feature);
-          L.popup()
-            .setLatLng(e.latlng)
-            .setContent(popup[layerId][0][idx].toString())
-            .openOn(map);
-        }
-      }
-    },
-    data: data[layerId][0],
+    click: clickFun,
+    hover: mouseoverFun,
+    data: data[group][0],
     color: clrs,
-    opacity: fillOpacity,
+    opacity: opacity,
     className: group,
-    pane: pane
-  });
+    border: stroke,
+    pane: pane,
+    layerId: layerId
+  };
 
-  map.layerManager.addLayer(shapeslayer.layer, "glify", null, group);
+  // append dotOptions to layer arguments
+  Object.entries(dotOptions).forEach(([key,value]) => { layerArgs[key] = value });
 
+  // initialize Glify Layer
+  const shapeslayer = L.glify.shapes(layerArgs);
+
+  // add layer to map using leaflet's layerManager
+  map.layerManager.addLayer(shapeslayer.layer, "glify", layerId, group);
+
+  addGlifyEventListeners(map)
 };

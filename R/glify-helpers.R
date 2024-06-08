@@ -83,6 +83,18 @@ glifyPopupAttachmentSrc = function(fl_popup, group) {
     )
   )
 }
+glifyLabelAttachmentSrc = function(fl_popup, group) {
+  data_dir <- dirname(fl_popup)
+  data_file <- basename(fl_popup)
+  list(
+    htmltools::htmlDependency(
+      name = paste0(group, "lab"),
+      version = 1,
+      src = c(file = data_dir),
+      script = list(data_file)
+    )
+  )
+}
 
 glifyRadiusAttachmentSrc = function(fl_radius, group) {
   data_dir <- dirname(fl_radius)

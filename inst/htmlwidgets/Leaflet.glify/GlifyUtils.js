@@ -94,7 +94,6 @@ function addGlifyEventListeners (map) {
       if (glifylayer) {
         let glifyinstance = L.glify.instances.find(e => e.layer._leaflet_id == leafid);
         if (glifyinstance) {
-          //console.log("glifyinstance TRUE"); console.log(glifyinstance)
           glifyinstance.active = true;
         }
       }
@@ -107,7 +106,6 @@ function addGlifyEventListeners (map) {
       if (glifylayer) {
         let glifyinstance = L.glify.instances.find(e => e.layer._leaflet_id == leafid);
         if (glifyinstance) {
-          //console.log("glifyinstance FALSE"); console.log(glifyinstance)
           glifyinstance.active = false;
         }
       }
@@ -148,6 +146,49 @@ LeafletWidget.methods.showGroup = function(group) {
 
 
 // Helper Functions
+function click_event_pts(e, point, addpopup, popup, popupOptions, layer, layerId, data, map) {
+  if (map.hasLayer(layer.layer)) {
+    var idx = data.findIndex(k => k==point);
+    var content = popup ? popup[idx].toString() : null;
+    if (HTMLWidgets.shinyMode) {
+          Shiny.setInputValue(map.id + "_glify_click", {
+            id: layerId ? layerId[idx] : idx+1,
+            group: layer.settings.className,
+            lat: point[0],
+            lng: point[1],
+            data: content
+          });
+    }
+    if (addpopup) {
+      L.popup(popupOptions)
+        .setLatLng(point)
+        .setContent(content)
+        .openOn(map);
+    }
+  }
+};
+function hover_event_pts(e, point, addlabel, label, layer, tooltip, layerId, data, map) {
+  if (map.hasLayer(layer.layer)) {
+    var idx = data.findIndex(k => k==point);
+    var content = Array.isArray(label) ? (label[idx] ? label[idx].toString() : null) :
+          typeof label === 'string' ? label : null;
+    if (HTMLWidgets.shinyMode) {
+          Shiny.setInputValue(map.id + "_glify_mouseover", {
+            id: layerId ? layerId[idx] : idx+1,
+            group: layer.settings.className,
+            lat: point[0],
+            lng: point[1],
+            data: content
+          });
+    }
+    if (addlabel) {
+      tooltip
+        .setLatLng(point)
+        .setContent(content)
+        .addTo(map);
+    }
+  }
+}
 function click_event(e, feature, addpopup, popup, popupOptions, layer, layerId, data, map) {
   if (map.hasLayer(layer.layer)) {
     const idx = data.features.findIndex(k => k==feature);
@@ -162,7 +203,6 @@ function click_event(e, feature, addpopup, popup, popupOptions, layer, layerId, 
     }
     if (addpopup) {
       const content = popup === true ? json2table(feature.properties) : popup[idx].toString();
-
       L.popup(popupOptions)
         .setLatLng(e.latlng)
         .setContent(content)

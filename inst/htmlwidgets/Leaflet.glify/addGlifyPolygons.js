@@ -1,5 +1,4 @@
 /* global LeafletWidget, L */
-
 LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label,
                                                   opacity, group, layerId, dotOptions, pane,
                                                   stroke, popupOptions, labelOptions) {

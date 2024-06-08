@@ -28,33 +28,9 @@ addGlPolylines = function(map,
                           labelOptions = NULL,
                           ...) {
 
+  # check data ##########
   if (missing(labelOptions)) labelOptions <- labelOptions()
   if (missing(popupOptions)) popupOptions <- popupOptions()
-
-  dotopts = list(...)
-
-  if (!is.null(layerId) && inherits(layerId, "formula"))
-    layerId <- evalFormula(layerId, data)
-
-  if (isTRUE(src)) {
-    m = addGlPolylinesSrc(
-      map = map
-      , data = data
-      , color = color
-      , opacity = opacity
-      , group = group
-      , popup = popup
-      , weight = weight
-      , layerId = layerId
-      , popupOptions = popupOptions
-      , labelOptions = labelOptions
-      , ...
-    )
-    return(m)
-  }
-
-  ## currently leaflet.glify only supports single (fill)opacity!
-  opacity = opacity[1]
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
@@ -63,9 +39,37 @@ addGlPolylines = function(map,
     stop("Can only handle LINESTRINGs, please cast your MULTILINESTRING to LINESTRING using sf::st_cast",
          call. = FALSE)
 
+  if (!is.null(layerId) && inherits(layerId, "formula"))
+    layerId <- evalFormula(layerId, data)
+
+  ## currently leaflet.glify only supports single (fill)opacity!
+  opacity = opacity[1]
+
+  # call SRC function ##############
+  if (isTRUE(src)) {
+    m = addGlPolylinesSrc(
+      map = map
+      , data = data
+      , color = color
+      , opacity = opacity
+      , group = group
+      , popup = popup
+      , label = label
+      , weight = weight
+      , layerId = layerId
+      , pane = pane
+      , popupOptions = popupOptions
+      , labelOptions = labelOptions
+      , ...
+    )
+    return(m)
+  }
+
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # color
+  # color ########
   palette = "viridis"
   if ("palette" %in% names(dotopts)) {
     palette <- dotopts$palette
@@ -77,7 +81,7 @@ addGlPolylines = function(map,
   colnames(color) = c("r", "g", "b")
   cols = jsonify::to_json(color, digits = 3)
 
-  # label / popup
+  # label / popup ########
   labels <- leaflet::evalFormula(label, data)
   if (is.null(popup)) {
     geom = sf::st_geometry(data)
@@ -98,7 +102,7 @@ addGlPolylines = function(map,
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
 
-  # data
+  # data ########
   if (length(dotopts) == 0) {
     geojsonsf_args = NULL
   } else {
@@ -118,7 +122,7 @@ addGlPolylines = function(map,
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
 
-  # invoke leaflet method and zoom to bounds
+  # invoke leaflet method and zoom to bounds ########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -152,6 +156,7 @@ addGlPolylinesSrc = function(map,
                              opacity = 0.8,
                              group = "glpolygons",
                              popup = NULL,
+                             label = NULL,
                              weight = 1,
                              layerId = NULL,
                              pane = "overlayPane",
@@ -159,38 +164,33 @@ addGlPolylinesSrc = function(map,
                              labelOptions = NULL,
                              ...) {
 
-  if (is.null(group)) group = deparse(substitute(data))
-  if (is.null(layerId)) layerId = paste0(group, "-lns")
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_LINESTRING", "sfc_MULTILINESTRING")))
-  if (inherits(sf::st_geometry(data), "sfc_MULTILINESTRING"))
-    stop("Can only handle LINESTRINGs, please cast your MULTILINESTRING ",
-         "to LINESTRING using e.g. sf::st_cast")
-
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # temp directories
+  # temp directories ############
   dir_data = tempfile(pattern = "glify_polylines_dat")
   dir.create(dir_data)
   dir_color = tempfile(pattern = "glify_polylines_col")
   dir.create(dir_color)
-  dir_popup = tempfile(pattern = "glify_polylines_pop")
-  dir.create(dir_popup)
   dir_weight = tempfile(pattern = "glify_polylines_wgt")
   dir.create(dir_weight)
+  dir_popup = tempfile(pattern = "glify_polylines_pop")
+  dir.create(dir_popup)
+  dir_labels = tempfile(pattern = "glify_polylines_labl")
+  dir.create(dir_labels)
 
-  # data
+  # data ############
   data_orig <- data
   geom = sf::st_geometry(data)
   data = sf::st_sf(id = 1:length(geom), geometry = geom)
 
-  ell_args <- list(...)
-  fl_data = paste0(dir_data, "/", layerId, "_data.js")
-  pre = paste0('var data = data || {}; data["', layerId, '"] = ')
+  fl_data = paste0(dir_data, "/", group, "_data.js")
+  pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
-      names(ell_args)
+      names(dotopts)
       , names(as.list(args(geojsonsf::sf_geojson)))
       , several.ok = TRUE
     )
@@ -198,41 +198,56 @@ addGlPolylinesSrc = function(map,
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), ell_args[jsonify_args])), '];',
+  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, layerId)
+    glifyDataAttachmentSrc(fl_data, group)
   )
 
-  # color
+  # color ############
   palette = "viridis"
-  if ("palette" %in% names(ell_args)) {
-    palette <- ell_args$palette
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   color <- makeColorMatrix(color, data_orig, palette = palette)
   if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
   color = as.data.frame(color, stringsAsFactors = FALSE)
   colnames(color) = c("r", "g", "b")
-
   if (nrow(color) > 1) {
-    fl_color = paste0(dir_color, "/", layerId, "_color.js")
-    pre = paste0('var col = col || {}; col["', layerId, '"] = ')
+    fl_color = paste0(dir_color, "/", group, "_color.js")
+    pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
     cat('[', jsonify::to_json(color), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyColorAttachmentSrc(fl_color, layerId)
+      glifyColorAttachmentSrc(fl_color, group)
     )
-
     color = NULL
   }
 
-  # popup
+  # labels ############
+  if (!is.null(label)) {
+    labels <- leaflet::evalFormula(label, data_orig)
+    fl_label = paste0(dir_labels, "/", group, "_label.js")
+    pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
+    writeLines(pre, fl_label)
+    cat('[', jsonify::to_json(labels), '];',
+        file = fl_label, append = TRUE)
+
+    map$dependencies = c(
+      map$dependencies,
+      glifyLabelAttachmentSrc(fl_label, group)
+    )
+    label = NULL
+  }
+
+  # popup ############
   if (!is.null(popup)) {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -242,44 +257,45 @@ addGlPolylinesSrc = function(map,
       )
     }
     popup = makePopup(popup, data_orig)
-    fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
-    pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
+    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
+    pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
     cat('[', jsonify::to_json(popup), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, layerId)
+      glifyPopupAttachmentSrc(fl_popup, group)
     )
-
+    popup = NULL
   }
 
-  # weight
+  # weight ############
   if (length(unique(weight)) > 1) {
-    fl_weight = paste0(dir_weight, "/", layerId, "_weight.js")
-    pre = paste0('var wgt = wgt || {}; wgt["', layerId, '"] = ')
+    fl_weight = paste0(dir_weight, "/", group, "_weight.js")
+    pre = paste0('var wgt = wgt || {}; wgt["', group, '"] = ')
     writeLines(pre, fl_weight)
     cat('[', jsonify::to_json(weight), '];',
         file = fl_weight, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyRadiusAttachmentSrc(fl_weight, layerId)
+      glifyRadiusAttachmentSrc(fl_weight, group)
     )
-
     weight = NULL
   }
 
+  # invoke method ###########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
     , 'addGlifyPolylinesSrc'
     , color
-    , weight
     , opacity
     , group
+    , weight
     , layerId
+    , dotopts
     , pane
     , popupOptions
     , labelOptions
@@ -291,5 +307,4 @@ addGlPolylinesSrc = function(map,
     c(bounds[1], bounds[3])
   )
 }
-
 

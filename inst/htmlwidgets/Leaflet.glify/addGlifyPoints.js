@@ -1,7 +1,6 @@
 /* global LeafletWidget, L */
-
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity,
-                                                radius, group, layerId, dotOptions, pane,
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity, radius,
+                                                group, layerId, dotOptions, pane,
                                                 popupOptions, labelOptions) {
 
   const map = this;
@@ -23,55 +22,14 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
   }
 
   // click & hover function
-  const clickFun = (e, point, xy) => {
-      //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.layer)) {
-        var idx = data.findIndex(k => k==point);
-        var content = popup ? popup[idx].toString() : null;
-        if (HTMLWidgets.shinyMode) {
-              Shiny.setInputValue(map.id + "_glify_click", {
-                id: layerId ? layerId[idx] : idx+1,
-                group: pointslayer.settings.className,
-                lat: point[0],
-                lng: point[1],
-                data: content
-              });
-        }
-        if (popup !== null) {
-          L.popup(popupOptions)
-            .setLatLng(point)
-            .setContent(content)
-            .openOn(map);
-        }
-      }
-    };
+  const clickFun = function(e, point) {
+    click_event_pts(e, point, popup !== null, popup, popupOptions, pointslayer, layerId, data, map);
+  };
 
   const tooltip = new L.Tooltip(labelOptions);
-  const hover_event = function(e, point, addlabel, label) {
-      //set up a standalone label (use a label as a layer)
-      if (map.hasLayer(pointslayer.layer)) {
-        var idx = data.findIndex(k => k==point);
-        var content = Array.isArray(label) ? (label[idx] ? label[idx].toString() : null) :
-              typeof label === 'string' ? label : null;
-        if (HTMLWidgets.shinyMode) {
-              Shiny.setInputValue(map.id + "_glify_mouseover", {
-                id: layerId ? layerId[idx] : idx+1,
-                group: pointslayer.settings.className,
-                lat: point[0],
-                lng: point[1],
-                data: content
-              });
-        }
-        if (label !== null) {
-          tooltip
-            .setLatLng(point)
-            .setContent(content)
-            .addTo(map);
-        }
-      }
-  }
-  const mouseoverFun = function(e, feature) {
-    hover_event(e, feature, label !== null, label);
+  const mouseoverFun = function(e, point) {
+    hover_event_pts(e, point, label !== null, label, pointslayer, tooltip,
+                    layerId, data, map);
   }
 
   // arguments for gl layer

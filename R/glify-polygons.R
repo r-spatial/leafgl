@@ -30,14 +30,24 @@ addGlPolygons = function(map,
                          labelOptions = NULL,
                          ...) {
 
+  # check data ##########
   if (missing(labelOptions)) labelOptions <- labelOptions()
   if (missing(popupOptions)) popupOptions <- popupOptions()
 
-  dotopts = list(...)
+  if (is.null(group)) group = deparse(substitute(data))
+  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
+  stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
+  if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
+    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast",
+         call. = FALSE)
 
   if (!is.null(layerId) && inherits(layerId, "formula"))
     layerId <- evalFormula(layerId, data)
 
+  ## currently leaflet.glify only supports single (fill)opacity!
+  fillOpacity = fillOpacity[1]
+
+  # call SRC function ##############
   if (isTRUE(src)) {
     m = addGlPolygonsSrc(
       map = map
@@ -47,6 +57,7 @@ addGlPolygons = function(map,
       , fillOpacity = fillOpacity
       , group = group
       , popup = popup
+      , label = label
       , layerId = layerId
       , pane = pane
       , stroke = stroke
@@ -57,19 +68,11 @@ addGlPolygons = function(map,
     return(m)
   }
 
-  ## currently leaflet.glify only supports single (fill)opacity!
-  fillOpacity = fillOpacity[1]
-
-  if (is.null(group)) group = deparse(substitute(data))
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
-  if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
-    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON to POLYGON using sf::st_cast",
-         call. = FALSE)
-
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # fillColor
+  # fillColor ###########
   palette = "viridis"
   if ("palette" %in% names(dotopts)) {
     palette <- dotopts$palette
@@ -81,7 +84,7 @@ addGlPolygons = function(map,
   colnames(fillColor) = c("r", "g", "b")
   cols = jsonify::to_json(fillColor, digits = 3)
 
-  # label / popup
+  # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
   if (is.null(popup)) {
     # geom = sf::st_transform(sf::st_geometry(data), crs = 4326)
@@ -103,7 +106,7 @@ addGlPolygons = function(map,
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
 
-  # data
+  # data ###########
   if (length(dotopts) == 0) {
     geojsonsf_args = NULL
   } else {
@@ -123,7 +126,7 @@ addGlPolygons = function(map,
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
 
-  # invoke leaflet method and zoom to bounds
+  # invoke leaflet method and zoom to bounds ###########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -159,6 +162,7 @@ addGlPolygonsSrc = function(map,
                             fillOpacity = 0.6,
                             group = "glpolygons",
                             popup = NULL,
+                            label = NULL,
                             layerId = NULL,
                             pane = "overlayPane",
                             stroke = TRUE,
@@ -166,36 +170,31 @@ addGlPolygonsSrc = function(map,
                             labelOptions = NULL,
                             ...) {
 
-  if (is.null(group)) group = deparse(substitute(data))
-  if (is.null(layerId)) layerId = paste0(group, "-pls")
-  if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
-  if (inherits(sf::st_geometry(data), "sfc_MULTIPOLYGON"))
-    stop("Can only handle POLYGONs, please cast your MULTIPOLYGON ",
-         "to POLYGON using e.g. sf::st_cast")
-
+  # get Bounds and ... #################
+  dotopts = list(...)
   bounds = as.numeric(sf::st_bbox(data))
 
-  # temp directories
+  # temp directories ############
   dir_data = tempfile(pattern = "glify_polygons_dat")
   dir.create(dir_data)
   dir_color = tempfile(pattern = "glify_polygons_col")
   dir.create(dir_color)
   dir_popup = tempfile(pattern = "glify_polygons_pop")
   dir.create(dir_popup)
+  dir_labels = tempfile(pattern = "glify_polylines_labl")
+  dir.create(dir_labels)
 
-  # data
+  # data ############
   data_orig <- data
   geom = sf::st_geometry(data)
   data = sf::st_sf(id = 1:length(geom), geometry = geom)
 
-  ell_args <- list(...)
-  fl_data = paste0(dir_data, "/", layerId, "_data.js")
-  pre = paste0('var data = data || {}; data["', layerId, '"] = ')
+  fl_data = paste0(dir_data, "/", group, "_data.js")
+  pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
   jsonify_args = try(
     match.arg(
-      names(ell_args)
+      names(dotopts)
       , names(as.list(args(geojsonsf::sf_geojson)))
       , several.ok = TRUE
     )
@@ -203,19 +202,20 @@ addGlPolygonsSrc = function(map,
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), ell_args[jsonify_args])), '];',
+  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
     map$dependencies,
     glifyDependenciesSrc(),
-    glifyDataAttachmentSrc(fl_data, layerId)
+    glifyDataAttachmentSrc(fl_data, group)
   )
 
-  # color
+  # color ############
   palette = "viridis"
-  if ("palette" %in% names(ell_args)) {
-    palette <- ell_args$palette
+  if ("palette" %in% names(dotopts)) {
+    palette <- dotopts$palette
+    dotopts$palette = NULL
   }
   fillColor <- makeColorMatrix(fillColor, data_orig, palette = palette)
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
@@ -223,21 +223,37 @@ addGlPolygonsSrc = function(map,
   colnames(fillColor) = c("r", "g", "b")
 
   if (nrow(fillColor) > 1) {
-    fl_color = paste0(dir_color, "/", layerId, "_color.js")
-    pre = paste0('var col = col || {}; col["', layerId, '"] = ')
+    fl_color = paste0(dir_color, "/", group, "_color.js")
+    pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
     cat('[', jsonify::to_json(fillColor), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyColorAttachmentSrc(fl_color, layerId)
+      glifyColorAttachmentSrc(fl_color, group)
     )
 
     fillColor = NULL
   }
 
-  # popup
+  # labels ############
+  if (!is.null(label)) {
+    labels <- leaflet::evalFormula(label, data_orig)
+    fl_label = paste0(dir_labels, "/", group, "_label.js")
+    pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
+    writeLines(pre, fl_label)
+    cat('[', jsonify::to_json(labels), '];',
+        file = fl_label, append = TRUE)
+
+    map$dependencies = c(
+      map$dependencies,
+      glifyLabelAttachmentSrc(fl_label, group)
+    )
+    label = NULL
+  }
+
+  # popup ############
   if (!is.null(popup)) {
     htmldeps <- htmltools::htmlDependencies(popup)
     if (length(htmldeps) != 0) {
@@ -247,18 +263,20 @@ addGlPolygonsSrc = function(map,
       )
     }
     popup = makePopup(popup, data_orig)
-    fl_popup = paste0(dir_popup, "/", layerId, "_popup.js")
-    pre = paste0('var popup = popup || {}; popup["', layerId, '"] = ')
+    fl_popup = paste0(dir_popup, "/", group, "_popup.js")
+    pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
     cat('[', jsonify::to_json(popup), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(
       map$dependencies,
-      glifyPopupAttachmentSrc(fl_popup, layerId)
+      glifyPopupAttachmentSrc(fl_popup, group)
     )
+    popup = NULL
   }
 
+  # invoke method ###########
   map = leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
@@ -267,6 +285,7 @@ addGlPolygonsSrc = function(map,
     , fillOpacity
     , group
     , layerId
+    , dotopts
     , pane
     , stroke
     , popupOptions
