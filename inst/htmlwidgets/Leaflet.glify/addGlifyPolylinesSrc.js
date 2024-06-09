@@ -54,6 +54,7 @@ LeafletWidget.methods.addGlifyPolylinesSrc = function(cols, opacity,
     className: group,
     weight: wght,
     pane: pane,
+    hoverWait: 10,
     layerId: layerId
   };
 

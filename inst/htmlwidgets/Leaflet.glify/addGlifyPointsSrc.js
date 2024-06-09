@@ -52,6 +52,7 @@ LeafletWidget.methods.addGlifyPointsSrc = function(cols, opacity, radius, group,
     size: rad,
     className: group,
     pane: pane,
+    hoverWait: 10,
     layerId: layerId
   };
 

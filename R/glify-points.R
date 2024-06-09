@@ -66,7 +66,6 @@
 #'   }
 #'
 #' @describeIn addGlPoints Add Points to a leaflet map using Leaflet.glify
-#' @order 1
 #' @examples \donttest{
 #' library(leaflet)
 #' library(leafgl)

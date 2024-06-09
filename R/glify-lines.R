@@ -1,5 +1,6 @@
 #' @examples
 #' library(leaflet)
+#' library(leafgl)
 #' library(sf)
 #'
 #' storms = st_as_sf(atlStorms2005)
@@ -11,7 +12,6 @@
 #'
 #' @describeIn addGlPoints Add Lines to a leaflet map using Leaflet.glify
 #' @aliases addGlPolylines
-#' @order 2
 #' @export addGlPolylines
 addGlPolylines = function(map,
                           data,

@@ -45,6 +45,7 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
     className: group,
     weight: wght,
     pane: pane,
+    hoverWait: 10,
     layerId: layerId
   };
 

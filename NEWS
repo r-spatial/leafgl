@@ -23,6 +23,12 @@ documentation etc
 
 miscellaneous
 
+ * unified / simplified the dependency functions/calls
+ * add option `leafgl_json_parser` to change JSON-parser via options. Possible values are:
+    - `jsonify` (default)
+    - `yyjsonr`
+    - Custom JSON converter like `jsonlite::toJSON` for example.
+
 
 leafgl 0.2.1
 

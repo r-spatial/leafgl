@@ -1,5 +1,6 @@
 #' @examples
 #' library(leaflet)
+#' library(leafgl)
 #' library(sf)
 #'
 #' gadm = st_as_sf(gadmCHE)
@@ -12,7 +13,6 @@
 #'
 #' @describeIn addGlPoints Add Polygons to a leaflet map using Leaflet.glify
 #' @aliases addGlPolygons
-#' @order 3
 #' @export addGlPolygons
 addGlPolygons = function(map,
                          data,

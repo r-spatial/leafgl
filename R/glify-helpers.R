@@ -144,16 +144,20 @@ convert_to_json <- function(data, ...) {
 
 ## Not used as its not faster - Needs geometries to be the last column and be named geometry
 # yyjsonr_2_geojson <- function(sfdata) {
-#   # sfdata <- data
-#   geom <- st_geometry(sfdata)
-#   sfdata <- st_drop_geometry(sfdata)
-#   sfdata$geometry <- geom
-#   sfdata <- sf::st_as_sf(sfdata)
+#   geom_col <- attr(sfdata, "sf_column")
+#   # Rename the geometry column to "geometry" if it's not already named "geometry"
+#   colndat <- names(sfdata)
+#   if (geom_col != "geometry") {
+#     colndat[colndat == geom_col] <- "geometry"
+#   }
+#   # Move the geometry column to the last position if it's not already the last column
+#   col_order <- setdiff(colndat, "geometry")
+#   sfdata <- sfdata[, c(col_order, "geometry")]
 #   json_data <- yyjsonr::write_json_str(sfdata, digits=4)
 #   json_data <- gsub("]}]", "]}}]}", fixed = TRUE,
-#                      paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
-#                             gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
-#                                  substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
+#                     paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
+#                            gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
+#                                 substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
 #   class(json_data) <- "geojson"
 #   json_data
 # }

@@ -44,6 +44,7 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(cols, opacity, group,
     className: group,
     border: stroke,
     pane: pane,
+    hoverWait: 10,
     layerId: layerId
   };
 
