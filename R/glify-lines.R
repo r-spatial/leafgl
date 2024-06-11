@@ -108,7 +108,7 @@ addGlPolylines = function(map,
     geojsonsf_args = try(
       match.arg(
         names(dotopts)
-        , names(as.list(args(geojsonsf::sf_geojson)))
+        , names(as.list(args(geojson_funccall)))
         , several.ok = TRUE
       )
       , silent = TRUE
@@ -116,7 +116,7 @@ addGlPolylines = function(map,
     if (inherits(geojsonsf_args, "try-error")) geojsonsf_args = NULL
     if (identical(geojsonsf_args, "sf")) geojsonsf_args = NULL
   }
-  data = do.call(geojsonsf::sf_geojson, c(list(data), dotopts[geojsonsf_args]))
+  data = do.call(geojson_funccall(), c(list(data), dotopts[geojsonsf_args]))
 
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
@@ -190,14 +190,14 @@ addGlPolylinesSrc = function(map,
   jsonify_args = try(
     match.arg(
       names(dotopts)
-      , names(as.list(args(geojsonsf::sf_geojson)))
+      , names(as.list(args(geojson_funccall)))
       , several.ok = TRUE
     )
     , silent = TRUE
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(geojsonsf::sf_geojson, c(list(data), dotopts[jsonify_args])), '];',
+  cat('[', do.call(geojson_funccall(), c(list(data), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(

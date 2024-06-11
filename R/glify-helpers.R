@@ -73,19 +73,30 @@ json_funccall <- function() {
 convert_to_json <- function(data, ...) {
   json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
   if (is.function(json_parser)) {
-    # print("I am using a custom JSON parser function")
     json_data <- json_parser(data, ...)
   } else if (json_parser == "yyjsonr") {
-    # print("I am using yyjsonr")
     json_data <- yyjsonr::write_json_str(data, ...)
     class(json_data) <- "json"
   } else {
-    # print("I am using jsonify")
     json_data <- jsonify::to_json(data, ...)
   }
   return(json_data)
 }
-
+geojson_funccall <- function() {
+  json_parser <- getOption("leafgl_geojson_parser", "geojsonsf")  # Default to geojsonsf
+  if (is.function(json_parser)) {
+    json_parser
+  } else if (json_parser == "yyjsonr") {
+    yyson_geojson_str
+  } else {
+    geojsonsf::sf_geojson
+  }
+}
+yyson_geojson_str <- function(x, ...) {
+  dt <- yyjsonr::write_geojson_str(x, ...)
+  class(dt) <- "json"
+  dt
+}
 
 
 ## Not used ##########
@@ -140,24 +151,4 @@ convert_to_json <- function(data, ...) {
 #       attachment = list(data_file)
 #     )
 #   )
-# }
-
-## Not used as its not faster - Needs geometries to be the last column and be named geometry
-# yyjsonr_2_geojson <- function(sfdata) {
-#   geom_col <- attr(sfdata, "sf_column")
-#   # Rename the geometry column to "geometry" if it's not already named "geometry"
-#   colndat <- names(sfdata)
-#   if (geom_col != "geometry") {
-#     colndat[colndat == geom_col] <- "geometry"
-#   }
-#   # Move the geometry column to the last position if it's not already the last column
-#   col_order <- setdiff(colndat, "geometry")
-#   sfdata <- sfdata[, c(col_order, "geometry")]
-#   json_data <- yyjsonr::write_json_str(sfdata, digits=4)
-#   json_data <- gsub("]}]", "]}}]}", fixed = TRUE,
-#                     paste0('{"type":"FeatureCollection","features":[{"type":"Feature","properties":',
-#                            gsub('","geometry":', '"},"geometry":{"type":"Polygon","coordinates":',
-#                                 substr(json_data, 2, nchar(json_data)), fixed = TRUE)))
-#   class(json_data) <- "geojson"
-#   json_data
 # }
