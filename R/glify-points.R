@@ -19,10 +19,11 @@
 #' @param weight line width/thickness in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
 #' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
-#' @param ... Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
-#'   & to pass additional arguments to the underlying JavaScript functions. Typical
-#'   use-cases include setting \code{'digits'} to round the point coordinates or to pass
-#'   a different \code{'fragmentShaderSource'} to control the shape of the points. Use
+#' @param ... Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
+#'   \code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the
+#'   underlying JavaScript functions. Typical use-cases include setting \code{'digits'} to
+#'   round the point coordinates or to pass a different \code{'fragmentShaderSource'} to
+#'   control the shape of the points. Use
 #'   \itemize{
 #'      \item{\code{'point'} (default) to render circles with a thin black outline}
 #'      \item{\code{'simpleCircle'} for circles without outline}
@@ -146,7 +147,7 @@ addGlPoints = function(map,
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
-  fillColor = convert_to_json(fillColor, digits = 3)
+  fillColor = yyson_json_str(fillColor, digits = 3)
 
   # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
@@ -158,7 +159,7 @@ addGlPoints = function(map,
         htmldeps
       )
     }
-    popup = convert_to_json(makePopup(popup, data))
+    popup = yyson_json_str(makePopup(popup, data))
   } else {
     popup = NULL
   }
@@ -171,14 +172,14 @@ addGlPoints = function(map,
     jsonify_args = try(
       match.arg(
         names(dotopts)
-        , names(as.list(args(json_funccall)))
+        , names(as.list(args(yyjsonr::opts_write_json)))
         , several.ok = TRUE
       )
       , silent = TRUE
     )
   }
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
-  data = do.call(json_funccall(), c(list(crds), dotopts[jsonify_args]))
+  data = do.call(yyson_json_str, c(list(crds), dotopts[jsonify_args]))
   class(data) <- "json"
 
   # dependencies
@@ -252,14 +253,14 @@ addGlPointsSrc = function(map,
   jsonify_args = try(
     match.arg(
       names(dotopts)
-      , names(as.list(args(json_funccall)))
+      , names(as.list(args(yyjsonr::opts_write_json)))
       , several.ok = TRUE
     )
     , silent = TRUE
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "x")) jsonify_args = NULL
-  cat('[', do.call(json_funccall(), c(list(crds), dotopts[jsonify_args])), '];',
+  cat('[', do.call(yyson_json_str, c(list(crds), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
@@ -283,7 +284,7 @@ addGlPointsSrc = function(map,
     fl_color = paste0(dir_color, "/", group, "_color.js")
     pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
-    cat('[', convert_to_json(fillColor, digits = 3), '];',
+    cat('[', yyson_json_str(fillColor, digits = 3), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_color, group, "col"))
@@ -295,7 +296,7 @@ addGlPointsSrc = function(map,
     fl_label = paste0(dir_labels, "/", group, "_label.js")
     pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
     writeLines(pre, fl_label)
-    cat('[', convert_to_json(leaflet::evalFormula(label, data)), '];',
+    cat('[', yyson_json_str(leaflet::evalFormula(label, data)), '];',
         file = fl_label, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_label, group, "lab"))
@@ -314,7 +315,7 @@ addGlPointsSrc = function(map,
     fl_popup = paste0(dir_popup, "/", group, "_popup.js")
     pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', convert_to_json(makePopup(popup, data)), '];',
+    cat('[', yyson_json_str(makePopup(popup, data)), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_popup, group, "pop"))
@@ -326,7 +327,7 @@ addGlPointsSrc = function(map,
     fl_radius = paste0(dir_radius, "/", layerId, "_radius.js")
     pre = paste0('var rad = rad || {}; rad["', layerId, '"] = ')
     writeLines(pre, fl_radius)
-    cat('[', convert_to_json(radius), '];',
+    cat('[', yyson_json_str(radius), '];',
         file = fl_radius, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_radius, group, "rad"))
@@ -391,11 +392,11 @@ addGlPointsSrc = function(map,
 #   fl_data2 = paste0(dir_data, "/", grp2, "_data.json")
 #   pre1 = paste0('var data = data || {}; data["', grp1, '"] = ')
 #   writeLines(pre1, fl_data1)
-#   cat('[', jsonify::to_json(crds[1:100, ], ...), '];',
+#   cat('[', yyson_json_str(crds[1:100, ], ...), '];',
 #       file = fl_data1, sep = "", append = TRUE)
 #   pre2 = paste0('var data = data || {}; data["', grp2, '"] = ')
 #   writeLines(pre2, fl_data2)
-#   cat('[', jsonify::to_json(crds[101:nrow(crds), ], ...), '];',
+#   cat('[', yyson_json_str(crds[101:nrow(crds), ], ...), '];',
 #       file = fl_data2, sep = "", append = TRUE)
 #
 #   # color
@@ -406,7 +407,7 @@ addGlPointsSrc = function(map,
 #   fl_color = paste0(dir_color, "/", group, "_color.json")
 #   pre = paste0('var col = col || {}; col["', group, '"] = ')
 #   writeLines(pre, fl_color)
-#   cat('[', jsonify::to_json(color), '];',
+#   cat('[', yyson_json_str(color), '];',
 #       file = fl_color, append = TRUE)
 #
 #   # popup
@@ -414,7 +415,7 @@ addGlPointsSrc = function(map,
 #     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
 #     pre = paste0('var popup = popup || {}; popup["', group, '"] = ')
 #     writeLines(pre, fl_popup)
-#     cat('[', jsonify::to_json(data[[popup]]), '];',
+#     cat('[', yyson_json_str(data[[popup]]), '];',
 #         file = fl_popup, append = TRUE)
 #   } else {
 #     popup = NULL
@@ -468,7 +469,7 @@ addGlPointsSrc = function(map,
 #   crds = sf::st_coordinates(data)[, c(2, 1)]
 #
 #   fl_data = paste0(dir_data, "/", group, "_data.json")
-#   cat(jsonify::to_json(crds, digits = 7), file = fl_data, append = FALSE)
+#   cat(yyson_json_str(crds, digits = 7), file = fl_data, append = FALSE)
 #   data_var = paste0(group, "dt")
 #
 #   # color
@@ -476,14 +477,14 @@ addGlPointsSrc = function(map,
 #   color = as.data.frame(color, stringsAsFactors = FALSE)
 #   colnames(color) = c("r", "g", "b")
 #
-#   jsn = jsonify::to_json(color)
+#   jsn = yyson_json_str(color)
 #   fl_color = paste0(dir_color, "/", group, "_color.json")
 #   color_var = paste0(group, "cl")
 #   cat(jsn, file = fl_color, append = FALSE)
 #
 #   # popup
 #   if (!is.null(popup)) {
-#     pop = jsonify::to_json(data[[popup]])
+#     pop = yyson_json_str(data[[popup]])
 #     fl_popup = paste0(dir_popup, "/", group, "_popup.json")
 #     popup_var = paste0(group, "pop")
 #     cat(pop, file = fl_popup, append = FALSE)

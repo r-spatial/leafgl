@@ -31,14 +31,12 @@ Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.3.1
 Imports:
-  geojsonsf,
   htmltools,
-  jsonify,
   leaflet,
   sf,
+  yyjsonr,
   grDevices
 Suggests:
   colourvalues,
   shiny,
-  yyjsonr,
   testthat (>= 2.1.0)

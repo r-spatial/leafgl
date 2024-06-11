@@ -96,10 +96,11 @@ match the number of rows in the data, the popup vector is repeated to match the 
 \item{labelOptions}{A Vector of \code{\link[leaflet:labelOptions]{labelOptions()}} to provide label
 options for each label. Default \code{NULL}}
 
-\item{...}{Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
-& to pass additional arguments to the underlying JavaScript functions. Typical
-use-cases include setting \code{'digits'} to round the point coordinates or to pass
-a different \code{'fragmentShaderSource'} to control the shape of the points. Use
+\item{...}{Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
+\code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the
+underlying JavaScript functions. Typical use-cases include setting \code{'digits'} to
+round the point coordinates or to pass a different \code{'fragmentShaderSource'} to
+control the shape of the points. Use
 \itemize{
    \item{\code{'point'} (default) to render circles with a thin black outline}
    \item{\code{'simpleCircle'} for circles without outline}

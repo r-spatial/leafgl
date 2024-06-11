@@ -2,6 +2,7 @@ leafgl 0.2.1.9005 (2023-09-08)
 
 features and improvements
 
+ * Switched from `jsonify` and `geojsonsf` to `yyjsonr`
  * New method *clearGlGroup* removes a group from leaflet and the Leaflet.Glify instances.
  * The JavaScript methods of the `removeGl**` functions was rewritten to correctly remove an element identified by `layerId`
  * `clearGlLayers` now correctly removes all Leaflet.Glify instances
@@ -24,10 +25,6 @@ documentation etc
 miscellaneous
 
  * unified / simplified the dependency functions/calls
- * add option `leafgl_json_parser` to change JSON-parser via options. Possible values are:
-    - `jsonify` (default)
-    - `yyjsonr`
-    - Custom JSON converter like `jsonlite::toJSON` for example.
 
 
 leafgl 0.2.1

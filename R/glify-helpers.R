@@ -60,37 +60,10 @@ glifyAttachmentSrc <- function(fl, group, type) {
 
 
 # helpers
-json_funccall <- function() {
-  json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
-  if (is.function(json_parser)) {
-    json_parser
-  } else if (json_parser == "yyjsonr") {
-    yyjsonr::write_json_str
-  } else {
-    jsonify::to_json
-  }
-}
-convert_to_json <- function(data, ...) {
-  json_parser <- getOption("leafgl_json_parser", "jsonify")  # Default to jsonify
-  if (is.function(json_parser)) {
-    json_data <- json_parser(data, ...)
-  } else if (json_parser == "yyjsonr") {
-    json_data <- yyjsonr::write_json_str(data, ...)
-    class(json_data) <- "json"
-  } else {
-    json_data <- jsonify::to_json(data, ...)
-  }
-  return(json_data)
-}
-geojson_funccall <- function() {
-  json_parser <- getOption("leafgl_geojson_parser", "geojsonsf")  # Default to geojsonsf
-  if (is.function(json_parser)) {
-    json_parser
-  } else if (json_parser == "yyjsonr") {
-    yyson_geojson_str
-  } else {
-    geojsonsf::sf_geojson
-  }
+yyson_json_str <- function(x, ...) {
+  dt <- yyjsonr::write_json_str(x, ...)
+  class(dt) <- "json"
+  dt
 }
 yyson_geojson_str <- function(x, ...) {
   dt <- yyjsonr::write_geojson_str(x, ...)

@@ -82,7 +82,7 @@ addGlPolygons = function(map,
   if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
   fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   colnames(fillColor) = c("r", "g", "b")
-  cols = convert_to_json(fillColor, digits = 3)
+  cols = yyson_json_str(fillColor, digits = 3)
 
   # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
@@ -100,7 +100,7 @@ addGlPolygons = function(map,
         htmldeps
       )
     }
-    popup = convert_to_json(makePopup(popup, data))
+    popup = yyson_json_str(makePopup(popup, data))
     geom = sf::st_geometry(data)
     data = sf::st_sf(id = 1:length(geom), geometry = geom)
   }
@@ -112,7 +112,7 @@ addGlPolygons = function(map,
     geojsonsf_args = try(
       match.arg(
         names(dotopts)
-        , names(as.list(args(geojson_funccall)))
+        , names(as.list(args(yyjsonr::opts_write_json)))
         , several.ok = TRUE
       )
       , silent = TRUE
@@ -120,7 +120,7 @@ addGlPolygons = function(map,
     if (inherits(geojsonsf_args, "try-error")) geojsonsf_args = NULL
     if (identical(geojsonsf_args, "sf")) geojsonsf_args = NULL
   }
-  data = do.call(geojson_funccall(), c(list(data), dotopts[geojsonsf_args]))
+  data = do.call(yyson_geojson_str, c(list(data), dotopts[geojsonsf_args]))
 
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
@@ -194,14 +194,14 @@ addGlPolygonsSrc = function(map,
   jsonify_args = try(
     match.arg(
       names(dotopts)
-      , names(as.list(args(geojson_funccall)))
+      , names(as.list(args(yyjsonr::opts_write_json)))
       , several.ok = TRUE
     )
     , silent = TRUE
   )
   if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(geojson_funccall(), c(list(data), dotopts[jsonify_args])), '];',
+  cat('[', do.call(yyson_geojson_str, c(list(data), dotopts[jsonify_args])), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
@@ -225,7 +225,7 @@ addGlPolygonsSrc = function(map,
     fl_color = paste0(dir_color, "/", group, "_color.js")
     pre = paste0('var col = col || {}; col["', group, '"] = ')
     writeLines(pre, fl_color)
-    cat('[', convert_to_json(fillColor, digits = 3), '];',
+    cat('[', yyson_json_str(fillColor, digits = 3), '];',
         file = fl_color, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_color, group, "col"))
@@ -238,7 +238,7 @@ addGlPolygonsSrc = function(map,
     fl_label = paste0(dir_labels, "/", group, "_label.js")
     pre = paste0('var labs = labs || {}; labs["', group, '"] = ')
     writeLines(pre, fl_label)
-    cat('[', convert_to_json(leaflet::evalFormula(label, data_orig)), '];',
+    cat('[', yyson_json_str(leaflet::evalFormula(label, data_orig)), '];',
         file = fl_label, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_label, group, "lab"))
@@ -257,7 +257,7 @@ addGlPolygonsSrc = function(map,
     fl_popup = paste0(dir_popup, "/", group, "_popup.js")
     pre = paste0('var pops = pops || {}; pops["', group, '"] = ')
     writeLines(pre, fl_popup)
-    cat('[', convert_to_json(makePopup(popup, data_orig)), '];',
+    cat('[', yyson_json_str(makePopup(popup, data_orig)), '];',
         file = fl_popup, append = TRUE)
 
     map$dependencies = c(map$dependencies, glifyAttachmentSrc(fl_popup, group, "pop"))
