@@ -37,6 +37,12 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
     map: map,
     click: clickFun,
     hover: mouseoverFun,
+    hoverOff: function(e, feat) {
+      tooltip.remove();
+      //if (HTMLWidgets.shinyMode) {
+      //  Shiny.setInputValue(map.id + "_glify_mouseover", null);
+      //}
+    },
     data: data,
     color: clrs,
     opacity: opacity,

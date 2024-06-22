@@ -20,8 +20,8 @@ clearGlLayers(map)
 clearGlGroup(map, group)
 }
 \arguments{
-\item{map}{a map widget object, possibly created from \code{\link[leaflet:leaflet]{leaflet()}}
-but more likely from \code{\link[leaflet:leafletProxy]{leafletProxy()}}}
+\item{map}{a map widget object, possibly created from \code{\link[leaflet]{leaflet}}()
+but more likely from \code{\link[leaflet]{leafletProxy}}()}
 
 \item{layerId}{character vector; the layer id(s) of the item to remove}
 

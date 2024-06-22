@@ -49,21 +49,18 @@ LeafletWidget.methods.clearGlLayers = function() {
     arr[i].settings.map.off("mousemove");
     arr[i].remove();
   }
-  arr.splice(0, arr.length)
 
   arr = L.glify.linesInstances;
   for( let i = 0; i < arr.length; i++){
     arr[i].settings.map.off("mousemove");
     arr[i].remove();
   }
-  arr.splice(0, arr.length)
 
   arr = L.glify.pointsInstances;
   for( let i = 0; i < arr.length; i++){
     arr[i].settings.map.off("mousemove");
     arr[i].remove();
   }
-  arr.splice(0, arr.length)
 
   this.layerManager.clearLayers("glify");
 };
@@ -76,7 +73,6 @@ LeafletWidget.methods.clearGlGroup = function(group) {
         if ( arr[i].settings.className === group) {
           arr[i].settings.map.off("mousemove");
           arr[i].remove();
-          arr.splice(i, 1);
         }
       }
     });

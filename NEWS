@@ -6,15 +6,16 @@ features and improvements
  * New method *clearGlGroup* removes a group from leaflet and the Leaflet.Glify instances.
  * The JavaScript methods of the `removeGl**` functions was rewritten to correctly remove an element identified by `layerId`
  * `clearGlLayers` now correctly removes all Leaflet.Glify instances
- * When showing/hiding Leaflet.Glify layers, they are set to active = TRUE/FALSE to make mouseevents work again. #48, #50
+ * When showing/hiding Leaflet.Glify layers, they are set to active = TRUE/FALSE to make mouseevents work again. #48 #50
 
 bug fixes
 
-  * src version now works also in shiny. #71
-  * added `popupOptions` and `labelOptions`. #83
-  * added `stroke` (default=TRUE) in `addGlPolygons` and `addGlPolygonsSrc` for drawing borders. #3
-  * Labels work similar to `leaflet`. `leafgl` accepts a single string, a vector of strings or a formula. #78
-  * The `...` arguments are now passed to all methods in the underlying library. This allows us to set
+ * Increase precision of points, lines and shapes by translating them closer to the Pixel Origin. Thanks @RayLarone #93
+ * src version now works also in shiny. #71
+ * added `popupOptions` and `labelOptions`. #83
+ * added `stroke` (default=TRUE) in `addGlPolygons` and `addGlPolygonsSrc` for drawing borders. #3 #68
+ * Labels work similar to `leaflet`. `leafgl` accepts a single string, a vector of strings or a formula. #78
+ * The `...` arguments are now passed to all methods in the underlying library. This allows us to set
     additional arguments like `fragmentShaderSource`, `sensitivity` or `sensitivityHover`.
 
 documentation etc
@@ -24,6 +25,8 @@ documentation etc
 
 miscellaneous
 
+ * update upstream javascript dependency to 3.3.0. #49
+  Note: If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
  * unified / simplified the dependency functions/calls
 
 

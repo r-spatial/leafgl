@@ -37,6 +37,12 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
     map: map,
     click: clickFun,
     hover: mouseoverFun,
+    hoverOff: function(e, feat) {
+      tooltip.remove();
+      //if (HTMLWidgets.shinyMode) {
+      //  Shiny.setInputValue(map.id + "_glify_mouseover", null);
+      //}
+    },
     latitudeKey: 1,
     longitudeKey: 0,
     data: data,
