@@ -152,7 +152,8 @@ function click_event_pts(e, point, addpopup, popup, popupOptions, layer, layerId
             group: layer.settings.className,
             lat: point[0],
             lng: point[1],
-            data: content
+            data: content,
+            ".nonce": Math.random()
           });
     }
     if (addpopup) {
@@ -174,7 +175,8 @@ function hover_event_pts(e, point, addlabel, label, layer, tooltip, layerId, dat
             group: layer.settings.className,
             lat: point[0],
             lng: point[1],
-            data: content
+            data: content,
+            ".nonce": Math.random()
           });
     }
     if (addlabel) {
@@ -182,6 +184,21 @@ function hover_event_pts(e, point, addlabel, label, layer, tooltip, layerId, dat
         .setLatLng(point)
         .setContent(content)
         .addTo(map);
+    }
+  }
+}
+function hoveroff_event_pts(e, point, layer, tooltip, layerId, data, map) {
+  if (map.hasLayer(layer.layer)) {
+    tooltip.remove();
+    var idx = data.findIndex(k => k==point);
+    if (HTMLWidgets.shinyMode) {
+          Shiny.setInputValue(map.id + "_glify_mouseout", {
+            id: layerId ? layerId[idx] : idx+1,
+            group: layer.settings.className,
+            lat: point[0],
+            lng: point[1],
+            ".nonce": Math.random()
+          });
     }
   }
 }
@@ -194,7 +211,8 @@ function click_event(e, feature, addpopup, popup, popupOptions, layer, layerId, 
         group: Object.values(layer.layer._eventParents)[0].groupname,
         lat: e.latlng.lat,
         lng: e.latlng.lng,
-        data: feature.properties
+        data: feature.properties,
+        ".nonce": Math.random()
       });
     }
     if (addpopup) {
@@ -215,7 +233,8 @@ function hover_event(e, feature, addlabel, label, layer, tooltip, layerId, data,
         group: Object.values(layer.layer._eventParents)[0].groupname,
         lat: e.latlng.lat,
         lng: e.latlng.lng,
-        data: feature.properties
+        data: feature.properties,
+        ".nonce": Math.random()
       });
     }
     if (addlabel) {
@@ -225,6 +244,21 @@ function hover_event(e, feature, addlabel, label, layer, tooltip, layerId, data,
         .setLatLng(e.latlng)
         .setContent(content)
         .addTo(map);
+    }
+  }
+}
+function hoveroff_event(e, feature, layer, tooltip, layerId, data, map) {
+  if (map.hasLayer(layer.layer)) {
+    tooltip.remove();
+    const idx = data.features.findIndex(k => k==feature);
+    if (HTMLWidgets.shinyMode) {
+      Shiny.setInputValue(map.id + "_glify_mouseout", {
+        id: layerId ? layerId[idx] : idx+1,
+        group: Object.values(layer.layer._eventParents)[0].groupname,
+        lat: e.latlng.lat,
+        lng: e.latlng.lng,
+        ".nonce": Math.random()
+      });
     }
   }
 }

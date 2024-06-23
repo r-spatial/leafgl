@@ -54,6 +54,8 @@
 #'       \code{input$MAPID_glify_click}
 #'     \item \strong{Mouseover Events:}
 #'       \code{input$MAPID_glify_mouseover}
+#'     \item \strong{Mouseout Events:}
+#'       \code{input$MAPID_glify_mouseout}
 #'   }
 #'
 #'

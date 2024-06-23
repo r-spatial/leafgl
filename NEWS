@@ -16,7 +16,7 @@ bug fixes
  * added `stroke` (default=TRUE) in `addGlPolygons` and `addGlPolygonsSrc` for drawing borders. #3 #68
  * Labels work similar to `leaflet`. `leafgl` accepts a single string, a vector of strings or a formula. #78
  * The `...` arguments are now passed to all methods in the underlying library. This allows us to set
-    additional arguments like `fragmentShaderSource`, `sensitivity` or `sensitivityHover`.
+    additional arguments like `fragmentShaderSource`, `sensitivity` or `sensitivityHover`. #81
 
 documentation etc
 

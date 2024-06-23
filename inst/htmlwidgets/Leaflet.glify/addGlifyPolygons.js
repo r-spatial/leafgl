@@ -29,11 +29,8 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label,
     map: map,
     click: clickFun,
     hover: mouseoverFun,
-    hoverOff: function(e, feat) {
-      tooltip.remove();
-      //if (HTMLWidgets.shinyMode) {
-      //  Shiny.setInputValue(map.id + "_glify_mouseover", null);
-      //}
+    hoverOff: function(e, feature) {
+      hoveroff_event(e, feature, shapeslayer, tooltip, layerId, data, map);
     },
     data: data,
     color: clrs,
