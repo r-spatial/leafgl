@@ -84,7 +84,7 @@ makePopup.list <- function(x, data) {
 
 #' @export
 makePopup.json <- function(x, data) {
-  x <- jsonify::from_json(x)
+  x <- yyjsonr::read_json_str(x)
   makePopup(x, data)
 }
 

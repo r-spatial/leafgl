@@ -44,8 +44,7 @@
 #' makeColorMatrix(~vals1, testdf)
 #'
 #' ## For JSON
-#' library(jsonify)
-#' makeColorMatrix(jsonify::to_json(data.frame(r = 54, g = 186, b = 1)), NULL)
+#' makeColorMatrix(leafgl:::yyson_json_str(data.frame(r = 54, g = 186, b = 1)), NULL)
 #'
 #' ## For Lists
 #' makeColorMatrix(list(1,2), data.frame(x=c(1,2)))
@@ -140,7 +139,7 @@ makeColorMatrix.list <- function(x, data = NULL, palette = "viridis", ...) {
 
 #' @export
 makeColorMatrix.json <- function(x, data = NULL, palette = "viridis", ...) {
-  x <- jsonify::from_json(x)
+  x <- yyjsonr::read_json_str(x)
   makeColorMatrix(x, data, palette, ...)
 }
 
