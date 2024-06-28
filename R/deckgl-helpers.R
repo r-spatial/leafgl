@@ -79,7 +79,7 @@ deckglDependencies = function() {
       "deck.gl",
       '9.0.14',
       src = c(
-        href = "https://cdn.jsdelivr.net/npm/deck.gl@9.0.14"
+        href = "https://cdn.jsdelivr.net/npm/deck.gl@9.0.20"
       )
       , script = "dist.min.js"
     )
@@ -126,7 +126,7 @@ arrowDependencies = function() {
 }
 
 
-# geoarrowDeckglDependencies = function() {
+# geoarrowDeckglLayersDependencies = function() {
 #   list(
 #     htmltools::htmlDependency(
 #       "geoarrow-deckgl-layers",
@@ -145,7 +145,7 @@ geoarrowDeckglLayersDependencies = function() {
       "geoarrow-deckgl-layers",
       '0.3.0-16',
       src = c(
-        href = "https://cdn.jsdelivr.net/npm/@geoarrow/deck.gl-layers@0.3.0-beta.16/dist"
+        href = "https://cdn.jsdelivr.net/npm/@geoarrow/deck.gl-layers@0.3.0-beta.17/dist"
       )
       , script = "dist.umd.min.js"
     )
@@ -171,7 +171,7 @@ geoarrowjsDependencies = function() {
       "geoarrow-js",
       '0.3.0',
       src = c(
-        href = "https://cdn.jsdelivr.net/npm/@geoarrow/geoarrow-js@0.3.0/dist"
+        href = "https://cdn.jsdelivr.net/npm/@geoarrow/geoarrow-js@0.3.1/dist"
       )
       , script = "geoarrow.umd.min.js"
     )

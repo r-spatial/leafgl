@@ -125,7 +125,7 @@ addDeckglPoints = function(map,
   map$dependencies = c(
     map$dependencies
     , arrowDependencies()
-    # , geoarrowjsDependencies()
+    , geoarrowjsDependencies()
     , deckglDependencies()
     , geoarrowDeckglLayersDependencies()
     , deckglLeafletDependencies()

@@ -108,7 +108,7 @@ LeafletWidget.methods.addDeckglPoints = function(geom_column_name, cols, popup, 
         id: "scatterplot",
         data: arrow_table,
         /// Geometry column
-        getPosition: d => d.getChild(geom_column_name),
+        getPosition: arrow_table.getChild(geom_column_name),
         /// Column of type FixedSizeList[3] or FixedSizeList[4], with child type Uint8
         getFillColor: [0, 255, 0], //table.getChild("colors"),
       });
