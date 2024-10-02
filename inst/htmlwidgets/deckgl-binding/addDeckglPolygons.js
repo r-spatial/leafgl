@@ -1,11 +1,14 @@
-LeafletWidget.methods.addDeckglPolygons = function(data, geom_column_name, cols, popup, label, opacity, radius, min_rad, max_rad, group, layerId, dotOptions, pane) {
+LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup, label, opacity, radius, min_rad, max_rad, group, layerId, dotOptions, pane) {
+
+  let gaDeckLayers = window["@geoarrow/deck"]["gl-layers"];
 
   const map = this;
-  var data = JSON.parse(data);
+  //var data = JSON.parse(data);
   let getFillColor = cols;
   let getLineColor = [0, 0, 0];
   let getLineWidth = 1;
 
+/*
   function getTooltip({object}) {
     if (label !== null) {
       if (object !== undefined && object[label] !== null) {
@@ -64,7 +67,7 @@ LeafletWidget.methods.addDeckglPolygons = function(data, geom_column_name, cols,
       tooltip.style.display = 'none';
     }
   }
-*/
+
 
   let opts = {
     id: layerId,
@@ -84,22 +87,57 @@ LeafletWidget.methods.addDeckglPolygons = function(data, geom_column_name, cols,
     getLineColor: getLineColor,
     getLineWidth: getLineWidth
   };
+*/
 
-  var deckPolygon = new deck.PolygonLayer(opts);
+  var data_fl = document.getElementById(layerId + '-1-attachment');
 
-  var decklayer = new DeckGlLeaflet.LeafletLayer({
-    views: [
-      new deck.MapView({
-        repeat: true
-      })
-    ],
-    layers: [deckPolygon],
-    //onClick: updateTooltip, //({ object }) => object && console.log(object),
-    getTooltip: getTooltip //({ object }) => object && { html: object[label] },
-  });
-  //decklayer = decklayer.bindTooltip("hello").openTooltip();
+  fetch(data_fl.href)
+    .then(result => Arrow.tableFromIPC(result))
+    .then(arrow_table => {
+      var geoArrowScatter = new gaDeckLayers.GeoArrowPolygonLayer({
+        id: "deckgl-polygon",
+        data: arrow_table,
+        /// Geometry column
+        getPolygon: arrow_table.getChild(geom_column_name),
+        /// Column of type FixedSizeList[3] or FixedSizeList[4], with child type Uint8
+        filled: true,
+        stroked: true,
+        lineWidthMinPixels: 1,
+        lineWidthUnits: 'pixels',
+        lineWidth: 3,
+        getLineColor: [0, 0, 0],
+        getFillColor: [0, 0, 0, 100] //table.getChild("colors"),
+        //radiusUnits: "pixels",
+        //getRadius: 3
+      });
 
-  map.layerManager.addLayer(decklayer, "deckgl", layerId, group);
+      /*
+      let opts = {
+        id: layerId,
+        //data: data,
+        radiusUnits: "pixels",
+        radiusMinPixels: 1,
+        lineWidthUnits: "pixels",
+        stroked: true,
+        pickable: true
+      };
+      var deckScatter = new deck.ScatterplotLayer(opts);
+      */
+
+      var decklayer = new DeckGlLeaflet.LeafletLayer({
+        views: [
+          new deck.MapView({
+            repeat: true
+          })
+        ],
+        layers: [geoArrowScatter],
+        //onClick: updateTooltip, //({ object }) => object && console.log(object),
+        //getTooltip: getTooltip //({ object }) => object && { html: object[label] },
+      });
+      //decklayer = decklayer.bindTooltip("hello").openTooltip();
+      //map.addLayer(decklayer);
+      map.layerManager.addLayer(decklayer, "deckgl", layerId, group);
+    });
 };
 
 

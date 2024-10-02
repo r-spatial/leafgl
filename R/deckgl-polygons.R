@@ -15,6 +15,8 @@ addDeckglPolygons = function(map,
 
   geom_colname = attr(data, which = "sf_colum")
 
+  if (is.null(layerId)) layerId = group
+  layerId = gsub("[[:punct:] ]", "_", layerId)
   radius_column = inherits(radius, "character") && radius %in% colnames(data)
   min_rad = ifelse(radius_column, min(data[[radius]], na.rm = TRUE), 10)
   max_rad = ifelse(radius_column, max(data[[radius]], na.rm = TRUE), 10)
@@ -40,7 +42,7 @@ addDeckglPolygons = function(map,
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
-  data = sf::st_cast(data, "POLYGON")
+  # data = sf::st_cast(data, "POLYGON")
   stopifnot(inherits(sf::st_geometry(data), c("sfc_POLYGON", "sfc_MULTIPOLYGON")))
 
   bounds = as.numeric(sf::st_bbox(data))
@@ -93,27 +95,49 @@ addDeckglPolygons = function(map,
   # if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
   # data = do.call(jsonify::to_json, c(list(crds), args[jsonify_args]))
 
-  if (length(args) == 0) {
-    yyjson_args = NULL
-  } else {
-    yyjson_args = try(
-      match.arg(
-        names(args)
-        , names(as.list(args(yyjsonr::write_json_str)))
-        , several.ok = TRUE
-      )
-      , silent = TRUE
-    )
-  }
-  if (inherits(yyjson_args, "try-error")) yyjson_args = NULL
-  data = do.call(yyjsonr::write_json_str, c(list(data), args[yyjson_args]))
+  # if (length(args) == 0) {
+  #   yyjson_args = NULL
+  # } else {
+  #   yyjson_args = try(
+  #     match.arg(
+  #       names(args)
+  #       , names(as.list(args(yyjsonr::write_json_str)))
+  #       , several.ok = TRUE
+  #     )
+  #     , silent = TRUE
+  #   )
+  # }
+  # if (inherits(yyjson_args, "try-error")) yyjson_args = NULL
+  # data = do.call(yyjsonr::write_json_str, c(list(data), args[yyjson_args]))
+
+  path_layer = tempfile()
+  dir.create(path_layer)
+  path_layer = paste0(path_layer, "/", layerId, "_layer.arrow")
+
+  geom_col_name <- attr(data, "sf_column")
+  geom_type <- geoarrow::infer_geoarrow_schema(data, coord_type = "INTERLEAVED")
+  data_schema <- nanoarrow::infer_nanoarrow_schema(data)
+  data_schema$children[[geom_col_name]] <- geom_type
+
+  data_out = nanoarrow::as_nanoarrow_array_stream(
+    data
+    , schema = data_schema
+  )
+
+  nanoarrow::write_nanoarrow(data_out, path_layer)
+
 
   # dependencies
   map$dependencies = c(
     map$dependencies
+    , arrowDependencies()
+    , geoarrowjsDependencies()
     , deckglDependencies()
-    # , deckglLeafletDependencies()
+    , geoarrowDeckglLayersDependencies()
+    , deckglLeafletDependencies()
+    , deckglDataAttachmentSrc(path_layer, layerId)
     , deckglBindingDependencies()
+    , chromajsDependencies()
   )
 
 
@@ -121,7 +145,6 @@ addDeckglPolygons = function(map,
     map
     , leaflet::getMapData(map)
     , 'addDeckglPolygons'
-    , data
     , geom_colname
     , fillColor
     , popup

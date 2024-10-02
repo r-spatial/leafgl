@@ -110,7 +110,9 @@ LeafletWidget.methods.addDeckglPoints = function(geom_column_name, cols, popup, 
         /// Geometry column
         getPosition: arrow_table.getChild(geom_column_name),
         /// Column of type FixedSizeList[3] or FixedSizeList[4], with child type Uint8
-        getFillColor: [0, 255, 0], //table.getChild("colors"),
+        getFillColor: [0, 0, 0], //table.getChild("colors"),
+        radiusUnits: "pixels",
+        getRadius: 3
       });
 
       /*

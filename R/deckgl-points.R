@@ -100,10 +100,23 @@ addDeckglPoints = function(map,
   dir.create(path_layer)
   path_layer = paste0(path_layer, "/", layerId, "_layer.arrow")
   # data_fl = tempfile(fileext = ".arrow")
-  arrow::write_ipc_stream(
+
+  geom_col_name <- attr(data, "sf_column")
+  geom_type <- geoarrow::infer_geoarrow_schema(data, coord_type = "INTERLEAVED")
+  data_schema <- nanoarrow::infer_nanoarrow_schema(data)
+  data_schema$children[[geom_col_name]] <- geom_type
+
+  data_out = nanoarrow::as_nanoarrow_array_stream(
     data
-    , path_layer
+    , schema = data_schema
   )
+
+  nanoarrow::write_nanoarrow(data_out, path_layer)
+
+  # arrow::write_ipc_stream(
+  #   data
+  #   , path_layer
+  # )
 
   # if (length(args) == 0) {
   #   yyjson_args = NULL
