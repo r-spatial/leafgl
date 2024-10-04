@@ -28,6 +28,7 @@ deckglBindingDependencies = function() {
       , script = c(
         "addDeckglPoints.js"
         , "addDeckglPolygons.js"
+        , "addDeckglPolylines.js"
         # , "deck.gl-leaflet.js"
       )
     )

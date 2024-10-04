@@ -1,4 +1,4 @@
-LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup, label, opacity, radius, min_rad, max_rad, group, layerId, dotOptions, pane) {
+LeafletWidget.methods.addDeckglPolylines = function(geom_column_name, cols, popup, label, opacity, radius, min_rad, max_rad, group, layerId, dotOptions, pane) {
 
   let gaDeckLayers = window["@geoarrow/deck"]["gl-layers"];
 
@@ -94,21 +94,16 @@ LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup
   fetch(data_fl.href)
     .then(result => Arrow.tableFromIPC(result))
     .then(arrow_table => {
-      var geoArrowPolygon = new gaDeckLayers.GeoArrowPolygonLayer({
-        id: "deckgl-polygon",
+      var geoArrowPath = new gaDeckLayers.GeoArrowPathLayer({
+        id: "deckgl-polyline",
         data: arrow_table,
         /// Geometry column
-        getPolygon: arrow_table.getChild(geom_column_name),
+        getPath: arrow_table.getChild(geom_column_name),
         /// Column of type FixedSizeList[3] or FixedSizeList[4], with child type Uint8
-        filled: true,
-        stroked: true,
-        lineWidthMinPixels: 1,
-        lineWidthUnits: 'pixels',
-        lineWidth: 3,
-        getLineColor: [0, 0, 0],
-        getFillColor: [0, 0, 0, 100] //table.getChild("colors"),
-        //radiusUnits: "pixels",
-        //getRadius: 3
+        widthMinPixels: 1,
+        widthUnits: 'pixels',
+        getWidth: 2,
+        getColor: [0, 0, 0],
       });
 
       /*
@@ -130,7 +125,7 @@ LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup
             repeat: true
           })
         ],
-        layers: [geoArrowPolygon],
+        layers: [geoArrowPath],
         //onClick: updateTooltip, //({ object }) => object && console.log(object),
         //getTooltip: getTooltip //({ object }) => object && { html: object[label] },
       });
