@@ -59,7 +59,7 @@ addDeckglPolygons = function(map,
   # fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
   # colnames(fillColor) = c("r", "g", "b")
 
-  fillColor = jsonify::to_json(c(as.vector(col2rgb(fillColor)), fillOpacity * 255))
+  # fillColor = jsonify::to_json(c(as.vector(col2rgb(fillColor)), fillOpacity * 255))
 
   # popup
   if (!is.null(popup)) {
