@@ -106,7 +106,8 @@ LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup
         lineWidthUnits: 'pixels',
         lineWidth: 1,
         getLineColor: [0, 0, 0],
-        getFillColor: [0, 0, 0, 100], //arrow_table.getChild("fillColor"),
+        //https://deck.gl/docs/developer-guide/performance#supply-attributes-directly
+        getFillColor: [0, 0, 0, 150],
         //radiusUnits: "pixels",
         //getRadius: 3
       });
@@ -140,14 +141,6 @@ LeafletWidget.methods.addDeckglPolygons = function(geom_column_name, cols, popup
     });
 };
 
-function hexToRgb(hex) {
-  let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
 
   /* colors
   var clrs;
