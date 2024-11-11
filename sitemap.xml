@@ -1,51 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/addGlPoints.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkDim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkDimPop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clearGlLayers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/glify-shiny.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeColorMatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makePopup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeGlPoints.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeGlPolygons.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeGlPolylines.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/addGlPoints.html</loc></url>
+<url><loc>/reference/checkDim.html</loc></url>
+<url><loc>/reference/checkDimPop.html</loc></url>
+<url><loc>/reference/clearGlLayers.html</loc></url>
+<url><loc>/reference/glify-shiny.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/makeColorMatrix.html</loc></url>
+<url><loc>/reference/makePopup.html</loc></url>
+<url><loc>/reference/removeGlPoints.html</loc></url>
+<url><loc>/reference/removeGlPolygons.html</loc></url>
+<url><loc>/reference/removeGlPolylines.html</loc></url>
 </urlset>
+
