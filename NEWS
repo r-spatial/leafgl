@@ -1,4 +1,4 @@
-leafgl 0.2.1.9007 (2024-11-13)
+leafgl 0.2.1.9008 (2024-11-13)
 
 features and improvements
 
@@ -8,7 +8,11 @@ bug fixes
 
 documentation etc
 
+  * we now have pckgdown site - Thanks to @olivroy #102
+
 miscellaneous
+
+  * remove obsolete .travis.yml
 
 
 leafgl 0.2.1
