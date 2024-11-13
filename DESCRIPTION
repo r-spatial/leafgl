@@ -1,6 +1,6 @@
 Package: leafgl
 Title: High-Performance 'WebGl' Rendering for Package 'leaflet'
-Version: 0.2.1.9009
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Tim",
              family = "Appelhans",

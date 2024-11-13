@@ -1,6 +1,4 @@
-# leafgl 0.2.1.9009 (2024-11-13)
-
-#### ✨ features and improvements
+# leafgl 0.2.2 (2024-11-13)
 
 #### 🐛 bug fixes
 
@@ -14,7 +12,6 @@
 
   * remove obsolete .travis.yml
 
-
 ## leafgl 0.2.1
 
 new features:
@@ -24,7 +21,7 @@ new features:
 miscallaneous:
 
   * all methods now have a pane argument to control layer ordering (thanks to @trafficonese). #67 #64
-  
+
 ## leafgl 0.2.0
 
 miscallaneous:
@@ -36,7 +33,6 @@ miscallaneous:
 new features:
 
   * expose additional JavaScript arguments in addGlPoints via magic dots. #54 & #60
-
 
 ## leafgl 0.1.1
 
