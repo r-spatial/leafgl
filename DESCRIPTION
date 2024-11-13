@@ -22,7 +22,10 @@ Authors@R:
       person(given = "Sebastian",
              family = "Gatscha",
              role = "ctb",
-             email = "sebastian_gatscha@gmx.at"))
+             email = "sebastian_gatscha@gmx.at"),
+      person(give = "Olivier", 
+             family = "Roy", 
+             role = "ctb"))
 Description: Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -8,7 +8,11 @@
 
 #### 💬 documentation etc
 
+  * we now have pckgdown site - Thanks to @olivroy #102
+
 #### 🍬 miscellaneous
+
+  * remove obsolete .travis.yml
 
 
 ## leafgl 0.2.1
