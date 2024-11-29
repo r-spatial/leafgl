@@ -1,6 +1,16 @@
-# leafgl 0.2.1.9005 (2023-09-08)
+# leafgl dev-version
 
-#### ✨ features and improvements
+-   Added some @details for Shiny click and mouseover events and their corresponding input. [#77](https://github.com/r-spatial/leafgl/issues/77)
+-   Use `@inheritParams leaflet::**` for identical function arguments
+-   unified / simplified the dependency functions/calls
+
+#### 🍬 miscellaneous
+
+-   update upstream javascript dependency to 3.3.0. [#49](https://github.com/r-spatial/leafgl/issues/49)
+    ⚠️If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
+    
+
+# leafgl 0.2.2 (2024-11-13)
 
 -   Switched from `jsonify` and `geojsonsf` to `yyjsonr`
 -   New method `clearGlGroup` removes a group from leaflet and the Leaflet.Glify instances.
@@ -19,16 +29,11 @@
 
 #### 💬 documentation etc
 
--   Added some @details for Shiny click and mouseover events and their corresponding input. [#77](https://github.com/r-spatial/leafgl/issues/77)
--   Use `@inheritParams leaflet::**` for identical function arguments
+  * we now have pckgdown site - Thanks to @olivroy #102
 
 #### 🍬 miscellaneous
 
--   update upstream javascript dependency to 3.3.0. [#49](https://github.com/r-spatial/leafgl/issues/49)
-
-    ⚠️If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
-
--   unified / simplified the dependency functions/calls
+  * remove obsolete .travis.yml
 
 ## leafgl 0.2.1
 
@@ -38,7 +43,7 @@ new features:
 
 miscallaneous:
 
--   all methods now have a pane argument to control layer ordering (thanks to @trafficonese). [#67](https://github.com/r-spatial/leafgl/issues/67) [#64](https://github.com/r-spatial/leafgl/issues/64)
+  * all methods now have a pane argument to control layer ordering (thanks to @trafficonese). #67 #64
 
 ## leafgl 0.2.0
 
@@ -50,7 +55,7 @@ miscallaneous:
 
 new features:
 
--   expose additional JavaScript arguments in addGlPoints via magic dots. [#54](https://github.com/r-spatial/leafgl/issues/54) & [#60](https://github.com/r-spatial/leafgl/issues/60)
+  * expose additional JavaScript arguments in addGlPoints via magic dots. #54 & #60
 
 ## leafgl 0.1.1
 

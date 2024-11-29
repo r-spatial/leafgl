@@ -1,22 +1,19 @@
 
 # leafgl - performant WebGL rendering for leaflet
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/r-spatial/leafgl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/leafgl/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/r-spatial/leafgl/branch/master/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/leafgl?branch=master)
-
-[![monthly](http://cranlogs.r-pkg.org/badges/leafgl)](https://www.rpackages.io/package/leafgl)
-[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafgl)](https://www.rpackages.io/package/leafgl)
+[![R-CMD-check](https://github.com/r-spatial/leafgl/workflows/R-CMD-check/badge.svg)](https://github.com/r-spatial/leafgl/actions)
+[![cran
+checks](https://badges.cranchecks.info/worst/leafgl.svg)](https://cran.r-project.org/web/checks/check_results_leafgl.html)
+![monthly](http://cranlogs.r-pkg.org/badges/leafgl)
+![total](http://cranlogs.r-pkg.org/badges/grand-total/leafgl)
 [![CRAN](http://www.r-pkg.org/badges/version/leafgl?color=009999)](https://cran.r-project.org/package=leafgl)
-[![status](https://tinyverse.netlify.com/badge/leafgl)](https://CRAN.R-project.org/package=leafgl)
-  <!-- badges: end -->
 
 An R package for fast web gl rendering of features on leaflet maps. It’s
 an R port of <https://github.com/robertleeplummerjr/Leaflet.glify> where
 more detailed information/documentation can be found. Also, if you like
-what you get here, make sure to star the original repo\!
+what you get here, make sure to star the original repo!
 
------
+------------------------------------------------------------------------
 
 ### Installation
 
@@ -63,7 +60,7 @@ wait for a map that the browser isn’t able to render anyway…
 For starters, it doesn’t guarantee to be working tomorrow. At this stage
 `leafgl` is pre-alpha and under heavy development so things are likely
 to change frequently. For example, we are thinking about shorter funtion
-names (e.g. `addGlPolygons` instead of the current `addGlifyPolygons`).
+names (e.g. `addGlPolygons` instead of the current `addGlifyPolygons`).
 Additionally, we are still figuring out which pathway is best to use in
 order to pass data from R to the browser. As a result, rendering
 environments other than the browser (or RStudio viewer) may not work
@@ -79,13 +76,13 @@ issue](https://github.com/r-spatial/leafgl/issues/4)
 
 ### What can I do to help?
 
-A lot\! First and foremost you can use it as often as possible and
-report issues/bugreports and/or feature request (see end of page for
-details). If you have ideas on how to enhance functionality without
-impacting performance too much and feel confident enough to provide pull
-request, please don’t hesitate. Finally, if you have proficient
-knowledge of JavaScript and want/know how to improve the package in any
-way, we would very much love to hear from you\!
+A lot! First and foremost you can use it as often as possible and report
+issues/bugreports and/or feature request (see end of page for details).
+If you have ideas on how to enhance functionality without impacting
+performance too much and feel confident enough to provide pull request,
+please don’t hesitate. Finally, if you have proficient knowledge of
+JavaScript and want/know how to improve the package in any way, we would
+very much love to hear from you!
 
 ### Example usage
 
@@ -118,12 +115,12 @@ leaflet() %>%
 
 <br>
 
------
+------------------------------------------------------------------------
 
 #### Colouring points by value mapping
 
 For this we use `library(colourvalues)` because it can create color
-voctors in the blink of an eye\!
+voctors in the blink of an eye!
 
 ``` r
 library(leaflet)
@@ -151,7 +148,7 @@ leaflet() %>%
 
 <br>
 
------
+------------------------------------------------------------------------
 
 #### 100k polygons on a map
 
@@ -188,11 +185,11 @@ leaflet() %>%
 
 <br>
 
------
+------------------------------------------------------------------------
 
 ## Shiny
 
-Thanks to \[@ColinFay\](<https://github.com/ColinFay>) `leafgl` has
+Thanks to [@ColinFay](https://github.com/ColinFay) `leafgl` has
 dedicated shiny functions. Given that what `leafgl` produces is a
 `leaflet` map, we only need to use `leafglOutput` in our `ui` call. In
 the `server` call we can simply use `renderLeaflet`. Here an example:
@@ -232,7 +229,7 @@ shinyApp(ui, server)
 
 <br>
 
------
+------------------------------------------------------------------------
 
 ## Contact
 

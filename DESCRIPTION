@@ -1,7 +1,6 @@
 Package: leafgl
-Type: Package
 Title: High-Performance 'WebGl' Rendering for Package 'leaflet'
-Version: 0.2.1.9005
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Tim",
              family = "Appelhans",
@@ -23,13 +22,14 @@ Authors@R:
       person(given = "Sebastian",
              family = "Gatscha",
              role = "ctb",
-             email = "sebastian_gatscha@gmx.at"))
-Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
+             email = "sebastian_gatscha@gmx.at"),
+      person(given = "Olivier", 
+             family = "Roy", 
+             role = "ctb"))
 Description: Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: false
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
   htmltools,
   leaflet,
@@ -40,3 +40,5 @@ Suggests:
   colourvalues,
   shiny,
   testthat (>= 2.1.0)
+URL: https://github.com/r-spatial/leafgl, https://r-spatial.github.io/leafgl/
+BugReports: https://github.com/r-spatial/leafgl/issues
