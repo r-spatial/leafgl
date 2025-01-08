@@ -1,6 +1,16 @@
-leafgl 0.2.1.9005 (2023-09-08)
+ leafgl development-version
 
-features and improvements
+ * Added some @details for Shiny click and mouseover events and their corresponding input. #77
+ * Use `@inheritParams leaflet::**` for identical function arguments
+
+miscellaneous
+
+ * update upstream javascript dependency to 3.3.1. #49
+  Note: If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
+ * unified / simplified the dependency functions/calls
+
+
+leafgl 0.2.2 (2024-11-13)
 
  * Switched from `jsonify` and `geojsonsf` to `yyjsonr`
  * New method *clearGlGroup* removes a group from leaflet and the Leaflet.Glify instances.
@@ -20,15 +30,11 @@ bug fixes
 
 documentation etc
 
- * Added some @details for Shiny click and mouseover events and their corresponding input. #77
- * Use `@inheritParams leaflet::**` for identical function arguments
+  * we now have pckgdown site - Thanks to @olivroy #102
 
 miscellaneous
 
- * update upstream javascript dependency to 3.3.0. #49
-  Note: If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
- * unified / simplified the dependency functions/calls
-
+  * remove obsolete .travis.yml
 
 leafgl 0.2.1
 
@@ -51,7 +57,6 @@ leafgl 0.1.2
 new features:
 
   * expose additional JavaScript arguments in addGlPoints via magic dots. #54 & #60
-
 
 leafgl 0.1.1
 
