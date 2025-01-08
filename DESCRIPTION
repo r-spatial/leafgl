@@ -29,7 +29,7 @@ Description: Provides bindings to the 'Leaflet.glify' JavaScript library which e
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
   htmltools,
   leaflet,
