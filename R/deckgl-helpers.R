@@ -78,9 +78,9 @@ deckglDependencies = function() {
   list(
     htmltools::htmlDependency(
       "deck.gl",
-      '9.0.14',
+      '9.1.0',
       src = c(
-        href = "https://cdn.jsdelivr.net/npm/deck.gl@9.0.20"
+        href = "https://cdn.jsdelivr.net/npm/deck.gl@9.1.0"
       )
       , script = "dist.min.js"
     )
