@@ -70,16 +70,21 @@ addGlPolylines = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color ########
-  palette = "viridis"
-  if ("palette" %in% names(dotopts)) {
-    palette <- dotopts$palette
-    dotopts$palette = NULL
+  if (inherits(color[1], "character") && startsWith(color[1], "#")) {
+    cols <- color
+    cols <- if(length(cols) == 1) {list(cols)} else { cols }
+  } else {
+    palette = "viridis"
+    if ("palette" %in% names(dotopts)) {
+      palette <- dotopts$palette
+      dotopts$palette = NULL
+    }
+    color <- makeColorMatrix(color, data, palette = palette)
+    if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
+    color = as.data.frame(color, stringsAsFactors = FALSE)
+    colnames(color) = c("r", "g", "b")
+    cols = yyson_json_str(color, digits = 3)
   }
-  color <- makeColorMatrix(color, data, palette = palette)
-  if (ncol(color) != 3) stop("only 3 column color matrix supported so far")
-  color = as.data.frame(color, stringsAsFactors = FALSE)
-  colnames(color) = c("r", "g", "b")
-  cols = yyson_json_str(color, digits = 3)
 
   # label / popup ########
   labels <- leaflet::evalFormula(label, data)

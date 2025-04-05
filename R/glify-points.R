@@ -140,16 +140,20 @@ addGlPoints = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color ###########
-  palette = "viridis"
-  if ("palette" %in% names(dotopts)) {
-    palette <- dotopts$palette
-    dotopts$palette = NULL
+  if (inherits(fillColor[1], "character") && startsWith(fillColor[1], "#")) {
+    fillColor <- if(length(fillColor) == 1) {list(fillColor)} else { fillColor }
+  } else {
+    palette = "viridis"
+    if ("palette" %in% names(dotopts)) {
+      palette <- dotopts$palette
+      dotopts$palette = NULL
+    }
+    fillColor <- makeColorMatrix(fillColor, data, palette = palette)
+    if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
+    fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
+    colnames(fillColor) = c("r", "g", "b")
+    fillColor = yyson_json_str(fillColor, digits = 3)
   }
-  fillColor <- makeColorMatrix(fillColor, data, palette = palette)
-  if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
-  fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
-  colnames(fillColor) = c("r", "g", "b")
-  fillColor = yyson_json_str(fillColor, digits = 3)
 
   # label / popup ###########
   labels <- leaflet::evalFormula(label, data)

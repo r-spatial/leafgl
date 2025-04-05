@@ -8,6 +8,15 @@
 \description{
 Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/r-spatial/leafgl}
+  \item \url{https://r-spatial.github.io/leafgl/}
+  \item Report bugs at \url{https://github.com/r-spatial/leafgl/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Tim Appelhans \email{tim.appelhans@gmail.com} [copyright holder]
 
@@ -17,6 +26,7 @@ Other contributors:
   \item Robert Plummer (Leaflet.glify plugin) [contributor]
   \item Kent Johnson \email{kjohnson@akoyabio.com} [contributor]
   \item Sebastian Gatscha \email{sebastian_gatscha@gmx.at} [contributor]
+  \item Olivier Roy [contributor]
 }
 
 }
