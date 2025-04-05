@@ -28,6 +28,7 @@ addGlPolygons = function(map,
                          stroke = TRUE,
                          popupOptions = NULL,
                          labelOptions = NULL,
+                         contextMenu = NULL,
                          ...) {
 
   # check data ##########
@@ -147,6 +148,7 @@ addGlPolygons = function(map,
     , stroke
     , popupOptions
     , labelOptions
+    , contextMenu
   )
 
   leaflet::expandLimits(

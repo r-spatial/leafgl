@@ -21,6 +21,7 @@ addGlPolylines(
   pane = "overlayPane",
   popupOptions = NULL,
   labelOptions = NULL,
+  contextMenu = NULL,
   ...
 )
 
@@ -38,6 +39,7 @@ addGlPoints(
   pane = "overlayPane",
   popupOptions = NULL,
   labelOptions = NULL,
+  contextMenu = NULL,
   ...
 )
 
@@ -56,6 +58,7 @@ addGlPolygons(
   stroke = TRUE,
   popupOptions = NULL,
   labelOptions = NULL,
+  contextMenu = NULL,
   ...
 )
 }
@@ -95,6 +98,9 @@ match the number of rows in the data, the popup vector is repeated to match the 
 
 \item{labelOptions}{A Vector of \code{\link[leaflet]{labelOptions}} to provide label
 options for each label. Default \code{NULL}}
+
+\item{contextMenu}{a \code{\link[htmlwidgets]JS} function, that is passed to contextmenu.
+See the example in \code{./inst/examples/contextmenu.R}}
 
 \item{...}{Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
 \code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the

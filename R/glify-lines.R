@@ -26,6 +26,7 @@ addGlPolylines = function(map,
                           pane = "overlayPane",
                           popupOptions = NULL,
                           labelOptions = NULL,
+                          contextMenu = NULL,
                           ...) {
 
   # check data ##########
@@ -143,6 +144,7 @@ addGlPolylines = function(map,
     , pane
     , popupOptions
     , labelOptions
+    , contextMenu
   )
 
   leaflet::expandLimits(

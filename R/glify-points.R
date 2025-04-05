@@ -19,6 +19,8 @@
 #' @param weight line width/thickness in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
 #' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
+#' @param contextMenu a \code{\link[htmlwidgets]JS} function, that is passed to contextmenu.
+#'  See the example in \code{./inst/examples/contextmenu.R}
 #' @param ... Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
 #'   \code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the
 #'   underlying JavaScript functions. Typical use-cases include setting \code{'digits'} to
@@ -99,6 +101,7 @@ addGlPoints = function(map,
                        pane = "overlayPane",
                        popupOptions = NULL,
                        labelOptions = NULL,
+                       contextMenu = NULL,
                        ...) {
 
   # check data ##########
@@ -208,6 +211,7 @@ addGlPoints = function(map,
     , pane
     , popupOptions
     , labelOptions
+    , contextMenu
   )
 
   leaflet::expandLimits(

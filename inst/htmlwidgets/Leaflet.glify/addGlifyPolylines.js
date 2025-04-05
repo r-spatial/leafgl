@@ -1,7 +1,7 @@
 /* global LeafletWidget, L */
 LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
                                                    opacity, group, weight, layerId, dotOptions, pane,
-                                                   popupOptions, labelOptions) {
+                                                   popupOptions, labelOptions, contextMenu ) {
 
   const map = this;
 
@@ -40,6 +40,20 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
     hoverOff: function(e, feature) {
       hoveroff_event(e, feature, lineslayer, tooltip, layerId, data, map);
     },
+    contextMenu: contextMenu,
+    /*
+    contextMenu: function(e, feature) {
+      console.log("e"); console.log(e)
+      console.log("feature"); console.log(feature)
+      var evt = $.Event("contextmenu", {
+        pageX: e.originalEvent.pageX,
+        pageY: e.originalEvent.pageY,
+        which: 3  // indicate right-click
+      });
+      // Trigger the event on the element that has the context menu bound.
+      $("#context-menu-anchor").trigger(evt);
+    },
+    */
     latitudeKey: 1,
     longitudeKey: 0,
     data: data,
