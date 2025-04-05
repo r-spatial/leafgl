@@ -122,7 +122,7 @@ addGlPolylines = function(map,
     if (inherits(geojsonsf_args, "try-error")) geojsonsf_args = NULL
     if (identical(geojsonsf_args, "sf")) geojsonsf_args = NULL
   }
-  data = do.call(yyson_geojson_str, c(list(data), dotopts[geojsonsf_args]))
+  data = do.call(yyson_geojson_str, c(list(data), "json_opts" = list(dotopts[geojsonsf_args])))
 
   # dependencies
   map$dependencies = c(map$dependencies, glifyDependencies())
@@ -194,17 +194,23 @@ addGlPolylinesSrc = function(map,
   fl_data = paste0(dir_data, "/", group, "_data.js")
   pre = paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, fl_data)
-  jsonify_args = try(
-    match.arg(
-      names(dotopts)
-      , names(as.list(args(yyjsonr::opts_write_json)))
-      , several.ok = TRUE
+  if (length(dotopts) != 0) {
+    jsonify_args = try(
+      match.arg(
+        names(dotopts)
+        , names(as.list(args(yyjsonr::opts_write_json)))
+        , several.ok = TRUE
+      )
+      , silent = TRUE
     )
-    , silent = TRUE
-  )
-  if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
-  if (identical(jsonify_args, "sf")) jsonify_args = NULL
-  cat('[', do.call(yyson_geojson_str, c(list(data), dotopts[jsonify_args])), '];',
+    if (inherits(jsonify_args, "try-error")) jsonify_args = NULL
+    if (identical(jsonify_args, "sf")) jsonify_args = NULL
+
+    dotoptslist <- c("json_opts" = list(dotopts[jsonify_args]))
+  } else {
+    dotoptslist <- NULL
+  }
+  cat('[', do.call(yyson_geojson_str, c(list(data), dotoptslist)), '];',
       file = fl_data, sep = "", append = TRUE)
 
   map$dependencies = c(
