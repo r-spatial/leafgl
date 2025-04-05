@@ -4,7 +4,7 @@ glifyDependencies = function(src = FALSE) {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '3.2.0',
+      '3.3.1',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
         "GlifyUtils.js"
