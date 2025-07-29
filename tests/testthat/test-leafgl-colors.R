@@ -120,8 +120,8 @@ test_that("Character as color", {
                 fillColor = "#36ba01",
                 group = "pts");
   expect_is(m, "leaflet")
-  expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
+  expect_is(m$x$calls[[1]]$args[[2]], "list")
+  expect_true(m$x$calls[[1]]$args[[2]][[1]] == "#36ba01")
   rm(m)
 
   m <- leaflet() %>%
@@ -129,8 +129,8 @@ test_that("Character as color", {
                    color = "#36ba01",
                    group = "lns");
   expect_is(m, "leaflet")
-  expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
+  expect_is(m$x$calls[[1]]$args[[2]], "list")
+  expect_true(m$x$calls[[1]]$args[[2]][[1]] == "#36ba01")
   rm(m)
 
   m <- leaflet() %>%
@@ -138,8 +138,8 @@ test_that("Character as color", {
                   color = "#36ba01",
                   group = "lns");
   expect_is(m, "leaflet")
-  expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
+  expect_is(m$x$calls[[1]]$args[[2]], "list")
+  expect_true(m$x$calls[[1]]$args[[2]][[1]] == "#36ba01")
   rm(m)
 
   ## Character - Character Column Name #############

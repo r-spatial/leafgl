@@ -1,7 +1,7 @@
 /* global LeafletWidget, L */
 LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity, radius,
                                                 group, layerId, dotOptions, pane,
-                                                popupOptions, labelOptions) {
+                                                popupOptions, labelOptions, contextMenu) {
 
   const map = this;
 
@@ -40,6 +40,7 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
     hoverOff: function(e, point) {
       hoveroff_event_pts(e, point, pointslayer, tooltip, layerId, data, map);
     },
+    contextMenu: contextMenu,
     data: data,
     color: clrs,
     opacity: opacity,

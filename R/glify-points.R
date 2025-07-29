@@ -19,6 +19,8 @@
 #' @param weight line width/thickness in pixels for \code{addGlPolylines}.
 #' @param src whether to pass data to the widget via file attachments.
 #' @param pane A string which defines the pane of the layer. The default is \code{"overlayPane"}.
+#' @param contextMenu a \code{\link[htmlwidgets]{JS}} function, that is passed to contextmenu.
+#'  See the example in \code{./inst/examples/contextmenu.R}
 #' @param ... Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
 #'   \code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the
 #'   underlying JavaScript functions. Typical use-cases include setting \code{'digits'} to
@@ -99,6 +101,7 @@ addGlPoints = function(map,
                        pane = "overlayPane",
                        popupOptions = NULL,
                        labelOptions = NULL,
+                       contextMenu = NULL,
                        ...) {
 
   # check data ##########
@@ -140,16 +143,20 @@ addGlPoints = function(map,
   bounds = as.numeric(sf::st_bbox(data))
 
   # color ###########
-  palette = "viridis"
-  if ("palette" %in% names(dotopts)) {
-    palette <- dotopts$palette
-    dotopts$palette = NULL
+  if (inherits(fillColor[1], "character") && startsWith(fillColor[1], "#")) {
+    fillColor <- if(length(fillColor) == 1) {list(fillColor)} else { fillColor }
+  } else {
+    palette = "viridis"
+    if ("palette" %in% names(dotopts)) {
+      palette <- dotopts$palette
+      dotopts$palette = NULL
+    }
+    fillColor <- makeColorMatrix(fillColor, data, palette = palette)
+    if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
+    fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
+    colnames(fillColor) = c("r", "g", "b")
+    fillColor = yyson_json_str(fillColor, digits = 3)
   }
-  fillColor <- makeColorMatrix(fillColor, data, palette = palette)
-  if (ncol(fillColor) != 3) stop("only 3 column fillColor matrix supported so far")
-  fillColor = as.data.frame(fillColor, stringsAsFactors = FALSE)
-  colnames(fillColor) = c("r", "g", "b")
-  fillColor = yyson_json_str(fillColor, digits = 3)
 
   # label / popup ###########
   labels <- leaflet::evalFormula(label, data)
@@ -204,6 +211,7 @@ addGlPoints = function(map,
     , pane
     , popupOptions
     , labelOptions
+    , contextMenu
   )
 
   leaflet::expandLimits(

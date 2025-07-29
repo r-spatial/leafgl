@@ -1,7 +1,7 @@
 /* global LeafletWidget, L */
 LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label,
                                                   opacity, group, layerId, dotOptions, pane,
-                                                  stroke, popupOptions, labelOptions) {
+                                                  stroke, popupOptions, labelOptions, contextMenu) {
 
   const map = this;
 
@@ -32,6 +32,7 @@ LeafletWidget.methods.addGlifyPolygons = function(data, cols, popup, label,
     hoverOff: function(e, feature) {
       hoveroff_event(e, feature, shapeslayer, tooltip, layerId, data, map);
     },
+    contextMenu: contextMenu,
     data: data,
     color: clrs,
     opacity: opacity,

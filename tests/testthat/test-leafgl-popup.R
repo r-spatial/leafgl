@@ -38,8 +38,8 @@ test_that("popup-points-character", {
                 popup = sfpoints$state,
                 group = "grp")
   expect_is(m, "leaflet")
-  expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(yyjsonr::validate_json_str(m$x$calls[[1]]$args[[2]]))
+  expect_is(m$x$calls[[1]]$args[[3]], "json")
+  expect_true(yyjsonr::validate_json_str(m$x$calls[[1]]$args[[3]]))
   rm(m)
 
   m <- leaflet() %>% addTiles() %>%
