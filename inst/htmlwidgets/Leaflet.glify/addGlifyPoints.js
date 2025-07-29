@@ -1,9 +1,12 @@
-LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity, radius, group, layerId, dotOptions, pane) {
+/* global LeafletWidget, L */
+LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacity, radius,
+                                                group, layerId, dotOptions, pane,
+                                                popupOptions, labelOptions) {
 
   const map = this;
 
   // colors
-  var clrs;
+  let clrs;
   if (cols.length === 1) {
     clrs = cols[0];
   } else {
@@ -11,68 +14,40 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
   }
 
   // radius
-  var rad;
+  let rad;
   if (typeof(radius) === "number") {
     rad = radius;
   } else {
     rad = function(index, point) { return radius[index]; };
   }
 
-  // click function
-  let clickFun = (e, point, xy) => {
-      var idx = data.findIndex(k => k==point);
-      //set up a standalone popup (use a popup as a layer)
-      if (map.hasLayer(pointslayer.layer)) {
-        var content = popup ? popup[idx].toString() : null;
-        if (HTMLWidgets.shinyMode) {
-              Shiny.setInputValue(map.id + "_glify_click", {
-                id: layerId ? layerId[idx] : idx+1,
-                group: pointslayer.settings.className,
-                lat: point[0],
-                lng: point[1],
-                data: content
-              });
-        }
-        if (popup !== null) {
-          L.popup()
-            .setLatLng(point)
-            .setContent(content)
-            .openOn(map);
-        }
-      }
-    };
+  // click & hover function
+  const clickFun = function(e, point) {
+    click_event_pts(e, point, popup !== null, popup, popupOptions, pointslayer, layerId, data, map);
+  };
 
-  let tooltip = new L.Tooltip();
-
-  var hover_event = function(e, point, addlabel, label) {
-    var idx = data.findIndex(k => k==point);
-      //set up a standalone label (use a label as a layer)
-      if (map.hasLayer(pointslayer.layer)) {
-        var content = label ? label[idx].toString() : null;
-        if (label !== null) {
-          tooltip
-            .setLatLng(point)
-            .setContent(content)
-            .addTo(map);
-        }
-      }
-  }
-
-  var hvr = function(e, feature) {
-    hover_event(e, feature, label !== null, label);
+  const tooltip = new L.Tooltip(labelOptions);
+  const mouseoverFun = function(e, point) {
+    hover_event_pts(e, point, label !== null, label, pointslayer, tooltip,
+                    layerId, data, map);
   }
 
   // arguments for gl layer
-  var pointsArgs = {
+  const layerArgs = {
     map: map,
     click: clickFun,
-    hover: hvr,
+    hover: mouseoverFun,
+    hoverOff: function(e, point) {
+      hoveroff_event_pts(e, point, pointslayer, tooltip, layerId, data, map);
+    },
     data: data,
     color: clrs,
     opacity: opacity,
     size: rad,
     className: group,
-    pane: pane
+    pane: pane,
+    hoverWait: 10,
+    layerId: layerId
   };
 
   // extract correct fragmentShaderSource if provided via dotOptions
@@ -84,20 +59,14 @@ LeafletWidget.methods.addGlifyPoints = function(data, cols, popup, label, opacit
   }
 
   // append dotOptions to layer arguments
-  Object.entries(dotOptions).forEach(([key,value]) => { pointsArgs[key] = value });
+  Object.entries(dotOptions).forEach(([key,value]) => { layerArgs[key] = value });
 
-  // initialze layer
-  var pointslayer = L.glify.points(pointsArgs);
+  // initialize Glify Layer
+  const pointslayer = L.glify.points(layerArgs);
 
-  // add layer to map using RStudio leaflet's layerManager
+  // add layer to map using leaflet's layerManager
   map.layerManager.addLayer(pointslayer.layer, "glify", layerId, group);
+
+  addGlifyEventListeners(map)
 };
 
-
-LeafletWidget.methods.removeGlPoints = function(layerId) {
-  this.layerManager.removeLayer("glify", layerId);
-};
-
-LeafletWidget.methods.clearGlLayers = function() {
-  this.layerManager.clearLayers("glify");
-};

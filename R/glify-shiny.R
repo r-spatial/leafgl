@@ -11,8 +11,6 @@
 #'
 #' @return A UI for rendering leafgl
 #'
-#' @importFrom leaflet leafletOutput
-#' @importFrom htmltools tagList tags htmlDependencies
 #' @rdname glify-shiny
 #' @export
 #'
@@ -56,8 +54,6 @@ leafglOutput <- function(outputId, width = "100%", height = 400){
 
 # Just for consistency
 #
-#' @importFrom leaflet renderLeaflet
-#'
 #' @param expr An expression that generates an HTML widget
 #' @param env The environment in which to evaluate expr.
 #' @param quoted Is expr a quoted expression (with quote())?

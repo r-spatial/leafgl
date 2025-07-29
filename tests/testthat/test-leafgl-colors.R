@@ -1,7 +1,7 @@
 context("test-leafgl-color_utils")
 library(leaflet)
 library(sf)
-library(jsonify)
+library(yyjsonr)
 
 n = 1e2
 df1 = data.frame(id = 1:n, id2 = n:1,
@@ -47,7 +47,7 @@ test_that("Character as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -65,7 +65,7 @@ test_that("Character as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -74,7 +74,7 @@ test_that("Character as color", {
                 group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -83,7 +83,7 @@ test_that("Character as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Character - Column Name ###################
@@ -93,7 +93,7 @@ test_that("Character as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -102,7 +102,7 @@ test_that("Character as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -111,7 +111,7 @@ test_that("Character as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Character - HEX-Code ###################
@@ -121,7 +121,7 @@ test_that("Character as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -130,7 +130,7 @@ test_that("Character as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -139,7 +139,7 @@ test_that("Character as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Character - Character Column Name #############
@@ -149,7 +149,7 @@ test_that("Character as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Character - Character Column Name with Palette #############
@@ -160,7 +160,7 @@ test_that("Character as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 })
 
@@ -172,7 +172,7 @@ test_that("Formula as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -182,7 +182,7 @@ test_that("Formula as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -201,7 +201,7 @@ test_that("Formula as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -211,7 +211,7 @@ test_that("Formula as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -230,7 +230,7 @@ test_that("Formula as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -240,7 +240,7 @@ test_that("Formula as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -262,7 +262,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -271,7 +271,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -280,7 +280,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -289,7 +289,7 @@ test_that("Tables as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -298,7 +298,7 @@ test_that("Tables as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 
@@ -309,7 +309,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -318,7 +318,7 @@ test_that("Tables as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -327,7 +327,7 @@ test_that("Tables as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## data.frame with nrow = 1 ###################
@@ -337,7 +337,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -346,7 +346,7 @@ test_that("Tables as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 })
@@ -359,7 +359,7 @@ test_that("Numeric as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -368,7 +368,7 @@ test_that("Numeric as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -377,7 +377,7 @@ test_that("Numeric as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Numeric ###################
@@ -387,7 +387,7 @@ test_that("Numeric as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -396,7 +396,7 @@ test_that("Numeric as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -405,7 +405,7 @@ test_that("Numeric as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Factor ###################
@@ -415,7 +415,7 @@ test_that("Numeric as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -424,7 +424,7 @@ test_that("Numeric as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -433,7 +433,7 @@ test_that("Numeric as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 
@@ -443,7 +443,7 @@ test_that("Numeric as color", {
                    group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -452,7 +452,7 @@ test_that("Numeric as color", {
                   group = "lns");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 })
@@ -465,7 +465,7 @@ test_that("List as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -474,7 +474,7 @@ test_that("List as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 
@@ -484,7 +484,7 @@ test_that("List as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -493,7 +493,7 @@ test_that("List as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -502,7 +502,7 @@ test_that("List as color", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- expect_warning(leaflet() %>%
@@ -512,7 +512,7 @@ test_that("List as color", {
                                     group = "pts"))
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 })
@@ -521,33 +521,33 @@ test_that("JSON as color", {
   ## JSON with same dimensions ###################
   m <- leaflet() %>%
     addGlPoints(data = pts,
-                fillColor = jsonify::to_json(list(matrix(sample(1:255, nrow(pts)*3, replace = T), ncol = 3))),
+                fillColor = leafgl:::yyson_json_str(list(matrix(sample(1:255, nrow(pts)*3, replace = T), ncol = 3))),
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## JSON with 1 color ###################
   m <- leaflet() %>%
     addGlPoints(data = pts,
-                fillColor = jsonify::to_json(data.frame(r = 54, g = 186, b = 1)),
+                fillColor = leafgl:::yyson_json_str(data.frame(r = 54, g = 186, b = 1)),
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## JSON with wrong dimension - Warning ###################
   m <- expect_warning(leaflet() %>%
     addGlPoints(data = pts,
-                fillColor = jsonify::to_json(data.frame(r = c(54, 123),
+                fillColor = leafgl:::yyson_json_str(data.frame(r = c(54, 123),
                                                     g = c(1, 186),
                                                     b = c(1, 123))),
                 group = "pts"))
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
 })
@@ -560,7 +560,7 @@ test_that("Date/POSIX* as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## POSIXct ###################
@@ -570,7 +570,7 @@ test_that("Date/POSIX* as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Date ###################
@@ -580,7 +580,7 @@ test_that("Date/POSIX* as color", {
                 group = "pts");
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 })
 
@@ -592,7 +592,7 @@ test_that("Warnings / Errors", {
                 group = "pts"))
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- expect_warning(leaflet() %>%
@@ -601,7 +601,7 @@ test_that("Warnings / Errors", {
                 group = "pts"));
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   m <- leaflet() %>%
@@ -610,7 +610,7 @@ test_that("Warnings / Errors", {
                 group = "pts")
   expect_is(m, "leaflet")
   expect_is(m$x$calls[[1]]$args[[2]], "json")
-  expect_true(validate_json(m$x$calls[[1]]$args[[2]]))
+  expect_true(validate_json_str(m$x$calls[[1]]$args[[2]]))
   rm(m)
 
   ## Errors + Warnings ###################

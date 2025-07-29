@@ -29,13 +29,13 @@ Authors@R:
 Description: Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: false
 RoxygenNote: 7.3.2
 Imports:
-  geojsonsf,
   htmltools,
-  jsonify,
   leaflet,
   sf,
+  yyjsonr,
   grDevices
 Suggests:
   colourvalues,

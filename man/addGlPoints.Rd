@@ -5,7 +5,7 @@
 \alias{addGlPolylines}
 \alias{addGlPoints}
 \alias{addGlPolygons}
-\title{add polylines to a leaflet map using Leaflet.glify}
+\title{Add Data to a leaflet map using Leaflet.glify}
 \usage{
 addGlPolylines(
   map,
@@ -19,6 +19,8 @@ addGlPolylines(
   layerId = NULL,
   src = FALSE,
   pane = "overlayPane",
+  popupOptions = NULL,
+  labelOptions = NULL,
   ...
 )
 
@@ -34,6 +36,8 @@ addGlPoints(
   layerId = NULL,
   src = FALSE,
   pane = "overlayPane",
+  popupOptions = NULL,
+  labelOptions = NULL,
   ...
 )
 
@@ -49,13 +53,16 @@ addGlPolygons(
   layerId = NULL,
   src = FALSE,
   pane = "overlayPane",
+  stroke = TRUE,
+  popupOptions = NULL,
+  labelOptions = NULL,
   ...
 )
 }
 \arguments{
-\item{map}{a leaflet map to add points/polygons to.}
+\item{map}{a map widget object created from \code{\link[leaflet]{leaflet}()}}
 
-\item{data}{sf/sp point/polygon data to add to the map.}
+\item{data}{sf/sp point/polygon/line data to add to the map.}
 
 \item{color}{Object representing the color. Can be of class integer, character with
 color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
@@ -64,16 +71,19 @@ See the examples or \link{makeColorMatrix} for more information.}
 \item{opacity}{feature opacity. Numeric between 0 and 1.
 Note: expect funny results if you set this to < 1.}
 
-\item{group}{a group name for the feature layer.}
+\item{group}{the name of the group the newly created layers should belong to
+(for \code{\link[leaflet]{clearGroup}} and \code{\link[leaflet]{addLayersControl}} purposes).
+Human-friendly group names are permitted--they need not be short,
+identifier-style names. Any number of layers and even different types of
+layers (e.g. markers and polygons) can share the same group name.}
 
 \item{popup}{Object representing the popup. Can be of type character with column names,
 formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
-match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
+match the number of rows in the data, the popup vector is repeated to match the dimension.}
 
-\item{label}{either a column name (currently only supported for polygons and polylines)
-or a character vector to be used as label.}
+\item{label}{a character vector of the HTML content for the labels}
 
-\item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
+\item{weight}{line width/thickness in pixels for \code{addGlPolylines}.}
 
 \item{layerId}{the layer id}
 
@@ -81,77 +91,112 @@ or a character vector to be used as label.}
 
 \item{pane}{A string which defines the pane of the layer. The default is \code{"overlayPane"}.}
 
-\item{...}{Used to pass additional named arguments to \code{\link[jsonify]{to_json}}
-& to pass additional arguments to the underlying JavaScript functions. Typical
-use-cases include setting 'digits' to round the point coordinates or to pass
-a different 'fragmentShaderSource' to control the shape of the points. Use
-'point' (default) to render circles with a thin black outline,
-'simpleCircle' for circles without outline or
-'sqaure' for squares (without outline).}
+\item{popupOptions}{A Vector of \code{\link[leaflet]{popupOptions}} to provide popups}
 
-\item{fillColor}{fill color.}
+\item{labelOptions}{A Vector of \code{\link[leaflet]{labelOptions}} to provide label
+options for each label. Default \code{NULL}}
 
-\item{fillOpacity}{fill opacity.}
+\item{...}{Used to pass additional named arguments to \code{\link[yyjsonr]{write_json_str}} or
+\code{\link[yyjsonr]{write_geojson_str}} & to pass additional arguments to the
+underlying JavaScript functions. Typical use-cases include setting \code{'digits'} to
+round the point coordinates or to pass a different \code{'fragmentShaderSource'} to
+control the shape of the points. Use
+\itemize{
+   \item{\code{'point'} (default) to render circles with a thin black outline}
+   \item{\code{'simpleCircle'} for circles without outline}
+   \item{\code{'square'} for squares without outline}
+}
+Additional arguments could be \code{'sensitivity'}, \code{'sensitivityHover'} or
+\code{'vertexShaderSource'}. See a full list at the
+\href{https://github.com/robertleeplummerjr/Leaflet.glify}{Leaflet.glify}
+repository.}
+
+\item{fillColor}{fill color}
+
+\item{fillOpacity}{fill opacity}
 
 \item{radius}{point size in pixels.}
+
+\item{stroke}{whether to draw stroke along the path (e.g. the borders of
+polygons or circles)}
 }
 \description{
-Leaflet.glify is a web gl renderer plugin for leaflet. See
+Leaflet.glify is a WebGL renderer plugin for leaflet. See
   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
   and documentation.
 }
-\details{
-MULTILINESTRINGs are currently not supported! Make sure you cast your data
-  to LINETSRING first (e.g. using \code{sf::st_cast(data, "LINESTRING")}.
-
-MULTIPOLYGONs are currently not supported! Make sure you cast your data
-  to POLYGON first (e.g. using \code{sf::st_cast(data, "POLYGON")}.
-}
 \section{Functions}{
 \itemize{
-\item \code{addGlPolylines()}: add polylines to a leaflet map using Leaflet.glify
+\item \code{addGlPolylines()}: Add Lines to a leaflet map using Leaflet.glify
 
-\item \code{addGlPoints()}: add points to a leaflet map using Leaflet.glify
+\item \code{addGlPoints()}: Add Points to a leaflet map using Leaflet.glify
 
-\item \code{addGlPolygons()}: add polygons to a leaflet map using Leaflet.glify
+\item \code{addGlPolygons()}: Add Polygons to a leaflet map using Leaflet.glify
 
 }}
+\note{
+MULTILINESTRINGs and MULTIPOLYGONs are currently not supported!
+  Make sure you cast your data to LINESTRING or POLYGON first using:
+  \itemize{
+     \item{\code{sf::st_cast(data, "LINESTRING")}}
+     \item{\code{sf::st_cast(data, "POLYGON")}}
+  }
+}
+\section{Shiny Inputs}{
+
+  The objects created with \code{leafgl} send input values to Shiny as the
+  user interacts with them. These events follow the pattern
+  \code{input$MAPID_glify_EVENTNAME}.
+  The following events are available:
+
+  \itemize{
+    \item \strong{Click Events:}
+      \code{input$MAPID_glify_click}
+    \item \strong{Mouseover Events:}
+      \code{input$MAPID_glify_mouseover}
+    \item \strong{Mouseout Events:}
+      \code{input$MAPID_glify_mouseout}
+  }
+
+
+  Each event returns a list containing:
+  \itemize{
+    \item \code{lat}: Latitude of the object or mouse cursor
+    \item \code{lng}: Longitude of the object or mouse cursor
+    \item \code{id}: The layerId, if any
+    \item \code{group}: The group name of the object
+    \item \code{data}: The properties of the feature
+  }
+}
+
 \examples{
-if (interactive()) {
 library(leaflet)
 library(leafgl)
 library(sf)
 
 storms = st_as_sf(atlStorms2005)
-
 cols = heat.colors(nrow(storms))
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
   addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
-}
 
-if (interactive()) {
+\donttest{
 library(leaflet)
 library(leafgl)
 library(sf)
 
 n = 1e5
-
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
                  y = rnorm(n, 49, 0.8))
 pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
-
 cols = topo.colors(nrow(pts))
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
   addGlPoints(data = pts, fillColor = cols, popup = TRUE)
-
 }
-
-if (interactive()) {
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -163,6 +208,5 @@ cols = grey.colors(nrow(gadm))
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
   addGlPolygons(data = gadm, color = cols, popup = TRUE)
-}
 
 }

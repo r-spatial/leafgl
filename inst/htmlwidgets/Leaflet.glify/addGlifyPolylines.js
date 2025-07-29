@@ -1,71 +1,45 @@
-LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label, opacity, group, weight, layerId, pane) {
+/* global LeafletWidget, L */
+LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label,
+                                                   opacity, group, weight, layerId, dotOptions, pane,
+                                                   popupOptions, labelOptions) {
 
-  var map = this;
+  const map = this;
 
-  var clrs;
+  // colors
+  let clrs;
   if (cols.length === 1) {
     clrs = cols[0];
   } else {
     clrs = function(index, feature) { return cols[index]; };
   }
 
-  var wght;
+  // weight
+  let wght;
   if (weight.length === undefined) {
     wght = weight;
   } else {
     wght = function(index, feature) { return weight[index]; };
   }
 
-  var click_event = function(e, feature, addpopup, popup) {
-    if (map.hasLayer(lineslayer.layer)) {
-      var idx = data.features.findIndex(k => k==feature);
-      if (HTMLWidgets.shinyMode) {
-        Shiny.setInputValue(map.id + "_glify_click", {
-          id: layerId ? layerId[idx] : idx+1,
-          group: Object.values(lineslayer.layer._eventParents)[0].groupname,
-          lat: e.latlng.lat,
-          lng: e.latlng.lng,
-          data: feature.properties
-        });
-      }
-      if (addpopup) {
-        var content = popup === true ? json2table(feature.properties) : popup[idx].toString();
-
-        L.popup({ maxWidth: 2000 })
-        .setLatLng(e.latlng)
-        .setContent(content)
-        .openOn(map);
-      }
-    }
+  // click & hover function
+  const clickFun = function (e, feature) {
+    click_event(e, feature, popup !== null, popup, popupOptions, lineslayer, layerId, data, map);
   };
 
-  var pop = function (e, feature) {
-    click_event(e, feature, popup !== null, popup);
-  };
-
-  // var label = "testtest";
-  let tooltip = new L.Tooltip();
-
-  var hover_event = function(e, feature, addlabel, label) {
-    if (map.hasLayer(lineslayer.layer)) {
-      if (addlabel) {
-        tooltip
-         .setLatLng(e.latlng)
-         .setContent(feature.properties[[label]].toString())
-         .addTo(map);
-      }
-    }
+  const tooltip = new L.Tooltip(labelOptions);
+  const mouseoverFun = function(e, feature) {
+    hover_event(e, feature, label !== null, label, lineslayer, tooltip,
+                layerId, data, map);
   }
 
-  var hvr = function(e, feature) {
-    hover_event(e, feature, label !== null, label);
-  }
-
-
-  var lineslayer = L.glify.lines({
+  // arguments for gl layer
+  const layerArgs = {
     map: map,
-    click: pop,
-    hover: hvr,
+    click: clickFun,
+    hover: mouseoverFun,
+    hoverOff: function(e, feature) {
+      hoveroff_event(e, feature, lineslayer, tooltip, layerId, data, map);
+    },
     latitudeKey: 1,
     longitudeKey: 0,
     data: data,
@@ -73,14 +47,21 @@ LeafletWidget.methods.addGlifyPolylines = function(data, cols, popup, label, opa
     opacity: opacity,
     className: group,
     weight: wght,
-    pane: pane
-  });
+    pane: pane,
+    hoverWait: 10,
+    layerId: layerId
+  };
 
+  // append dotOptions to layer arguments
+  Object.entries(dotOptions).forEach(([key,value]) => { layerArgs[key] = value });
+
+  // initialize Glify Layer
+  const lineslayer = L.glify.lines(layerArgs);
+
+  // add layer to map using leaflet's layerManager
   map.layerManager.addLayer(lineslayer.layer, "glify", layerId, group);
+
+  addGlifyEventListeners(map)
 };
 
-
-LeafletWidget.methods.removeGlPolylines = function(layerId) {
-  this.layerManager.removeLayer("glify", layerId);
-};
 

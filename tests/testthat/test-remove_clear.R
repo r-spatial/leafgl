@@ -2,7 +2,6 @@ context("test-leafgl-remove_clear")
 
 library(leaflet)
 library(sf)
-library(jsonify)
 
 n = 1e2
 df1 = data.frame(id = 1:n, id2 = n:1,

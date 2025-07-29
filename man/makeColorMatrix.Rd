@@ -56,8 +56,7 @@ makeColorMatrix(~vals, testdf)
 makeColorMatrix(~vals1, testdf)
 
 ## For JSON
-library(jsonify)
-makeColorMatrix(jsonify::to_json(data.frame(r = 54, g = 186, b = 1)), NULL)
+makeColorMatrix(leafgl:::yyson_json_str(data.frame(r = 54, g = 186, b = 1)), NULL)
 
 ## For Lists
 makeColorMatrix(list(1,2), data.frame(x=c(1,2)))
