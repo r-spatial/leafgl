@@ -7,13 +7,11 @@
 <url><loc>https://r-spatial.github.io/leafgl/reference/addGlPoints.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/checkDim.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/checkDimPop.html</loc></url>
-<url><loc>https://r-spatial.github.io/leafgl/reference/clearGlLayers.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/glify-shiny.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/index.html</loc></url>
+<url><loc>https://r-spatial.github.io/leafgl/reference/leafgl-package.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/makeColorMatrix.html</loc></url>
 <url><loc>https://r-spatial.github.io/leafgl/reference/makePopup.html</loc></url>
-<url><loc>https://r-spatial.github.io/leafgl/reference/removeGlPoints.html</loc></url>
-<url><loc>https://r-spatial.github.io/leafgl/reference/removeGlPolygons.html</loc></url>
-<url><loc>https://r-spatial.github.io/leafgl/reference/removeGlPolylines.html</loc></url>
+<url><loc>https://r-spatial.github.io/leafgl/reference/remove.html</loc></url>
 </urlset>
 
