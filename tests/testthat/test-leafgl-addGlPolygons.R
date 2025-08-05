@@ -22,16 +22,6 @@ test_that("addGlPolygons works", {
     addGlPolygons(data = single_poly, group = NULL, src = TRUE, digits = 5)
   expect_is(m, "leaflet")
 
-  ## Spatial Data #########
-  spatialdf <- as(single_poly, "Spatial")
-  m = leaflet() %>%
-    addGlPolygons(data = spatialdf, digits = 5)
-  expect_is(m, "leaflet")
-
-  m = leaflet() %>%
-    addGlPolygons(data = spatialdf, src = TRUE, digits = 5)
-  expect_is(m, "leaflet")
-
   ## Multi #########
   expect_error(
     leaflet() %>%
@@ -40,4 +30,14 @@ test_that("addGlPolygons works", {
     leaflet() %>%
       addGlPolygons(data = gadm, src = TRUE, digits = 5))
 
+  ## Spatial Data #########
+  skip_if_not_installed("sp")
+  spatialdf <- as(single_poly, "Spatial")
+  m = leaflet() %>%
+    addGlPolygons(data = spatialdf, digits = 5)
+  expect_is(m, "leaflet")
+
+  m = leaflet() %>%
+    addGlPolygons(data = spatialdf, src = TRUE, digits = 5)
+  expect_is(m, "leaflet")
 })
