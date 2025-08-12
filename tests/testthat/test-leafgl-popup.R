@@ -504,15 +504,6 @@ test_that("popup-lines-table", {
 })
 
 test_that("popup-lines-spatial", {
-  popups <- suppressWarnings(sf::as_Spatial(storms))
-  ## SpatialLinesDataFrame ##############
-  m <- leaflet() %>% addTiles() %>%
-    addGlPolylines(data = storms,
-                   popup = popups,
-                   opacity = 1)
-  expect_is(m, "leaflet")
-  expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
-
   ## Simple Feature ##############
   library(sf)
   m <- leaflet() %>% addTiles() %>%
@@ -520,6 +511,16 @@ test_that("popup-lines-spatial", {
                    popup = storms,
                    opacity = 1)
 
+  expect_is(m, "leaflet")
+  expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
+
+  skip_if_not_installed("sp")
+  popups <- suppressWarnings(sf::as_Spatial(storms))
+  ## SpatialLinesDataFrame ##############
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolylines(data = storms,
+                   popup = popups,
+                   opacity = 1)
   expect_is(m, "leaflet")
   expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
 })
@@ -717,22 +718,22 @@ test_that("popup-polygon-table", {
 })
 
 test_that("popup-polygon-spatial", {
+  ## Simple Feature ##############
+  library(sf)
+  m <- leaflet() %>% addTiles() %>%
+    addGlPolygons(data = gadm,
+                  popup = gadm,
+                  opacity = 1)
+
+  expect_is(m, "leaflet")
+  expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
   ## SpatialPolygonsDataFrame ##############
+  skip_if_not_installed("sp")
   popups <- suppressWarnings(sf::as_Spatial(gadm))
   m <- leaflet() %>% addTiles() %>%
     addGlPolygons(data = gadm,
                    popup = popups,
                    opacity = 1)
-  expect_is(m, "leaflet")
-  expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
-
-  ## Simple Feature ##############
-  library(sf)
-  m <- leaflet() %>% addTiles() %>%
-    addGlPolygons(data = gadm,
-                   popup = gadm,
-                   opacity = 1)
-
   expect_is(m, "leaflet")
   expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
 })
