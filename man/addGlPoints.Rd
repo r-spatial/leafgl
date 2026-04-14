@@ -63,7 +63,7 @@ addGlPolygons(
 )
 }
 \arguments{
-\item{map}{a map widget object created from \code{\link[leaflet]{leaflet}()}}
+\item{map}{a map widget object created from \code{\link[leaflet:leaflet]{leaflet()}}}
 
 \item{data}{sf/sp point/polygon/line data to add to the map.}
 
@@ -75,10 +75,10 @@ See the examples or \link{makeColorMatrix} for more information.}
 Note: expect funny results if you set this to < 1.}
 
 \item{group}{the name of the group the newly created layers should belong to
-(for \code{\link[leaflet]{clearGroup}} and \code{\link[leaflet]{addLayersControl}} purposes).
+(for \code{\link[leaflet:clearGroup]{clearGroup()}} and \code{\link[leaflet:addLayersControl]{addLayersControl()}} purposes).
 Human-friendly group names are permitted--they need not be short,
 identifier-style names. Any number of layers and even different types of
-layers (e.g. markers and polygons) can share the same group name.}
+layers (e.g., markers and polygons) can share the same group name.}
 
 \item{popup}{Object representing the popup. Can be of type character with column names,
 formula, logical, data.frame or matrix, Spatial, list or JSON. If the length does not
@@ -94,9 +94,9 @@ match the number of rows in the data, the popup vector is repeated to match the 
 
 \item{pane}{A string which defines the pane of the layer. The default is \code{"overlayPane"}.}
 
-\item{popupOptions}{A Vector of \code{\link[leaflet]{popupOptions}} to provide popups}
+\item{popupOptions}{A Vector of \code{\link[leaflet:popupOptions]{popupOptions()}} to provide popups}
 
-\item{labelOptions}{A Vector of \code{\link[leaflet]{labelOptions}} to provide label
+\item{labelOptions}{A Vector of \code{\link[leaflet:labelOptions]{labelOptions()}} to provide label
 options for each label. Default \code{NULL}}
 
 \item{contextMenu}{a \code{\link[htmlwidgets]{JS}} function, that is passed to contextmenu.
@@ -123,7 +123,7 @@ repository.}
 
 \item{radius}{point size in pixels.}
 
-\item{stroke}{whether to draw stroke along the path (e.g. the borders of
+\item{stroke}{whether to draw stroke along the path (e.g., the borders of
 polygons or circles)}
 }
 \description{
