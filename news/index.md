@@ -1,0 +1,91 @@
+# Changelog
+
+## leafgl 0.2.2.9000 (2026-04-14)
+
+##### ✨ features and improvements
+
+##### 🐛 bug fixes
+
+##### 💬 documentation etc
+
+##### 🍬 miscellaneous
+
+## leafgl 0.2.2 (2024-11-13)
+
+CRAN release: 2024-11-13
+
+- Switched from `jsonify` and `geojsonsf` to `yyjsonr`
+- New method `clearGlGroup` removes a group from leaflet and the
+  Leaflet.Glify instances.
+- The JavaScript methods of the `removeGl**` functions was rewritten to
+  correctly remove an element identified by `layerId`
+- `clearGlLayers` now correctly removes all Leaflet.Glify instances
+- When showing/hiding Leaflet.Glify layers, they are set to active =
+  TRUE/FALSE to make mouseevents work again.
+  [\#48](https://github.com/r-spatial/leafgl/issues/48)
+  [\#50](https://github.com/r-spatial/leafgl/issues/50)
+
+##### 🐛 bug fixes
+
+- Increase precision of points, lines and shapes by translating them
+  closer to the Pixel Origin. Thanks
+  [@RayLarone](https://github.com/RayLarone)
+  [\#93](https://github.com/r-spatial/leafgl/issues/93)
+- src version now works also in shiny.
+  [\#71](https://github.com/r-spatial/leafgl/issues/71)
+- added `popupOptions` and `labelOptions`.
+  [\#83](https://github.com/r-spatial/leafgl/issues/83)
+- added `stroke` (default=TRUE) in `addGlPolygons` and
+  `addGlPolygonsSrc` for drawing borders.
+  [\#3](https://github.com/r-spatial/leafgl/issues/3)
+  [\#68](https://github.com/r-spatial/leafgl/issues/68)
+- Labels work similar to `leaflet`. `leafgl` accepts a single string, a
+  vector of strings or a formula.
+  [\#78](https://github.com/r-spatial/leafgl/issues/78)
+- The `...` arguments are now passed to all methods in the underlying
+  library. This allows us to set additional arguments like
+  `fragmentShaderSource`, `sensitivity` or `sensitivityHover`.
+  [\#81](https://github.com/r-spatial/leafgl/issues/81)
+
+##### 💬 documentation etc
+
+- we now have pckgdown site - Thanks to
+  [@olivroy](https://github.com/olivroy)
+  [\#102](https://github.com/r-spatial/leafgl/issues/102)
+
+##### 🍬 miscellaneous
+
+- remove obsolete .travis.yml
+
+### leafgl 0.2.1
+
+new features:
+
+- all methods can now have labels/tooltips. Currently only lines and
+  polygons support passing of a column name, points need a predefined
+  label vector.
+
+miscallaneous:
+
+- all methods now have a pane argument to control layer ordering (thanks
+  to [@trafficonese](https://github.com/trafficonese)).
+  [\#67](https://github.com/r-spatial/leafgl/issues/67)
+  [\#64](https://github.com/r-spatial/leafgl/issues/64)
+
+### leafgl 0.2.0
+
+miscallaneous:
+
+- update upstream javascript dependency to 3.2.0
+
+### leafgl 0.1.2
+
+new features:
+
+- expose additional JavaScript arguments in addGlPoints via magic dots.
+  [\#54](https://github.com/r-spatial/leafgl/issues/54) &
+  [\#60](https://github.com/r-spatial/leafgl/issues/60)
+
+### leafgl 0.1.1
+
+initial release.
