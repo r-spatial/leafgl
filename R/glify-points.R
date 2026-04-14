@@ -105,8 +105,8 @@ addGlPoints = function(map,
                        ...) {
 
   # check data ##########
-  if (missing(labelOptions)) labelOptions <- labelOptions()
-  if (missing(popupOptions)) popupOptions <- popupOptions()
+  if (missing(labelOptions)) labelOptions <- leaflet::labelOptions()
+  if (missing(popupOptions)) popupOptions <- leaflet::popupOptions()
 
   if (is.null(group)) group = deparse(substitute(data))
   if (inherits(data, "Spatial")) data <- sf::st_as_sf(data)
