@@ -6,11 +6,6 @@
 
 #### 💬 documentation etc
 
-#### 🍬 miscellaneous
-
-
-# leafgl dev-version
-
 -   Added some @details for Shiny click and mouseover events and their corresponding input. [#77](https://github.com/r-spatial/leafgl/issues/77)
 -   Use `@inheritParams leaflet::**` for identical function arguments
 -   unified / simplified the dependency functions/calls
