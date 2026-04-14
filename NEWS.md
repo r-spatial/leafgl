@@ -1,8 +1,4 @@
-# leafgl 0.2.2.9002 (2026-04-14)
-
-#### ✨ features and improvements
-
-#### 🐛 bug fixes
+# leafgl 0.2.3 (2026-04-14)
 
 #### 💬 documentation etc
 
@@ -14,7 +10,7 @@
 
 -   update upstream javascript dependency to 3.3.0. [#49](https://github.com/r-spatial/leafgl/issues/49)
     ⚠️If you previously used the workaround `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this new version.
-    
+
 
 # leafgl 0.2.2 (2024-11-13)
 
