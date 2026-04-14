@@ -1,5 +1,15 @@
 # Changelog
 
+## leafgl 0.2.3.9000 (2026-04-14)
+
+##### ✨ features and improvements
+
+##### 🐛 bug fixes
+
+##### 💬 documentation etc
+
+##### 🍬 miscellaneous
+
 ## leafgl 0.2.3 (2026-04-14)
 
 ##### 💬 documentation etc
