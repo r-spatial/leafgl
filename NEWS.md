@@ -1,3 +1,14 @@
+# leafgl 0.2.2.9000 (2026-04-14)
+
+#### ✨ features and improvements
+
+#### 🐛 bug fixes
+
+#### 💬 documentation etc
+
+#### 🍬 miscellaneous
+
+
 # leafgl dev-version
 
 -   Added some @details for Shiny click and mouseover events and their corresponding input. [#77](https://github.com/r-spatial/leafgl/issues/77)
