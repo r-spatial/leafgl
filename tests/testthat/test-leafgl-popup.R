@@ -269,7 +269,7 @@ test_that("popup-points-logical", {
                 group = "grp")
   expect_is(m, "leaflet")
   expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
-  expect_true(m$x$calls[[2]]$args[[3]] == "[]")
+  expect_true(m$x$calls[[2]]$args[[3]] == "null")
 
   ## NULL #################
   m <- leaflet() %>% addTiles() %>%
@@ -555,7 +555,7 @@ test_that("popup-lines-logical", {
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
-  expect_true(m$x$calls[[2]]$args[[3]] == "[]")
+  expect_true(m$x$calls[[2]]$args[[3]] == "null")
 
   ## NULL #################
   m <- leaflet() %>% addTiles() %>%
@@ -768,7 +768,7 @@ test_that("popup-polygon-logical", {
                    opacity = 1)
   expect_is(m, "leaflet")
   expect_true(yyjsonr::validate_json_str(m$x$calls[[2]]$args[[3]]))
-  expect_true(m$x$calls[[2]]$args[[3]] == "[]")
+  expect_true(m$x$calls[[2]]$args[[3]] == "null")
 
   ## NULL #################
   m <- leaflet() %>% addTiles() %>%
