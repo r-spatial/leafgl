@@ -5,12 +5,13 @@ Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
              role = c("cre", "aut", "cph"),
-             email = "tim.appelhans@gmail.com"),
+             email = "tappelhans@tutamail.com",
+             comment = c(ORCID = "0000-0002-9824-2707")),
       person(given = "Colin",
              family = "Fay",
              role = "ctb",
              email = "colin@thinkr.fr",
-             comment = structure("0000-0001-7343-1846", .Names = "ORCID")),
+             comment = c(ORCID = "0000-0001-7343-1846")),
       person(given = "Robert",
              family = "Plummer",
              role = "ctb",
@@ -30,7 +31,7 @@ Description: Provides bindings to the 'Leaflet.glify' JavaScript library which e
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
   htmltools,
   leaflet,

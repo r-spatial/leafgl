@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Tim Appelhans \email{tim.appelhans@gmail.com} [copyright holder]
+\strong{Maintainer}: Tim Appelhans \email{tappelhans@tutamail.com} (\href{https://orcid.org/0000-0002-9824-2707}{ORCID}) [copyright holder]
 
 Other contributors:
 \itemize{
