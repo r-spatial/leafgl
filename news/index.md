@@ -1,6 +1,6 @@
 # Changelog
 
-## leafgl 0.2.2.9000 (2026-04-14)
+## leafgl 0.2.2.9002 (2026-04-14)
 
 ##### ✨ features and improvements
 
@@ -8,7 +8,19 @@
 
 ##### 💬 documentation etc
 
+- Added some [@details](https://github.com/details) for Shiny click and
+  mouseover events and their corresponding input.
+  [\#77](https://github.com/r-spatial/leafgl/issues/77)
+- Use `@inheritParams leaflet::**` for identical function arguments
+- unified / simplified the dependency functions/calls
+
 ##### 🍬 miscellaneous
+
+- update upstream javascript dependency to 3.3.0.
+  [\#49](https://github.com/r-spatial/leafgl/issues/49) ⚠️If you
+  previously used the workaround
+  `L.glify.Shapes.instances.splice(0, 1)`, please remove it with this
+  new version.
 
 ## leafgl 0.2.2 (2024-11-13)
 
