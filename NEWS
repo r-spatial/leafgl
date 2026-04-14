@@ -1,15 +1,10 @@
-leafgl 0.2.2.9001 (2026-04-14)
+leafgl 0.2.2.9002 (2026-04-14)
 
 features and improvements
 
 bug fixes
 
 documentation etc
-
-miscellaneous
-
-
-leafgl dev-version
 
 -   Added some @details for Shiny click and mouseover events and their corresponding input. #77
 -   Use @inheritParams leaflet::** for identical function arguments
