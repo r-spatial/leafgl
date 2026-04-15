@@ -22,13 +22,13 @@ Source:
 [`DESCRIPTION`](https://github.com/r-spatial/leafgl/blob/master/DESCRIPTION)
 
 Appelhans T (2026). *leafgl: High-Performance 'WebGl' Rendering for
-Package 'leaflet'*. R package version 0.2.3.9001,
+Package 'leaflet'*. R package version 0.2.4,
 <https://github.com/r-spatial/leafgl>.
 
     @Manual{,
       title = {leafgl: High-Performance 'WebGl' Rendering for Package 'leaflet'},
       author = {Tim Appelhans},
       year = {2026},
-      note = {R package version 0.2.3.9001},
+      note = {R package version 0.2.4},
       url = {https://github.com/r-spatial/leafgl},
     }
