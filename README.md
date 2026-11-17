@@ -59,7 +59,7 @@ wait for a map that the browser isn’t able to render anyway…
 
 For starters, it doesn’t guarantee to be working tomorrow. At this stage
 `leafgl` is pre-alpha and under heavy development so things are likely
-to change frequently. For example, we are thinking about shorter funtion
+to change frequently. For example, we are thinking about shorter function
 names (e.g. `addGlPolygons` instead of the current `addGlifyPolygons`).
 Additionally, we are still figuring out which pathway is best to use in
 order to pass data from R to the browser. As a result, rendering
