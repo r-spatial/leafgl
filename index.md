@@ -17,12 +17,14 @@ what you get here, make sure to star the original repo!
 ##### Stable version from CRAN
 
 ``` r
+
 install.packages("leafgl")
 ```
 
 ##### Development version from Github
 
 ``` r
+
 devtools::install_github("r-spatial/leafgl")
 ```
 
@@ -56,12 +58,13 @@ wait for a map that the browser isn’t able to render anyway…
 
 For starters, it doesn’t guarantee to be working tomorrow. At this stage
 `leafgl` is pre-alpha and under heavy development so things are likely
-to change frequently. For example, we are thinking about shorter funtion
-names (e.g. `addGlPolygons` instead of the current `addGlifyPolygons`).
-Additionally, we are still figuring out which pathway is best to use in
-order to pass data from R to the browser. As a result, rendering
-environments other than the browser (or RStudio viewer) may not work
-properly or at all until we approach a more stable implementation.
+to change frequently. For example, we are thinking about shorter
+function names (e.g. `addGlPolygons` instead of the current
+`addGlifyPolygons`). Additionally, we are still figuring out which
+pathway is best to use in order to pass data from R to the browser. As a
+result, rendering environments other than the browser (or RStudio
+viewer) may not work properly or at all until we approach a more stable
+implementation.
 
 #### NOTE
 
@@ -88,6 +91,7 @@ very much love to hear from you!
 This will render 1 Mio. points on a standard leaflet map.
 
 ``` r
+
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -121,6 +125,7 @@ For this we use
 because it can create color voctors in the blink of an eye!
 
 ``` r
+
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -156,6 +161,7 @@ This data was downloaded from
 <https://download.geofabrik.de/europe/switzerland.html>
 
 ``` r
+
 library(leaflet)
 library(leafgl)
 library(sf)
@@ -193,6 +199,7 @@ dedicated shiny functions. Given that what `leafgl` produces is a
 the `server` call we can simply use `renderLeaflet`. Here an example:
 
 ``` r
+
 library(leaflet)
 library(leafgl)
 library(sf)
